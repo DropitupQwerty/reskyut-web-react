@@ -12,10 +12,6 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Tooltip,
-  Avatar,
-  Menu,
-  MenuItem,
 } from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
@@ -24,12 +20,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ApartmentIcon from '@mui/icons-material/Apartment';
-import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
-import PersonIcon from '@mui/icons-material/Person';
-import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
-import PeopleIcon from '@mui/icons-material/People';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const drawerWidth = 240;
 
