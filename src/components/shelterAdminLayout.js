@@ -20,6 +20,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import PetsIcon from '@mui/icons-material/Pets';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 240;
 
@@ -88,13 +92,9 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-const settings = ['Account', 'Logout'];
-
 export default function AdminLayoutmd({ children }) {
-  let navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -102,14 +102,6 @@ export default function AdminLayoutmd({ children }) {
 
   const handleDrawerClose = () => {
     setOpen(false);
-  };
-
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = (e) => {
-    setAnchorElUser(null);
   };
 
   return (
@@ -147,7 +139,9 @@ export default function AdminLayoutmd({ children }) {
           </IconButton>
         </DrawerHeader>
         <Divider />
+
         <List sx={{ flexGrow: 1 }}>
+          {/* Dashboard */}
           <ListItem
             button
             sx={{
@@ -174,10 +168,121 @@ export default function AdminLayoutmd({ children }) {
               sx={{ opacity: open ? 1 : 0 }}
             />
           </ListItem>
+          {/* Dashboard */}
+          {/* AnimalListing */}
+          <ListItem
+            button
+            sx={{
+              color: '#5f7161',
+              minHeight: 48,
+              justifyContent: open ? 'initial' : 'center',
+              px: 3,
+            }}
+            component={Link}
+            to="/animallisting"
+            selected={window.location.pathname.includes('/animallisting')}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <ViewListIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText
+              primary="Animal Listing  "
+              sx={{ opacity: open ? 1 : 0 }}
+            />
+          </ListItem>
+          {/* AnimalListing */}
+          {/* Adopption Page */}
 
+          <ListItem
+            button
+            sx={{
+              color: '#5f7161',
+              minHeight: 48,
+              justifyContent: open ? 'initial' : 'center',
+              px: 3,
+            }}
+            component={Link}
+            to="/adoptionpage "
+            selected={window.location.pathname.includes('/adoptionpage')}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <PetsIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText
+              primary="Adoption Page  "
+              sx={{ opacity: open ? 1 : 0 }}
+            />
+          </ListItem>
+          {/* Adopption Page */}
           <Divider />
+          {/* Profile */}
+          <ListItem
+            button
+            sx={{
+              color: '#5f7161',
+              minHeight: 48,
+              justifyContent: open ? 'initial' : 'center',
+              px: 3,
+              flexGrow: '1',
+            }}
+            component={Link}
+            to="/profile "
+            selected={window.location.pathname.includes('/profile')}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <AccountCircleIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText primary="Profile  " sx={{ opacity: open ? 1 : 0 }} />
+          </ListItem>
+          {/* Profile */}
+          {/* Logout */}
+          <ListItem
+            button
+            sx={{
+              color: '#5f7161',
+              minHeight: 48,
+              justifyContent: open ? 'initial' : 'center',
+              px: 3,
+              flexGrow: '1',
+            }}
+            component={Link}
+            to="/profile "
+            selected={window.location.pathname.includes('/profile')}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <LogoutIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText primary="Logout  " sx={{ opacity: open ? 1 : 0 }} />
+          </ListItem>
+
+          {/* Logout */}
         </List>
       </Drawer>
+
       <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '50px' }}>
         {children}
       </Box>
