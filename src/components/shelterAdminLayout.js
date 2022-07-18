@@ -283,7 +283,7 @@ export default function AdminLayoutmd({ children }) {
         </List>
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '50px' }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '100px' }}>
         {children}
       </Box>
     </Box>
