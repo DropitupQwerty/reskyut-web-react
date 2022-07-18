@@ -21,6 +21,7 @@ export default function App() {
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/animallisting" element={<AnimalListing />}></Route>
           <Route path="/adoptionpage" element={<AdopptionPage />}></Route>
+
         </Routes>
       </Router>
     </ThemeProvider>
