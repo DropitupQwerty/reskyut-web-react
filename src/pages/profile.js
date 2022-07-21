@@ -89,11 +89,7 @@ export default function Profile() {
           ></Avatar>
         </Stack>
 
-        <Box
-          display="flex"
-          justifyContent="center"
-          sx={{ marginLeft: '100px' }}
-        >
+        <Box display="flex" justifyContent="center">
           <Grid
             container
             spacing={3}
@@ -144,7 +140,7 @@ export default function Profile() {
                 animals."
               />
             </Grid>
-            <Grid item container xs={4}>
+            <Grid item container xs={4} spacing={2}>
               <Grid item>
                 <Box>
                   <Button

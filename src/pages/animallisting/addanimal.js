@@ -1,3 +1,6 @@
+import React from 'react';
+import global from '../../styles/global';
+import AppBarLayout from '../../components/appBarLayout';
 import {
   Button,
   Typography,
@@ -10,13 +13,14 @@ import {
   Select,
   MenuItem,
   TextField,
+  Paper,
 } from '@mui/material';
-import React from 'react';
 
-import global from '../../styles/global';
+import AddIcon from '@mui/icons-material/Add';
+import ImageIcon from '@mui/icons-material/Image';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+
 import { Link } from 'react-router-dom';
-import AppBarLayout from '../../components/appBarLayout';
 
 export default function AddAnimal() {
   const [gender, setGender] = React.useState('');
@@ -65,117 +69,189 @@ export default function AddAnimal() {
             ADD ANIMAL
           </Typography>
         </Box>
-
-        <Grid
+        <Box
           container
-          spacing={2}
-          direction="column"
-          sx={{ marginTop: '30px' }}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItem: 'center',
+            marginTop: '30px',
+          }}
         >
-          <Grid
-            item
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
-              NAME:
-            </Typography>
-            <FormControl fullWidth>
-              <OutlinedInput sx={{ borderRadius: '20px' }} />
-            </FormControl>
-          </Grid>
-          <Grid
-            item
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
-              AGE:
-            </Typography>
-            <FormControl fullWidth>
-              <OutlinedInput sx={{ borderRadius: '20px' }} />
-            </FormControl>
-          </Grid>
-          <Grid
-            item
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
-              GENDER:
-            </Typography>
-            <FormControl fullWidth>
-              <Select
-                value={gender}
-                onChange={genderHandleChange}
-                sx={{ borderRadius: '20px' }}
+          <Grid container>
+            <Grid item container spacing={2} direction="column">
+              <Grid
+                item
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
               >
-                <MenuItem value={'Male'}>Male</MenuItem>
-                <MenuItem value={'Female'}>Female</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid
-            item
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
-              STATUS:
-            </Typography>
-            <FormControl fullWidth>
-              <Select
-                value={status}
-                onChange={statusHandleChange}
-                sx={{ borderRadius: '20px' }}
+                <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
+                  NAME:
+                </Typography>
+                <FormControl fullWidth>
+                  <OutlinedInput sx={{ borderRadius: '20px' }} />
+                </FormControl>
+              </Grid>
+              <Grid
+                item
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
               >
-                <MenuItem value={'unlisted'}>Unlisted</MenuItem>
-                <MenuItem value={'listed'}>Listed</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid
-            item
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
-              PET CATEGORY:
-            </Typography>
-            <FormControl fullWidth>
-              <Select
-                value={category}
-                onChange={categoryHandleChange}
-                sx={{ borderRadius: '20px' }}
+                <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
+                  AGE:
+                </Typography>
+                <FormControl fullWidth>
+                  <OutlinedInput sx={{ borderRadius: '20px' }} />
+                </FormControl>
+              </Grid>
+              <Grid
+                item
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
               >
-                <MenuItem value={'Dog'}>Dog</MenuItem>
-                <MenuItem value={'Cat'}>Cat</MenuItem>
-                <MenuItem value={'Dinosaur'}>Dinosaur</MenuItem>
-              </Select>
-            </FormControl>
+                <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
+                  GENDER:
+                </Typography>
+                <FormControl fullWidth>
+                  <Select
+                    value={gender}
+                    onChange={genderHandleChange}
+                    sx={{ borderRadius: '20px' }}
+                  >
+                    <MenuItem value={'Male'}>Male</MenuItem>
+                    <MenuItem value={'Female'}>Female</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                item
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
+                  STATUS:
+                </Typography>
+                <FormControl fullWidth>
+                  <Select
+                    value={status}
+                    onChange={statusHandleChange}
+                    sx={{ borderRadius: '20px' }}
+                  >
+                    <MenuItem value={'unlisted'}>Unlisted</MenuItem>
+                    <MenuItem value={'listed'}>Listed</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                item
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
+                  PET CATEGORY:
+                </Typography>
+                <FormControl fullWidth>
+                  <Select
+                    value={category}
+                    onChange={categoryHandleChange}
+                    sx={{ borderRadius: '20px' }}
+                  >
+                    <MenuItem value={'Dog'}>Dog</MenuItem>
+                    <MenuItem value={'Cat'}>Cat</MenuItem>
+                    <MenuItem value={'Dinosaur'}>Dinosaur</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item>
+                <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
+                  DESCRIPTION:
+                </Typography>
+                <TextField multiline rows={3} fullWidth />
+              </Grid>
+              <Grid item sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Button sx={{ ...global.button3 }}>CANCEL</Button>
+                <Button sx={{ ...global.button2Small, marginLeft: '20px' }}>
+                  SAVE
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
-              DESCRIPTION:
+          <Box sx={{ marginLeft: '20px', flexGrow: '1' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <ImageIcon color="primary" />
+              <Typography
+                variant="h6"
+                sx={{ marginLeft: '10px', fontWeight: 'bold' }}
+              >
+                {' '}
+                Image
+              </Typography>
+            </Box>
+            <Typography variant="body2">
+              Upload an image file, pick one from your media library, or add one
+              with a URL.
             </Typography>
-            <TextField multiline rows={3} fullWidth />
-          </Grid>
-        </Grid>
+            <Button
+              variant="contained"
+              component="label"
+              sx={{ marginTop: '12px', ...global.button2Small }}
+            >
+              Upload
+              <input hidden accept="image/*" multiple type="file" />
+            </Button>
+            <Box marginTop={2}>
+              <Grid container>
+                <Grid item>
+                  <IconButton>
+                    <Paper
+                      elavation={3}
+                      sx={{ height: '98px', width: '93px' }}
+                    ></Paper>
+                  </IconButton>
+                </Grid>
+                <Grid item>
+                  <IconButton>
+                    <Paper
+                      elavation={3}
+                      sx={{ height: '98px', width: '93px' }}
+                    ></Paper>
+                  </IconButton>
+                </Grid>
+                <Grid item>
+                  <IconButton>
+                    <Paper
+                      elavation={3}
+                      sx={{ height: '98px', width: '93px' }}
+                    ></Paper>
+                  </IconButton>
+                </Grid>
+                <Grid item>
+                  <IconButton>
+                    <Paper
+                      elavation={3}
+                      sx={{ height: '98px', width: '93px' }}
+                    ></Paper>
+                  </IconButton>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+        </Box>
       </Box>
     </AppBarLayout>
   );
