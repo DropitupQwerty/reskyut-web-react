@@ -18,11 +18,10 @@ export default function App() {
       <Router>
         <Routes>
           <Route path="/" element={<SignIn />}></Route>
-          <Route path="/dashboard" element={<Dashboard />}></Route>
+          <Route path="/dashboard" element={<Dashboard />}></Route>s{' '}
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/animallisting" element={<AnimalListing />}></Route>
           <Route path="/adoptionpage" element={<AdopptionPage />}></Route>
-
           {/* Animal Listing */}
           <Route
             path="/animallisting/addanimal"

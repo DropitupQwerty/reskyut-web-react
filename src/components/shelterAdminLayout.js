@@ -226,6 +226,9 @@ export default function AdminLayoutmd({ children }) {
             />
           </ListItem>
           {/* Adopption Page */}
+        </List>
+        <List>
+          {' '}
           <Divider />
           {/* Profile */}
           <ListItem
@@ -264,8 +267,7 @@ export default function AdminLayoutmd({ children }) {
               flexGrow: '1',
             }}
             component={Link}
-            to="/profile "
-            selected={window.location.pathname.includes('/profile')}
+            to="/ "
           >
             <ListItemIcon
               sx={{
@@ -278,7 +280,6 @@ export default function AdminLayoutmd({ children }) {
             </ListItemIcon>
             <ListItemText primary="Logout  " sx={{ opacity: open ? 1 : 0 }} />
           </ListItem>
-
           {/* Logout */}
         </List>
       </Drawer>
