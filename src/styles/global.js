@@ -33,5 +33,9 @@ const global = {
     height: ' 51px',
     width: ' 173px',
   },
+  textHeader: {
+    color: '#E94057',
+    fontWeight: 'bold',
+  },
 };
 export default global;

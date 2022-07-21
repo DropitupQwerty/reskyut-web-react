@@ -1,4 +1,5 @@
 import {
+  Box,
   Avatar,
   Button,
   Grid,
@@ -26,7 +27,6 @@ import React from 'react';
 import global from '../styles/global';
 import ShelterAdminLayout from '../components/shelterAdminLayout';
 import { deepOrange } from '@mui/material/colors';
-import { Box } from '@mui/system';
 
 export default function Profile() {
   const [open, setOpen] = React.useState(false);
@@ -36,6 +36,7 @@ export default function Profile() {
   const [values, setValues] = React.useState({
     amount: '',
     password: '',
+    oldPassword: '',
     weight: '',
     weightRange: '',
     showPassword: false,
