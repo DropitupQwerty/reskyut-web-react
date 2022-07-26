@@ -9,6 +9,7 @@ import Profile from './pages/profile';
 import AnimalListing from './pages/animal-listing';
 import AdopptionPage from './pages/adoption-page';
 import AddAnimal from './pages/animallisting/addanimal';
+import EditAnimal from './pages/animallisting/editanimal';
 import Message from './pages/message';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -30,6 +31,10 @@ export default function App() {
           <Route
             path="/animallisting/addanimal"
             element={<AddAnimal />}
+          ></Route>
+          <Route
+            path="/animallisting/editanimal"
+            element={<EditAnimal />}
           ></Route>
           <Route path="*" element={<PagenotFound />}></Route>
         </Routes>
