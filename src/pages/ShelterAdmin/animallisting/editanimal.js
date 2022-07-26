@@ -1,6 +1,6 @@
 import React from 'react';
-import global from '../../styles/global';
-import AppBarLayout from '../../components/appBarLayout';
+import global from '../../../styles/global';
+import AppBarLayout from '../../../components/appBarLayout';
 import {
   Button,
   Typography,
@@ -66,7 +66,7 @@ export default function AddAnimal() {
             variant="h4"
             sx={{ textAlign: 'center', ...global.textHeader }}
           >
-            {'ADD ANIMAL'}
+            {'EDIT ANIMAL'}
           </Typography>
         </Box>
         <Box

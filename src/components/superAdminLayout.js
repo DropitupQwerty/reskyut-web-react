@@ -92,7 +92,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function ShelterAdminLayout({ children }) {
+export default function SuperAdminLayout({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
 
@@ -151,8 +151,8 @@ export default function ShelterAdminLayout({ children }) {
               px: 3,
             }}
             component={Link}
-            to="/Dashboard"
-            selected={window.location.pathname.includes('/Dashboard')}
+            to="/admin/dashboard"
+            selected={window.location.pathname.includes('/admin/dashboard')}
           >
             <ListItemIcon
               sx={{
@@ -169,7 +169,7 @@ export default function ShelterAdminLayout({ children }) {
             />
           </ListItem>
           {/* Dashboard */}
-          {/* AnimalListing */}
+          {/* NGO list*/}
           <ListItem
             button
             sx={{
@@ -192,70 +192,14 @@ export default function ShelterAdminLayout({ children }) {
               <ViewListIcon color="primary" />
             </ListItemIcon>
             <ListItemText
-              primary="Animal Listing  "
+              primary="List of NGO  "
               sx={{ opacity: open ? 1 : 0 }}
             />
           </ListItem>
-          {/* AnimalListing */}
-          {/* Adopption Page */}
-
-          <ListItem
-            button
-            sx={{
-              color: '#5f7161',
-              minHeight: 48,
-              justifyContent: open ? 'initial' : 'center',
-              px: 3,
-            }}
-            component={Link}
-            to="/adoptionpage "
-            selected={window.location.pathname.includes('/adoptionpage')}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: open ? 3 : 'auto',
-                justifyContent: 'center',
-              }}
-            >
-              <PetsIcon color="primary" />
-            </ListItemIcon>
-            <ListItemText
-              primary="Adoption Page  "
-              sx={{ opacity: open ? 1 : 0 }}
-            />
-          </ListItem>
-          {/* Adopption Page */}
+          {/* Ngo list */}
         </List>
         <List>
-          {' '}
           <Divider />
-          {/* Profile */}
-          <ListItem
-            button
-            sx={{
-              color: '#5f7161',
-              minHeight: 48,
-              justifyContent: open ? 'initial' : 'center',
-              px: 3,
-              flexGrow: '1',
-            }}
-            component={Link}
-            to="/profile "
-            selected={window.location.pathname.includes('/profile')}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: open ? 3 : 'auto',
-                justifyContent: 'center',
-              }}
-            >
-              <AccountCircleIcon color="primary" />
-            </ListItemIcon>
-            <ListItemText primary="Profile  " sx={{ opacity: open ? 1 : 0 }} />
-          </ListItem>
-          {/* Profile */}
           {/* Logout */}
           <ListItem
             button

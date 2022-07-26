@@ -1,5 +1,5 @@
 import React from 'react';
-import ShelterAdminLayout from '../components/shelterAdminLayout';
+import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import { Paper, Box, Typography, Grid } from '@mui/material';
 
 export default function dashboard() {

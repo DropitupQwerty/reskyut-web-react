@@ -24,8 +24,8 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import React from 'react';
-import global from '../styles/global';
-import ShelterAdminLayout from '../components/shelterAdminLayout';
+import global from '../../styles/global';
+import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import { deepOrange } from '@mui/material/colors';
 
 export default function Profile() {

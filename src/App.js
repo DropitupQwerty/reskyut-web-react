@@ -2,15 +2,18 @@
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../src/utils/theme';
 
-//pages
+//shelter admin pages
 import SignIn from './sign-in';
-import Dashboard from './pages/dashboard';
-import Profile from './pages/profile';
-import AnimalListing from './pages/animal-listing';
-import AdopptionPage from './pages/adoption-page';
-import AddAnimal from './pages/animallisting/addanimal';
-import EditAnimal from './pages/animallisting/editanimal';
-import Message from './pages/message';
+import Dashboard from './pages/ShelterAdmin/dashboard';
+import Profile from './pages/ShelterAdmin/profile';
+import AnimalListing from './pages/ShelterAdmin/animal-listing';
+import AdopptionPage from './pages/ShelterAdmin/adoption-page';
+import AddAnimal from './pages/ShelterAdmin/animallisting/addanimal';
+import EditAnimal from './pages/ShelterAdmin/animallisting/editanimal';
+import Message from './pages/ShelterAdmin/message';
+
+//Super admin pages
+import SaDashboard from './pages/SuperAdmin/sadashboard';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -20,6 +23,8 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
+        {/* Shelter Admin */}
+
         <Routes>
           <Route path="/" element={<SignIn />}></Route>
           <Route path="/dashboard" element={<Dashboard />}></Route>s{' '}
@@ -36,6 +41,8 @@ export default function App() {
             path="/animallisting/editanimal"
             element={<EditAnimal />}
           ></Route>
+          {/* Super Admin */}
+          <Route path="/admin/dashboard" element={<SaDashboard />}></Route>
           <Route path="*" element={<PagenotFound />}></Route>
         </Routes>
       </Router>
