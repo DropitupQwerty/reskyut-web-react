@@ -14,6 +14,8 @@ import Message from './pages/ShelterAdmin/message';
 
 //Super admin pages
 import SaDashboard from './pages/SuperAdmin/sadashboard';
+import ListOfNGO from './pages/SuperAdmin/listofngo';
+import PostOfNGO from './pages/SuperAdmin/postofngo';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -43,6 +45,8 @@ export default function App() {
           ></Route>
           {/* Super Admin */}
           <Route path="/admin/dashboard" element={<SaDashboard />}></Route>
+          <Route path="/admin/listofngo" element={<ListOfNGO />}></Route>
+          <Route path="/admin/postofngo" element={<PostOfNGO />}></Route>
           <Route path="*" element={<PagenotFound />}></Route>
         </Routes>
       </Router>
