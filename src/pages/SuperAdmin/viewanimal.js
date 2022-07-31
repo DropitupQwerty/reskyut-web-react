@@ -1,6 +1,7 @@
 import React from 'react';
-import global from '../../../styles/global';
-import AppBarLayout from '../../../components/appBarLayout';
+import global from '../../styles/global';
+import AppBarAdminLayout from '../../components/appBarAdminLayout';
+
 import {
   Button,
   Typography,
@@ -21,7 +22,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 import { Link } from 'react-router-dom';
 
-export default function AddAnimal() {
+export default function ViewAnimal() {
   const [gender, setGender] = React.useState('');
   const [status, setStatus] = React.useState('');
   const [category, setCategory] = React.useState('');
@@ -47,7 +48,7 @@ export default function AddAnimal() {
   };
 
   return (
-    <AppBarLayout>
+    <AppBarAdminLayout>
       <Box>
         <Box>
           <Button
@@ -56,8 +57,8 @@ export default function AddAnimal() {
             color="primary"
             sx={style.button}
             component={Link}
-            to="/animallisting "
-            selected={window.location.pathname.includes('/animallisting')}
+            to="/admin/postofngo"
+            selected={window.location.pathname.includes('/admin/postofngo')}
           >
             <ArrowBackIosIcon />
           </Button>
@@ -65,7 +66,7 @@ export default function AddAnimal() {
             variant="h4"
             sx={{ textAlign: 'center', ...global.textHeader }}
           >
-            {'ADD ANIMAL'}
+            {'VIEW ANIMAL'}
           </Typography>
         </Box>
         <Box
@@ -183,9 +184,8 @@ export default function AddAnimal() {
                 <TextField multiline rows={3} fullWidth />
               </Grid>
               <Grid item sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button sx={{ ...global.button3 }}>CANCEL</Button>
                 <Button sx={{ ...global.button2Small, marginLeft: '20px' }}>
-                  SAVE
+                  DELETE
                 </Button>
               </Grid>
             </Grid>
@@ -201,18 +201,7 @@ export default function AddAnimal() {
                 Image
               </Typography>
             </Box>
-            <Typography variant="body2">
-              Upload an image file, pick one from your media library, or add one
-              with a URL.
-            </Typography>
-            <Button
-              variant="contained"
-              component="label"
-              sx={{ marginTop: '12px', ...global.button2Small }}
-            >
-              Upload
-              <input hidden accept="image/*" multiple type="file" />
-            </Button>
+
             <Box marginTop={2}>
               <Grid container>
                 <Grid item>
@@ -252,6 +241,6 @@ export default function AddAnimal() {
           </Box>
         </Box>
       </Box>
-    </AppBarLayout>
+    </AppBarAdminLayout>
   );
 }

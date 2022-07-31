@@ -24,6 +24,8 @@ import PetsIcon from '@mui/icons-material/Pets';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 
 const drawerWidth = 240;
 
@@ -123,7 +125,7 @@ export default function SuperAdminLayout({ children }) {
               <MenuIcon />
             </IconButton>
             <Typography variant="h4" sx={{ fontWeight: '600' }}>
-              {'Stray Worth Saving'}
+              {'SUPER ADMIN'}
             </Typography>
           </Box>
         </Toolbar>
@@ -179,8 +181,8 @@ export default function SuperAdminLayout({ children }) {
               px: 3,
             }}
             component={Link}
-            to="/animallisting"
-            selected={window.location.pathname.includes('/animallisting')}
+            to="/admin/listofngo"
+            selected={window.location.pathname.includes('/admin/listofngo')}
           >
             <ListItemIcon
               sx={{
@@ -197,9 +199,87 @@ export default function SuperAdminLayout({ children }) {
             />
           </ListItem>
           {/* Ngo list */}
+          {/* Add Ngo*/}
+          <ListItem
+            button
+            sx={{
+              color: '#5f7161',
+              minHeight: 48,
+              justifyContent: open ? 'initial' : 'center',
+              px: 3,
+            }}
+            component={Link}
+            to="/admin/addngo"
+            selected={window.location.pathname.includes('/admin/addngo')}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <GroupAddIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText primary="Add NGO  " sx={{ opacity: open ? 1 : 0 }} />
+          </ListItem>
+          {/* Add Ngo */}
+          {/* Post of Ngo*/}
+          <ListItem
+            button
+            sx={{
+              color: '#5f7161',
+              minHeight: 48,
+              justifyContent: open ? 'initial' : 'center',
+              px: 3,
+            }}
+            component={Link}
+            to="/admin/postofngo"
+            selected={window.location.pathname.includes('/admin/postofngo')}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <DynamicFeedIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText
+              primary="Post Of NGO  "
+              sx={{ opacity: open ? 1 : 0 }}
+            />
+          </ListItem>
+          {/* Post of Ngo */}
         </List>
         <List>
           <Divider />
+          {/* Profile*/}
+          <ListItem
+            button
+            sx={{
+              color: '#5f7161',
+              minHeight: 48,
+              justifyContent: open ? 'initial' : 'center',
+              px: 3,
+            }}
+            component={Link}
+            to=""
+            selected={window.location.pathname.includes('')}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <AccountCircleIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText primary="Profile  " sx={{ opacity: open ? 1 : 0 }} />
+          </ListItem>
+          {/* Profile */}
           {/* Logout */}
           <ListItem
             button
@@ -211,7 +291,7 @@ export default function SuperAdminLayout({ children }) {
               flexGrow: '1',
             }}
             component={Link}
-            to="/ "
+            to="/admin "
           >
             <ListItemIcon
               sx={{

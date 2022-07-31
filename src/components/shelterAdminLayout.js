@@ -94,7 +94,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function ShelterAdminLayout({ children }) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -267,7 +267,7 @@ export default function ShelterAdminLayout({ children }) {
               flexGrow: '1',
             }}
             component={Link}
-            to="/ "
+            to="/admin "
           >
             <ListItemIcon
               sx={{

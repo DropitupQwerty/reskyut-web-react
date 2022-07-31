@@ -16,6 +16,10 @@ import Message from './pages/ShelterAdmin/message';
 import SaDashboard from './pages/SuperAdmin/sadashboard';
 import ListOfNGO from './pages/SuperAdmin/listofngo';
 import PostOfNGO from './pages/SuperAdmin/postofngo';
+import SaSignIn from './pages/SuperAdmin/sasign-in';
+import AddNgo from './pages/SuperAdmin/addngo';
+import ViewNgo from './pages/SuperAdmin/viewngo';
+import ViewAnimal from './pages/SuperAdmin/viewanimal';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -44,9 +48,14 @@ export default function App() {
             element={<EditAnimal />}
           ></Route>
           {/* Super Admin */}
+          <Route path="/admin" element={<SaSignIn />}></Route>
           <Route path="/admin/dashboard" element={<SaDashboard />}></Route>
           <Route path="/admin/listofngo" element={<ListOfNGO />}></Route>
           <Route path="/admin/postofngo" element={<PostOfNGO />}></Route>
+          <Route path="/admin/addngo" element={<AddNgo />}></Route>
+          <Route path="/admin/viewngo" element={<ViewNgo />}></Route>
+          <Route path="/admin/viewanimal" element={<ViewAnimal />}></Route>
+          {/* Page not Found */}
           <Route path="*" element={<PagenotFound />}></Route>
         </Routes>
       </Router>
