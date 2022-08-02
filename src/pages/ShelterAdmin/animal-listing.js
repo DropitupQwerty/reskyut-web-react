@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import global from '../../styles/global';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import {
   Paper,
@@ -30,21 +32,27 @@ export default function AnimalListing() {
         <Typography variant="h4" align="center">
           <ReceiptLongIcon color="primary" /> <b>Animal Listing</b>
         </Typography>
+      </Grid>
+      <Grid item xs sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        {' '}
         <Button
           variant="contained"
           color="primary"
           sx={{
-            width: '170px',
-            height: '50px',
-            borderRadius: '20px',
-            marginLeft: '75vw',
+            ...global.button2Small,
           }}
+          component={Link}
+          to="/animallisting/addanimal"
+          selected={window.location.pathname.includes(
+            '/animallisting/addanimal'
+          )}
         >
           <Typography>
             <b> + New Animal</b>
           </Typography>
         </Button>
       </Grid>
+
       <Grid item xs>
         <Checkbox {...AnimalListing} />
         <Button>
