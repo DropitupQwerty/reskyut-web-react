@@ -12,6 +12,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Badge,
 } from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
@@ -94,7 +95,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function ShelterAdminLayout({ children }) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -207,6 +208,17 @@ export default function ShelterAdminLayout({ children }) {
               justifyContent: open ? 'initial' : 'center',
               px: 3,
             }}
+            secondaryAction={
+              <Badge
+                max={1e6}
+                badgeContent={99}
+                color="primary"
+                overlap="circular"
+                sx={{
+                  marginBottom: '45px',
+                }}
+              />
+            }
             component={Link}
             to="/adoptionpage "
             selected={window.location.pathname.includes('/adoptionpage')}
@@ -220,11 +232,13 @@ export default function ShelterAdminLayout({ children }) {
             >
               <PetsIcon color="primary" />
             </ListItemIcon>
+
             <ListItemText
               primary="Adoption Page  "
               sx={{ opacity: open ? 1 : 0 }}
             />
           </ListItem>
+
           {/* Adopption Page */}
         </List>
         <List>
@@ -267,7 +281,7 @@ export default function ShelterAdminLayout({ children }) {
               flexGrow: '1',
             }}
             component={Link}
-            to="/admin "
+            to="/ "
           >
             <ListItemIcon
               sx={{
