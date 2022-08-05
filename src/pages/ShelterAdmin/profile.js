@@ -26,7 +26,6 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React from 'react';
 import global from '../../styles/global';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
-import { deepOrange } from '@mui/material/colors';
 
 export default function Profile() {
   const [open, setOpen] = React.useState(false);
@@ -84,9 +83,7 @@ export default function Profile() {
           justifyContent="center"
           sx={{ marginTop: '20px' }}
         >
-          <Avatar
-            sx={{ bgcolor: deepOrange[500], height: '200px', width: '200px' }}
-          ></Avatar>
+          <Avatar sx={{ height: '200px', width: '200px' }}></Avatar>
         </Stack>
 
         <Box display="flex" justifyContent="center">
