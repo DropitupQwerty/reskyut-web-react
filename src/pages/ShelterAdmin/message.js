@@ -382,7 +382,13 @@ export default function Message() {
               </List>
             </Box>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '20px',
+            }}
+          >
             <Button sx={{ ...global.button2xs }}>Decline</Button>
             <Button sx={{ ...global.button1xs }}>Approve</Button>
           </Box>
