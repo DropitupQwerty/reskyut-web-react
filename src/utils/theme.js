@@ -14,17 +14,11 @@ const theme = createTheme({
       dark: 'rgba(173, 178, 136, 1)',
       contrastText: '#fff',
     },
-    error: {
-      light: '#e57373',
-      main: '#f44336',
-      dark: '#d32f2f',
+    message: {
+      light: 'fdf1f3',
+      main: '#E94057',
+      dark: 'rgba(64, 83, 67, 1)',
       contrastText: '#fff',
-    },
-    text: {
-      primary: 'rgba(0, 0, 0, 0.87)',
-      secondary: 'rgba(0, 0, 0, 0.54)',
-      disabled: 'rgba(0, 0, 0, 0.38)',
-      hint: 'rgba(0, 0, 0, 0.38)',
     },
   },
 });

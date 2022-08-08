@@ -15,11 +15,15 @@ import {
   Button,
   Paper,
   Link,
+  Divider,
+  SnackbarContent,
 } from '@mui/material';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 import React from 'react';
+import global from '../../styles/global';
 
-const drawerWidth = 300;
+const drawerWidth = 240;
 
 function stringToColor(string) {
   let hash = 0;
@@ -51,6 +55,45 @@ function stringAvatar(name) {
 }
 
 export default function Message() {
+  const style = {
+    messageRight: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      padding: '20px',
+      marginBottom: '10px',
+    },
+    messageLeft: {
+      display: 'flex',
+      padding: '20px',
+      marginBottom: '10px',
+      justifyContent: 'flex-start',
+    },
+    avatar: {
+      padding: '20px',
+    },
+    paperMsg: {
+      margin: '0 10px',
+    },
+    msgStyle: {
+      padding: '20px',
+      fontSize: '14px',
+      lineHeight: '150%',
+      bgcolor: '#FDF1F3',
+    },
+    text1: {
+      fontSize: '20px',
+      fontWeight: 'bold',
+    },
+
+    text2: {
+      fontSize: '16px',
+      fontWeight: 'bold',
+    },
+    text3: {
+      fontSize: '14px',
+    },
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <AppBar
@@ -79,6 +122,17 @@ export default function Message() {
       >
         <Toolbar />
 
+        <List>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <ArrowBackIosIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText fontWeight="bold" primary={'PREVIOUS PAGE'} />
+            </ListItemButton>
+          </ListItem>
+        </List>
+        <Divider />
         <List>
           <ListItem alignItems="flex-start" disablePadding>
             <ListItemButton>
@@ -153,9 +207,33 @@ export default function Message() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: '2' }}>
         <Toolbar />
-        <Box sx={{ display: 'flex', alignSelf: 'flex-end', p: 2 }}>
-          <Typography>text</Typography>
+        {/* MESSAGE AREA */}
+        <Box aria-label="Message right" sx={style.messageRight}>
+          <Paper sx={style.paperMsg}>
+            <Typography sx={style.msgStyle}>
+              Hello, Mr. Tabao. Nag notify po samin na gusto nyo pong i adopt si
+              Chops.
+            </Typography>
+          </Paper>
+          <Avatar {...stringAvatar('Jeffrey Sanches')} />
         </Box>
+        <Box aria-label="Message Left" sx={style.messageLeft}>
+          <Avatar {...stringAvatar('Stray Worth Saving')} />
+          <Paper sx={style.paperMsg}>
+            <Typography sx={style.msgStyle}>
+              Hello, opo gusto ko po sana i adopt si Chops. ano po ba ang mga
+              kailangan?
+            </Typography>
+          </Paper>
+        </Box>
+        <Box aria-label="Message right" sx={style.messageRight}>
+          <Paper sx={style.paperMsg}>
+            <Typography sx={style.msgStyle}>Okay Sige po</Typography>
+          </Paper>
+          <Avatar {...stringAvatar('Jeffrey Sanches')} />
+        </Box>
+
+        {/* TextField for message Sending */}
         <Paper
           elevation={3}
           sx={{
@@ -205,16 +283,12 @@ export default function Message() {
             <Avatar sx={{ height: '150px', width: '150px' }} />
           </Box>
           <Box noWrap sx={{ p: 1 }}>
-            <Typography variant="h6" fontWeight="bold">
-              Jeffrey Sanchez Tabao
-            </Typography>
-            <Link href="#">{'www.facebook.com'}</Link>
+            <Typography sx={style.text1}>Jeffrey Sanchez Tabao</Typography>
+            <Link href="#">
+              <Typography sx={style.text3}> {'www.facebook.com'}</Typography>
+            </Link>
             <Box>
-              <Typography
-                variant="h6"
-                fontWeight="bold"
-                sx={{ paddingTop: '20px' }}
-              >
+              <Typography sx={({ paddingTop: '20px' }, style.text2)}>
                 Location
               </Typography>
               <Typography variant="caption">
@@ -225,9 +299,7 @@ export default function Message() {
           </Box>
         </Box>
         <Box>
-          <Typography variant="h6" fontWeight="bold">
-            About
-          </Typography>
+          <Typography sx={style.text2}>About</Typography>
           <Typography variant="caption">
             My name is Jeffrey Tabao, and I believe that adopting pets from
             shelters is the same as rescuing them. What we don't realize is that
@@ -252,55 +324,55 @@ export default function Message() {
                 <ListItemText
                   sx={{ display: 'flex', alignItems: 'center' }}
                   primary={
-                    <Typography fontWeight="bold" paddingRight={1}>
+                    <Typography sx={style.text2} paddingRight={1}>
                       Name:
                     </Typography>
                   }
                   secondary={
-                    <Typography variant="caption">{'saipa'} </Typography>
+                    <Typography sx={style.text3}>{'saipa'} </Typography>
                   }
                 />
                 <ListItemText
                   sx={{ display: 'flex', alignItems: 'center' }}
                   primary={
-                    <Typography fontWeight="bold" paddingRight={1}>
+                    <Typography sx={style.text2} paddingRight={1}>
                       Age:
                     </Typography>
                   }
                   secondary={
-                    <Typography variant="caption">{'Adult'} </Typography>
+                    <Typography sx={style.text3}>{'Adult'} </Typography>
                   }
                 />
                 <ListItemText
                   sx={{ display: 'flex', alignItems: 'center' }}
                   primary={
-                    <Typography fontWeight="bold" paddingRight={1}>
+                    <Typography sx={style.text2} paddingRight={1}>
                       Gender:
                     </Typography>
                   }
                   secondary={
-                    <Typography variant="caption">{'Male'} </Typography>
+                    <Typography sx={style.text3}>{'Male'} </Typography>
                   }
                 />
                 <ListItemText
                   sx={{ display: 'flex', alignItems: 'center' }}
                   primary={
-                    <Typography fontWeight="bold" paddingRight={1}>
+                    <Typography sx={style.text2} paddingRight={1}>
                       Pet Category:
                     </Typography>
                   }
                   secondary={
-                    <Typography variant="caption">{'Dogs'} </Typography>
+                    <Typography sx={style.text3}>{'Dogs'} </Typography>
                   }
                 />
                 <ListItemText
                   primary={
-                    <Typography fontWeight="bold" paddingRight={1}>
+                    <Typography sx={style.text2} paddingRight={1}>
                       Description:
                     </Typography>
                   }
                   secondary={
-                    <Typography variant="caption">
+                    <Typography sx={style.text3}>
                       {
                         'his ears and tail were chopped off by some stupid Person.'
                       }
@@ -309,6 +381,10 @@ export default function Message() {
                 />
               </List>
             </Box>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button sx={{ ...global.button2xs }}>Decline</Button>
+            <Button sx={{ ...global.button1xs }}>Approve</Button>
           </Box>
         </Box>
       </Drawer>
