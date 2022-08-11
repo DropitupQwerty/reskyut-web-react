@@ -53,6 +53,16 @@ const global = {
     height: '40px',
     fontWeight: 'bold',
   },
+  button3xs: {
+    margin: '0 5px',
+    background: '#7F7F7F',
+    color: '#333',
+    padding: '10px',
+    borderRadius: '20px',
+    width: '120px',
+    height: '40px',
+    fontWeight: 'bold',
+  },
   textHeader: {
     color: '#E94057',
     fontWeight: 'bold',
