@@ -63,6 +63,10 @@ const global = {
     height: '40px',
     fontWeight: 'bold',
   },
+  paperDashboard: {
+    height: '196px',
+    padding: ' 20px',
+  },
   textHeader: {
     color: '#E94057',
     fontWeight: 'bold',

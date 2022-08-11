@@ -1,69 +1,135 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import { Paper, Box, Typography, Grid } from '@mui/material';
+import global from '../../styles/global';
+import { getUserAccount } from '../../fakeApi/fakeUserAccountApi';
+import { getAnimal } from '../../fakeApi/fakeAnimalAccount';
 
-export default function dashboard() {
-  return (
-    <ShelterAdminLayout>
-      <Box>
-        <Grid container justify="flex-end" spacing={2}>
-          <Grid item xs>
-            <Paper elevation={3} sx={{ height: '250px', borderRadius: '20px' }}>
-              <Typography variant="h5" sx={{ marginLeft: '5vh' }}>
-                <b>Wants to adopt TODAY</b>
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs>
-            <Paper
-              elevation={3}
-              sx={{
-                height: '250px',
+class Dashboard extends Component {
+  state = {
+    userAccounts: getUserAccount(),
+    animalData: getAnimal(),
+    animalAdopted: 0,
+  };
 
-                borderRadius: '20px',
-                marginLeft: '3vw',
-              }}
-            >
-              <Typography variant="h5" sx={{ marginLeft: '5vh' }}>
-                <b>Total Animals Posted</b>
-              </Typography>
-            </Paper>
+  render() {
+    const paperText = {
+      textAlign: 'center',
+      marginTop: '30px',
+    };
+    return (
+      <ShelterAdminLayout>
+        <Box>
+          <Grid container justify="flex-end" spacing={2}>
+            <Grid item xs={4}>
+              <Paper elevation={3} sx={{ ...global.paperDashboard }}>
+                <Typography variant="h5">
+                  <b>Wants to adopt TODAY</b>
+                </Typography>
+                <Box>
+                  <Typography variant="h2" sx={paperText}>
+                    {this.state.userAccounts.length}
+                  </Typography>
+                </Box>
+              </Paper>
+            </Grid>
+            <Grid item xs={4}>
+              <Paper
+                sx={{
+                  ...global.paperDashboard,
+                }}
+                elevation={3}
+              >
+                <Typography variant="h5">
+                  <b>Total Animals Posted</b>
+                </Typography>
+                <Box>
+                  <Typography variant="h2" sx={paperText}>
+                    {this.state.animalData.length}
+                  </Typography>
+                </Box>
+              </Paper>
+            </Grid>
+            <Grid item xs={4}>
+              <Paper
+                elevation={3}
+                sx={{
+                  ...global.paperDashboard,
+                }}
+              >
+                <Typography variant="h5">
+                  <b>Total Animals Adopted</b>
+                </Typography>
+                <Box>
+                  <Typography variant="h2" sx={paperText}>
+                    {this.state.animalAdopted}
+                  </Typography>
+                </Box>
+              </Paper>
+            </Grid>
+            <Grid item xs={8}>
+              <Paper sx={{ ...global.paperDashboard }} elevation={3}>
+                <Grid container spacing={10}>
+                  <Grid item xs={6}>
+                    <Box>
+                      <Typography variant="h5" sx={{ textAlign: 'center' }}>
+                        <b>Animal Name</b>
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                        marginTop: '10px',
+                      }}
+                    >
+                      {this.state.userAccounts
+                        .slice(0, 4)
+                        .map((userAccount) => (
+                          <Typography
+                            key={userAccount.id}
+                            sx={{ padding: '2px' }}
+                          >
+                            {userAccount.petAdopt}
+                          </Typography>
+                        ))}
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box>
+                      <Typography variant="h5" sx={{ textAlign: 'center' }}>
+                        <b>Wants to Adopt</b>
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                        marginTop: '10px',
+                      }}
+                    >
+                      {this.state.userAccounts
+                        .slice(0, 4)
+                        .map((userAccount) => (
+                          <Typography
+                            key={userAccount.id}
+                            sx={{ padding: '2px', alignText: 'center' }}
+                          >
+                            {userAccount.firstName}
+                          </Typography>
+                        ))}
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
           </Grid>
-          <Grid item xs>
-            <Paper
-              elevation={3}
-              sx={{
-                height: '250px',
-                borderRadius: '20px',
-                marginLeft: '3vw',
-              }}
-            >
-              <Typography variant="h5" sx={{ marginLeft: '5vh' }}>
-                <b>Total Animals Adopted</b>
-              </Typography>
-            </Paper>
-          </Grid>
-        </Grid>
-        <Paper
-          elevation={3}
-          sx={{
-            height: '650px',
-            width: '750px',
-            borderRadius: '20px',
-            marginTop: '5vh',
-          }}
-        >
-          <Grid container justify="flex-end">
-            <Typography variant="h5" sx={{ marginLeft: '5vh' }}>
-              <b>Animal Name</b>
-            </Typography>
-            <Typography variant="h5" sx={{ marginLeft: '30vh' }}>
-              <b>Wants to Adopt</b>
-            </Typography>
-          </Grid>
-        </Paper>
-        
-      </Box>
-    </ShelterAdminLayout>
-  );
+        </Box>
+      </ShelterAdminLayout>
+    );
+  }
 }
+
+export default Dashboard;

@@ -115,7 +115,7 @@ class AnimalListing extends Component {
       );
     }
 
-    return this.state.animalData.map((animal) => (
+    return this.state.animalData.slice(0, 4).map((animal) => (
       <TableRow key={animal.id}>
         <TableCell>{animal.ngo}</TableCell>
         <TableCell>{animal.name}</TableCell>

@@ -4,6 +4,7 @@ import { getAccount } from '../../fakeApi/fakeShelterAccountApi';
 import React, { Component } from 'react';
 import { Box } from '@mui/system';
 import { Paper, Typography } from '@mui/material';
+import global from '../../styles/global';
 
 class SaDashboard extends Component {
   state = {
@@ -18,11 +19,8 @@ class SaDashboard extends Component {
           <Paper
             elevation={3}
             sx={{
-              height: '250px',
-              borderRadius: '20px',
-              padding: '20px',
+              ...global.paperDashboard,
               width: '25vw',
-              height: '40vh',
             }}
           >
             <Box>
