@@ -18,7 +18,7 @@ const animalAccount = [
     pet: 'dog',
     description: 'someone stupid bullshit Cut his ears',
     ngo: 'Stray Worth Saving',
-    listed: 'listed',
+    listed: true,
   },
   {
     id: 2,
@@ -39,7 +39,7 @@ const animalAccount = [
     pet: 'dog',
     description: 'Nanganggat ng palihim hehe',
     ngo: 'SWS',
-    listed: 'unlisted',
+    listed: false,
   },
 ];
 

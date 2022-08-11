@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import global from '../../styles/global';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
+import Listed from '../../components/common/listed';
 import {
   Paper,
   Box,
@@ -20,6 +21,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Badge,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -96,6 +98,13 @@ class AnimalListing extends Component {
       </ShelterAdminLayout>
     );
   }
+  handleListed = (animal) => {
+    const animalData = [...this.state.animalData];
+    const index = animalData.indexOf(animal);
+    animalData[index] = { ...animalData[index] };
+    animalData[index].listed = !animalData[index].listed;
+    this.setState({ animalData });
+  };
 
   showDataTable() {
     if (this.state.animalData.length === 0) {
@@ -115,9 +124,11 @@ class AnimalListing extends Component {
         <TableCell>{animal.description}</TableCell>
 
         <TableCell align="right">
-          <Button sx={{ ...global.button1xs }}>Listed</Button>
+          <Listed
+            listed={animal.listed}
+            onToggleListed={() => this.handleListed(animal)}
+          />
         </TableCell>
-
         <TableCell align="right">
           <Button sx={{ ...global.button2xs }}>EDIT</Button>
         </TableCell>

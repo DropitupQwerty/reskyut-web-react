@@ -57,5 +57,14 @@ const global = {
     color: '#E94057',
     fontWeight: 'bold',
   },
+  badgeStatus: {
+    margin: '0 5px',
+    color: '#333',
+    padding: '10px',
+    borderRadius: '20px',
+    width: '120px',
+    height: '40px',
+    fontWeight: 'bold',
+  },
 };
 export default global;
