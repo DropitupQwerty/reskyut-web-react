@@ -16,7 +16,6 @@ import {
   Paper,
   Link,
   Divider,
-  SnackbarContent,
 } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
