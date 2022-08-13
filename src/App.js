@@ -33,7 +33,7 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<SignIn />}></Route>
-          <Route path="/dashboard" element={<Dashboard />}></Route>s{' '}
+          <Route path="/dashboard" element={<Dashboard />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/animallisting" element={<AnimalListing />}></Route>
           <Route path="/adoptionpage" element={<AdopptionPage />}></Route>
@@ -53,7 +53,7 @@ export default function App() {
           <Route path="/admin/listofngo" element={<ListOfNGO />}></Route>
           <Route path="/admin/postofngo" element={<PostOfNGO />}></Route>
           <Route path="/admin/addngo" element={<AddNgo />}></Route>
-          <Route path="/admin/viewngo" element={<ViewNgo />}></Route>
+          <Route path="/admin/viewngo/" element={<ViewNgo />}></Route>
           <Route path="/admin/viewanimal" element={<ViewAnimal />}></Route>
           {/* Page not Found */}
           <Route path="*" element={<PagenotFound />}></Route>

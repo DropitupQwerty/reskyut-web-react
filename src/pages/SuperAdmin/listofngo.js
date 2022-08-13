@@ -2,6 +2,7 @@
 import { getAccount } from '../../fakeApi/fakeShelterAccountApi';
 //
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
 
@@ -94,7 +95,9 @@ class ListOfNgo extends Component {
           >
             Disable
           </Button>
-          <Button sx={{ ...global.button1xs }}>View</Button>
+          <Button sx={{ ...global.button1xs }} component={Link} to={{}}>
+            View
+          </Button>
         </TableCell>
       </TableRow>
     ));
