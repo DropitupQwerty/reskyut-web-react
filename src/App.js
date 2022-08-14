@@ -54,7 +54,12 @@ export default function App() {
           <Route path="/admin/postofngo" element={<PostOfNGO />}></Route>
           <Route path="/admin/addngo" element={<AddNgo />}></Route>
           <Route path="/admin/viewngo/" element={<ViewNgo />}></Route>
-          <Route path="/admin/viewanimal" element={<ViewAnimal />}></Route>
+
+          <Route
+            exact
+            path="/admin/viewanimal"
+            component={(props) => <ViewAnimal {...props} />}
+          />
           {/* Page not Found */}
           <Route path="*" element={<PagenotFound />}></Route>
         </Routes>

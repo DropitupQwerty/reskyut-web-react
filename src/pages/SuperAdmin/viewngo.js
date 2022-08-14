@@ -17,115 +17,108 @@ import AppBarAdminLayout from '../../components/appBarAdminLayout';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Link } from 'react-router-dom';
 
-class ViewNgo extends Component {
-  render() {
-    const { data } = this.props.location;
-    console.log(data);
+const ViewNgo = (props) => {
+  console.log(props.account);
+  const style = {
+    textfield: {
+      width: '348px',
+      height: '49px',
+    },
+    textfield1: {
+      width: '830px',
+    },
+  };
+  return (
+    <AppBarAdminLayout>
+      <Box>
+        <Button
+          elevation={3}
+          variant="outlined"
+          color="primary"
+          sx={style.button}
+          component={Link}
+          to="/admin/listofngo "
+        >
+          <ArrowBackIosIcon />
+        </Button>
+        <Stack
+          direction="row"
+          justifyContent="center"
+          sx={{ marginTop: '20px' }}
+        >
+          <Avatar
+            sx={{ bgcolor: deepOrange[500], height: '200px', width: '200px' }}
+          ></Avatar>
+        </Stack>
 
-    const style = {
-      textfield: {
-        width: '348px',
-        height: '49px',
-      },
-      textfield1: {
-        width: '830px',
-      },
-    };
-    return (
-      <AppBarAdminLayout>
-        <Box>
-          <Button
-            elevation={3}
-            variant="outlined"
-            color="primary"
-            sx={style.button}
-            component={Link}
-            to="/admin/listofngo "
-          >
-            <ArrowBackIosIcon />
-          </Button>
-          <Stack
-            direction="row"
+        <Box display="flex" justifyContent="center">
+          <Grid
+            container
+            spacing={3}
             justifyContent="center"
-            sx={{ marginTop: '20px' }}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '12px',
+            }}
           >
-            <Avatar
-              sx={{ bgcolor: deepOrange[500], height: '200px', width: '200px' }}
-            ></Avatar>
-          </Stack>
-
-          <Box display="flex" justifyContent="center">
-            <Grid
-              container
-              spacing={3}
-              justifyContent="center"
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                marginTop: '12px',
-              }}
-            >
-              <Grid item xs={4}>
-                <Typography sx={{ fontWeight: 'bold' }}> Firstname</Typography>
-                <FormControl sx={style.textfield}>
-                  <OutlinedInput />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography sx={{ fontWeight: 'bold' }}> Middlename</Typography>
-                <FormControl sx={style.textfield}>
-                  <OutlinedInput />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography sx={{ fontWeight: 'bold' }}> Lastname</Typography>
-                <FormControl sx={style.textfield}>
-                  <OutlinedInput />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography sx={{ fontWeight: 'bold' }}> Username</Typography>
-                <FormControl sx={style.textfield}>
-                  <OutlinedInput />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography sx={{ fontWeight: 'bold' }}> Email</Typography>
-                <FormControl sx={style.textfield}>
-                  <OutlinedInput />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography sx={{ fontWeight: 'bold' }}>
-                  {' '}
-                  Display Name
-                </Typography>
-                <FormControl sx={style.textfield}>
-                  <OutlinedInput />
-                </FormControl>
-              </Grid>
-              <Grid item xs>
-                <Typography sx={{ fontWeight: 'bold' }}>
-                  Description of Shelter
-                </Typography>
-                <TextField multiline rows={5} sx={style.textfield1} />
-              </Grid>
-              <Grid item xs={4} sx={{ marginTop: '50px' }}>
-                <Button
-                  sx={{
-                    ...global.button2,
-                    fontWeight: 'bold',
-                  }}
-                >
-                  Disable
-                </Button>
-              </Grid>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: 'bold' }}> Firstname</Typography>
+              <FormControl sx={style.textfield}>
+                <OutlinedInput />
+              </FormControl>
             </Grid>
-          </Box>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: 'bold' }}> Middlename</Typography>
+              <FormControl sx={style.textfield}>
+                <OutlinedInput />
+              </FormControl>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: 'bold' }}> Lastname</Typography>
+              <FormControl sx={style.textfield}>
+                <OutlinedInput />
+              </FormControl>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: 'bold' }}> Username</Typography>
+              <FormControl sx={style.textfield}>
+                <OutlinedInput />
+              </FormControl>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: 'bold' }}> Email</Typography>
+              <FormControl sx={style.textfield}>
+                <OutlinedInput />
+              </FormControl>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: 'bold' }}> Display Name</Typography>
+              <FormControl sx={style.textfield}>
+                <OutlinedInput />
+              </FormControl>
+            </Grid>
+            <Grid item xs>
+              <Typography sx={{ fontWeight: 'bold' }}>
+                Description of Shelter
+              </Typography>
+              <TextField multiline rows={5} sx={style.textfield1} />
+            </Grid>
+            <Grid item xs={4} sx={{ marginTop: '50px' }}>
+              <Button
+                sx={{
+                  ...global.button2,
+                  fontWeight: 'bold',
+                }}
+              >
+                Disable
+              </Button>
+            </Grid>
+          </Grid>
         </Box>
-      </AppBarAdminLayout>
-    );
-  }
-}
+      </Box>
+    </AppBarAdminLayout>
+  );
+};
 
 export default ViewNgo;

@@ -95,9 +95,7 @@ class ListOfNgo extends Component {
           >
             Disable
           </Button>
-          <Button sx={{ ...global.button1xs }} component={Link} to={{}}>
-            View
-          </Button>
+          <Button sx={{ ...global.button1xs }}>View</Button>
         </TableCell>
       </TableRow>
     ));
