@@ -50,16 +50,15 @@ export default function App() {
           {/* Super Admin */}
           <Route path="/admin" element={<SaSignIn />}></Route>
           <Route path="/admin/dashboard" element={<SaDashboard />}></Route>
-          <Route path="/admin/listofngo" element={<ListOfNGO />}></Route>
           <Route path="/admin/postofngo" element={<PostOfNGO />}></Route>
           <Route path="/admin/addngo" element={<AddNgo />}></Route>
-          <Route path="/admin/viewngo/" element={<ViewNgo />}></Route>
-
+          <Route path="/admin/listofngo" element={<ListOfNGO />}></Route>
           <Route
-            exact
-            path="/admin/viewanimal"
-            component={(props) => <ViewAnimal {...props} />}
-          />
+            path="/admin/listofngo/viewngo/:id"
+            element={<ViewNgo />}
+          ></Route>
+
+          <Route exact path="/admin/viewanimal" />
           {/* Page not Found */}
           <Route path="*" element={<PagenotFound />}></Route>
         </Routes>

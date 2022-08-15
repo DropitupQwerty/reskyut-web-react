@@ -1,17 +1,25 @@
 import React from 'react';
 import { FormControl, OutlinedInput } from '@mui/material';
 
-const Input = ({ name, label, onChange, value, type, style }) => {
+const Input = ({
+  name,
+  label,
+  onChange,
+  value,
+  type,
+  style,
+  readOnly = false,
+}) => {
   return (
-    <FormControl>
+    <FormControl sx={style} fullWidth>
       <OutlinedInput
-        sx={style}
         placeholder={label}
         value={value}
         onChange={onChange}
         id={name}
         name={name}
         type={type}
+        readOnly={readOnly}
       />
     </FormControl>
   );

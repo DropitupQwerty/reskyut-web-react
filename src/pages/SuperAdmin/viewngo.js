@@ -15,17 +15,17 @@ import global from '../../styles/global';
 import { deepOrange } from '@mui/material/colors';
 import AppBarAdminLayout from '../../components/appBarAdminLayout';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { getAccount } from './../../fakeApi/fakeShelterAccountApi';
+import Input from '../../components/common/input';
 
-const ViewNgo = (props) => {
-  console.log(props.account);
+const ViewNgo = () => {
+  const { id } = useParams();
+  const account = getAccount(id);
+
   const style = {
     textfield: {
-      width: '348px',
       height: '49px',
-    },
-    textfield1: {
-      width: '830px',
     },
   };
   return (
@@ -48,6 +48,7 @@ const ViewNgo = (props) => {
         >
           <Avatar
             sx={{ bgcolor: deepOrange[500], height: '200px', width: '200px' }}
+            src={account.avatarPhoto}
           ></Avatar>
         </Stack>
 
@@ -64,50 +65,76 @@ const ViewNgo = (props) => {
           >
             <Grid item xs={4}>
               <Typography sx={{ fontWeight: 'bold' }}> Firstname</Typography>
-              <FormControl sx={style.textfield}>
-                <OutlinedInput />
-              </FormControl>
+              <Input
+                sx={style.textfield}
+                value={account.firstName}
+                id="firstname"
+                readOnly={true}
+              />
             </Grid>
             <Grid item xs={4}>
               <Typography sx={{ fontWeight: 'bold' }}> Middlename</Typography>
-              <FormControl sx={style.textfield}>
-                <OutlinedInput />
-              </FormControl>
+              <Input
+                sx={style.textfield}
+                value={account.middleName}
+                id="middlename"
+                readOnly={true}
+              />
             </Grid>
             <Grid item xs={4}>
               <Typography sx={{ fontWeight: 'bold' }}> Lastname</Typography>
-              <FormControl sx={style.textfield}>
-                <OutlinedInput />
-              </FormControl>
+              <Input
+                sx={style.textfield}
+                value={account.lastName}
+                id="lastname"
+                readOnly={true}
+              />
             </Grid>
             <Grid item xs={4}>
               <Typography sx={{ fontWeight: 'bold' }}> Username</Typography>
-              <FormControl sx={style.textfield}>
-                <OutlinedInput />
-              </FormControl>
+              <Input
+                sx={style.textfield}
+                value={account.userName}
+                id="username"
+                readOnly={true}
+              />
             </Grid>
             <Grid item xs={4}>
               <Typography sx={{ fontWeight: 'bold' }}> Email</Typography>
-              <FormControl sx={style.textfield}>
-                <OutlinedInput />
-              </FormControl>
+              <Input
+                sx={style.textfield}
+                value={account.userEmail}
+                id="email"
+                readOnly={true}
+              />
             </Grid>
             <Grid item xs={4}>
               <Typography sx={{ fontWeight: 'bold' }}> Display Name</Typography>
-              <FormControl sx={style.textfield}>
-                <OutlinedInput />
-              </FormControl>
+              <Input
+                sx={style.textfield}
+                value={account.displayName}
+                id="displayName"
+                readOnly={true}
+              />
             </Grid>
             <Grid item xs>
               <Typography sx={{ fontWeight: 'bold' }}>
                 Description of Shelter
               </Typography>
-              <TextField multiline rows={5} sx={style.textfield1} />
+              <TextField multiline value={account.desc} rows={5} fullWidth />
             </Grid>
-            <Grid item xs={4} sx={{ marginTop: '50px' }}>
+            <Grid
+              item
+              xs={4}
+              sx={{
+                marginTop: '50px',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
               <Button
                 sx={{
-                  ...global.button2,
+                  ...global.button2Small,
                   fontWeight: 'bold',
                 }}
               >

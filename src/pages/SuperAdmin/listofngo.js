@@ -1,5 +1,5 @@
 //importing dummy api
-import { getAccount } from '../../fakeApi/fakeShelterAccountApi';
+import { getAccounts } from '../../fakeApi/fakeShelterAccountApi';
 //
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -27,7 +27,7 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 //
 
 class ListOfNgo extends Component {
-  state = { accounts: getAccount() };
+  state = { accounts: getAccounts() };
 
   handleDelete = (account) => {
     const accounts = this.state.accounts.filter((a) => a.id !== account.id);
@@ -95,7 +95,13 @@ class ListOfNgo extends Component {
           >
             Disable
           </Button>
-          <Button sx={{ ...global.button1xs }}>View</Button>
+          <Button
+            sx={{ ...global.button1xs }}
+            component={Link}
+            to={`/admin/listofngo/viewngo/${account.id}`}
+          >
+            View
+          </Button>
         </TableCell>
       </TableRow>
     ));

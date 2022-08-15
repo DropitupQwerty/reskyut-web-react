@@ -14,7 +14,7 @@ const account = [
   },
   {
     id: '2',
-    avatarPhoto: img1,
+    avatarPhoto: '',
     firstName: 'Jeffrey',
     middleName: ' DKA',
     lastName: 'Sanchez',
@@ -25,8 +25,11 @@ const account = [
   },
 ];
 
-export function getAccount() {
+export function getAccounts() {
   return account;
+}
+export function getAccount(id) {
+  return account.find((a) => a.id === id);
 }
 
 export function deleteAccount(id) {
