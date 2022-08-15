@@ -1,5 +1,5 @@
 import SuperAdminLayout from '../../components/superAdminLayout';
-import { getAccount } from '../../fakeApi/fakeShelterAccountApi';
+import { getAccounts } from '../../fakeApi/fakeShelterAccountApi';
 
 import React, { Component } from 'react';
 import { Box } from '@mui/system';
@@ -8,7 +8,7 @@ import global from '../../styles/global';
 
 class SaDashboard extends Component {
   state = {
-    accounts: getAccount(),
+    accounts: getAccounts(),
   };
   render() {
     const { length: dataCount } = this.state.accounts;
