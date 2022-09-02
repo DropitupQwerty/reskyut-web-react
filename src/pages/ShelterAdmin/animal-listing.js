@@ -1,6 +1,6 @@
 //fake api
 
-import { getAnimal } from '../../fakeApi/fakeAnimalAccount';
+import { getAnimals } from '../../fakeApi/fakeAnimalAccount';
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -28,7 +28,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 
 class AnimalListing extends Component {
-  state = { animalData: getAnimal() };
+  state = { animalData: getAnimals() };
 
   render() {
     return (

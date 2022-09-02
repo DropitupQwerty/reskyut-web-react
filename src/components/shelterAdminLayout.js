@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import {
   Box,
@@ -12,7 +12,6 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Badge,
 } from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
@@ -105,6 +104,24 @@ export default function ShelterAdminLayout({ children }) {
     setOpen(false);
   };
 
+  const drawermenus = [
+    {
+      label: 'Dashboard',
+      link: 'dashboard',
+      icon: <DashboardIcon color="primary" />,
+    },
+    {
+      label: 'Animal Listing',
+      link: 'animallisting',
+      icon: <ViewListIcon color="primary" />,
+    },
+    {
+      label: 'Adoption Page',
+      link: 'adoptionpage',
+      icon: <PetsIcon color="primary" />,
+    },
+  ];
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -142,107 +159,40 @@ export default function ShelterAdminLayout({ children }) {
         <Divider />
 
         <List sx={{ flexGrow: 1 }}>
-          {/* Dashboard */}
-          <ListItem
-            button
-            sx={{
-              color: '#5f7161',
-              minHeight: 48,
-              justifyContent: open ? 'initial' : 'center',
-              px: 3,
-            }}
-            component={Link}
-            to="/Dashboard"
-            selected={window.location.pathname.includes('/Dashboard')}
-          >
-            <ListItemIcon
+          {drawermenus.map((drawermenu) => (
+            <ListItem
+              key={drawermenu.label}
+              button
               sx={{
-                minWidth: 0,
-                mr: open ? 3 : 'auto',
-                justifyContent: 'center',
+                color: '#5f7161',
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 3,
               }}
+              component={Link}
+              to={`/${drawermenu.link}`}
+              selected={window.location.pathname.includes(
+                `/${drawermenu.link}`
+              )}
             >
-              <DashboardIcon color="primary" />
-            </ListItemIcon>
-            <ListItemText
-              primary="Dashboard  "
-              sx={{ opacity: open ? 1 : 0 }}
-            />
-          </ListItem>
-          {/* Dashboard */}
-          {/* AnimalListing */}
-          <ListItem
-            button
-            sx={{
-              color: '#5f7161',
-              minHeight: 48,
-              justifyContent: open ? 'initial' : 'center',
-              px: 3,
-            }}
-            component={Link}
-            to="/animallisting"
-            selected={window.location.pathname.includes('/animallisting')}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: open ? 3 : 'auto',
-                justifyContent: 'center',
-              }}
-            >
-              <ViewListIcon color="primary" />
-            </ListItemIcon>
-            <ListItemText
-              primary="Animal Listing  "
-              sx={{ opacity: open ? 1 : 0 }}
-            />
-          </ListItem>
-          {/* AnimalListing */}
-          {/* Adopption Page */}
-
-          <ListItem
-            button
-            sx={{
-              color: '#5f7161',
-              minHeight: 48,
-              justifyContent: open ? 'initial' : 'center',
-              px: 3,
-            }}
-            secondaryAction={
-              <Badge
-                max={1e6}
-                badgeContent={99}
-                color="primary"
-                overlap="circular"
+              <ListItemIcon
                 sx={{
-                  marginBottom: '45px',
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
                 }}
+              >
+                {drawermenu.icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={`${drawermenu.label}`}
+                sx={{ opacity: open ? 1 : 0 }}
               />
-            }
-            component={Link}
-            to="/adoptionpage "
-            selected={window.location.pathname.includes('/adoptionpage')}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: open ? 3 : 'auto',
-                justifyContent: 'center',
-              }}
-            >
-              <PetsIcon color="primary" />
-            </ListItemIcon>
-
-            <ListItemText
-              primary="Adoption Page  "
-              sx={{ opacity: open ? 1 : 0 }}
-            />
-          </ListItem>
-
-          {/* Adopption Page */}
+            </ListItem>
+          ))}
         </List>
+
         <List>
-          {' '}
           <Divider />
           {/* Profile */}
           <ListItem

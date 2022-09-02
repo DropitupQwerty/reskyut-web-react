@@ -19,7 +19,6 @@ import PostOfNGO from './pages/SuperAdmin/postofngo';
 import SaSignIn from './pages/SuperAdmin/sasign-in';
 import AddNgo from './pages/SuperAdmin/addngo';
 import ViewNgo from './pages/SuperAdmin/viewngo';
-import ViewAnimal from './pages/SuperAdmin/viewanimal';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -33,11 +32,15 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<SignIn />}></Route>
-          <Route path="/dashboard" element={<Dashboard />}></Route>
-          <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/animallisting" element={<AnimalListing />}></Route>
-          <Route path="/adoptionpage" element={<AdopptionPage />}></Route>
-          <Route path="/message" element={<Message />}></Route>
+          <Route path="/dashboard" exact element={<Dashboard />}></Route>
+          <Route path="/profile" exact element={<Profile />}></Route>
+          <Route
+            path="/animallisting"
+            exact
+            element={<AnimalListing />}
+          ></Route>
+          <Route path="/adoptionpage" exact element={<AdopptionPage />}></Route>
+          <Route path="/message" exact element={<Message />}></Route>
           {/* Animal Listing */}
           <Route
             path="/animallisting/addanimal"

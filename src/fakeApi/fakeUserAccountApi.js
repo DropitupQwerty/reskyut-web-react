@@ -1,3 +1,8 @@
+import { getAnimal } from './fakeAnimalAccount';
+
+const petChoice = getAnimal(getUserAccount.petAdopt);
+console.log(petChoice);
+
 const userAccount = [
   {
     id: 1,
@@ -5,7 +10,7 @@ const userAccount = [
     middleName: 'Sabado',
     lastName: 'Valderama',
     fbLink: 'https://www.facebook.com/vjacoballen/',
-    petAdopt: 'saipa',
+    petAdopt: 1,
   },
   {
     id: 2,
@@ -13,7 +18,7 @@ const userAccount = [
     middleName: 'Sanchez',
     lastName: 'Tabao',
     fbLink: 'https://www.facebook.com/SaintJep',
-    petAdopt: 'Chops',
+    petAdopt: 2,
   },
   {
     id: 3,
@@ -21,7 +26,7 @@ const userAccount = [
     middleName: 'DKA',
     lastName: 'liwanag',
     fbLink: 'https://www.facebook.com/null/',
-    petAdopt: 'dudong',
+    petAdopt: 3,
   },
   {
     id: 4,
@@ -29,7 +34,7 @@ const userAccount = [
     middleName: 'DKA',
     lastName: 'De leon',
     fbLink: 'https://www.facebook.com/null/',
-    petAdopt: 'betlog',
+    petAdopt: 4,
   },
   {
     id: 5,
@@ -37,10 +42,13 @@ const userAccount = [
     middleName: 'DKA',
     lastName: 'De leon',
     fbLink: 'https://www.facebook.com/null/',
-    petAdopt: 'betlog',
+    petAdopt: 5,
   },
 ];
-
-export function getUserAccount() {
+export function getUserAccounts() {
   return userAccount;
+}
+
+export function getUserAccount(id) {
+  return userAccount.find((u) => u.id === id);
 }

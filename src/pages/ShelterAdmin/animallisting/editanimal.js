@@ -8,7 +8,6 @@ import {
   IconButton,
   FormControl,
   OutlinedInput,
-  Input,
   Grid,
   Select,
   MenuItem,
@@ -16,7 +15,6 @@ import {
   Paper,
 } from '@mui/material';
 
-import AddIcon from '@mui/icons-material/Add';
 import ImageIcon from '@mui/icons-material/Image';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 

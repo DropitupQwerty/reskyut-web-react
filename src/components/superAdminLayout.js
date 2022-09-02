@@ -279,8 +279,6 @@ export default function SuperAdminLayout({ children }) {
             </ListItemIcon>
             <ListItemText primary="Profile  " sx={{ opacity: open ? 1 : 0 }} />
           </ListItem>
-          {/* Profile */}
-          {/* Logout */}
           <ListItem
             button
             sx={{

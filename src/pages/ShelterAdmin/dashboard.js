@@ -2,14 +2,19 @@ import React, { Component } from 'react';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import { Paper, Box, Typography, Grid } from '@mui/material';
 import global from '../../styles/global';
-import { getUserAccount } from '../../fakeApi/fakeUserAccountApi';
-import { getAnimal } from '../../fakeApi/fakeAnimalAccount';
+import { getUserAccounts } from '../../fakeApi/fakeUserAccountApi';
+import { getAnimals, getAnimal } from '../../fakeApi/fakeAnimalAccount';
 
 class Dashboard extends Component {
   state = {
-    userAccounts: getUserAccount(),
-    animalData: getAnimal(),
+    userAccounts: getUserAccounts(),
+    animalDatas: getAnimals(),
     animalAdopted: 0,
+  };
+  handleGetAnimal = (userAccountsId) => {
+    const animal = getAnimal(userAccountsId);
+    console.log(animal.name);
+    return animal.name;
   };
 
   render() {
@@ -45,7 +50,7 @@ class Dashboard extends Component {
                 </Typography>
                 <Box>
                   <Typography variant="h2" sx={paperText}>
-                    {this.state.animalData.length}
+                    {this.state.animalDatas.length}
                   </Typography>
                 </Box>
               </Paper>
@@ -91,7 +96,7 @@ class Dashboard extends Component {
                             key={userAccount.id}
                             sx={{ padding: '2px' }}
                           >
-                            {userAccount.petAdopt}
+                            {this.handleGetAnimal(userAccount.petAdopt)}
                           </Typography>
                         ))}
                     </Box>

@@ -4,7 +4,6 @@ import React from 'react';
 export default function AppBarLayout({ children }) {
   return (
     <Box>
-      {' '}
       <AppBar position="fixed">
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Toolbar>

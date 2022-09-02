@@ -8,6 +8,7 @@ const Input = ({
   value,
   type,
   style,
+  error,
   readOnly = false,
 }) => {
   return (
@@ -20,6 +21,7 @@ const Input = ({
         name={name}
         type={type}
         readOnly={readOnly}
+        error={error}
       />
     </FormControl>
   );

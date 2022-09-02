@@ -1,5 +1,6 @@
 //fake api
-import { getUserAccount } from '../../fakeApi/fakeUserAccountApi';
+import { getUserAccounts } from '../../fakeApi/fakeUserAccountApi';
+import { getAnimal } from '../../fakeApi/fakeAnimalAccount';
 
 import {
   Paper,
@@ -24,7 +25,8 @@ import PetsIcon from '@mui/icons-material/Pets';
 
 class Adoptionpage extends Component {
   state = {
-    userAccounts: getUserAccount(),
+    userAccounts: getUserAccounts(),
+    userAnimal: getAnimal(),
   };
 
   handleDecline = (userAccount) => {
@@ -33,6 +35,12 @@ class Adoptionpage extends Component {
     );
     this.setState({ userAccounts });
   };
+  handleGetAnimal = (userAccountsId) => {
+    const animal = getAnimal(userAccountsId);
+    console.log(animal.name);
+    return animal.name;
+  };
+
   render() {
     return (
       <ShelterAdminLayout>
@@ -77,9 +85,13 @@ class Adoptionpage extends Component {
                     {userAccount.lastName}
                   </TableCell>
                   <TableCell>
-                    <Link href={userAccount.fbLink}>{userAccount.fbLink}</Link>
+                    <Link href={userAccount.fbLink} target="_blank">
+                      {userAccount.fbLink}
+                    </Link>
                   </TableCell>
-                  <TableCell>{userAccount.petAdopt}</TableCell>
+                  <TableCell>
+                    {this.handleGetAnimal(userAccount.petAdopt)}
+                  </TableCell>
                   <TableCell>
                     <Button
                       sx={{ ...global.button2xs }}

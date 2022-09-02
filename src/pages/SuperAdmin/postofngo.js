@@ -1,6 +1,6 @@
 //fakeApi
 
-import { getAnimal } from '../../fakeApi/fakeAnimalAccount';
+import { getAnimals } from '../../fakeApi/fakeAnimalAccount';
 
 //
 import SuperAdminLayout from '../../components/superAdminLayout';
@@ -13,7 +13,6 @@ import {
   Grid,
   Button,
   Checkbox,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -27,7 +26,7 @@ import LayersIcon from '@mui/icons-material/Layers';
 import ListOfNGO from './listofngo';
 
 class PostOfNgo extends Component {
-  state = { animalData: getAnimal() };
+  state = { animalData: getAnimals() };
   render() {
     return (
       <SuperAdminLayout>

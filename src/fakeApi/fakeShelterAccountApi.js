@@ -8,9 +8,9 @@ const account = [
     middleName: ' Sabado',
     lastName: 'Valderama',
     userName: 'JacobAllen',
-    userEmail: 'vjacoballen@yahoo.com',
+    userEmail: 'StrayWorthSaving@gmail.com',
     displayName: 'Stray Worth Saving',
-    desc: ' This Animal Shelter is the best shelter',
+    desc: 'This page is dedicated to rescuing and helping stray dogs and cats especially those in pain We are hoping those who will follow this page can extend prayers and help to these poor abused animals',
   },
   {
     id: '2',

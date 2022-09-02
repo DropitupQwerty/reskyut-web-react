@@ -13,99 +13,91 @@ import {
 import React from 'react';
 import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
-import { deepOrange } from '@mui/material/colors';
+import Input from '../../components/common/input';
+import Form from '../../components/common/form';
 
-export default function AddNgo() {
-  // style
-  const style = {
-    textfield: {
-      width: '348px',
-      height: '49px',
-    },
-    textfield1: {
-      width: '830px',
-    },
-  };
+class AddNgo extends Form {
+  render() {
+    const style = {
+      textfield: {
+        width: '348px',
+        height: '49px',
+      },
+      textfield1: {
+        width: '830px',
+      },
+    };
 
-  return (
-    <SuperAdminLayout>
-      <Box>
-        <Stack
-          direction="row"
-          justifyContent="center"
-          sx={{ marginTop: '20px' }}
-        >
-          <Avatar
-            sx={{ bgcolor: deepOrange[500], height: '200px', width: '200px' }}
-          ></Avatar>
-        </Stack>
-
-        <Box display="flex" justifyContent="center">
-          <Grid
-            container
-            spacing={3}
+    return (
+      <SuperAdminLayout>
+        <Box>
+          <Stack
+            direction="row"
             justifyContent="center"
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: '12px',
-            }}
+            sx={{ marginTop: '20px' }}
           >
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: 'bold' }}> Firstname</Typography>
-              <FormControl sx={style.textfield}>
-                <OutlinedInput />
-              </FormControl>
+            <Avatar sx={{ height: '200px', width: '200px' }}></Avatar>
+          </Stack>
+
+          <Box display="flex" justifyContent="center">
+            <Grid
+              container
+              spacing={3}
+              justifyContent="center"
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '12px',
+              }}
+            >
+              <Grid item xs={4}>
+                <Typography sx={{ fontWeight: 'bold' }}> Firstname</Typography>
+                <Input />
+              </Grid>
+              <Grid item xs={4}>
+                <Typography sx={{ fontWeight: 'bold' }}> Middlename</Typography>
+                <Input />
+              </Grid>
+              <Grid item xs={4}>
+                <Typography sx={{ fontWeight: 'bold' }}> Lastname</Typography>
+                <Input />
+              </Grid>
+              <Grid item xs={4}>
+                <Typography sx={{ fontWeight: 'bold' }}> Username</Typography>
+                <Input />
+              </Grid>
+              <Grid item xs={4}>
+                <Typography sx={{ fontWeight: 'bold' }}> Email</Typography>
+                <Input />
+              </Grid>
+              <Grid item xs={4}>
+                <Typography sx={{ fontWeight: 'bold' }}>
+                  Display Name
+                </Typography>
+                <Input />
+              </Grid>
+              <Grid item xs>
+                <Typography sx={{ fontWeight: 'bold' }}>
+                  Description of Shelter
+                </Typography>
+                <TextField multiline rows={5} sx={style.textfield1} />
+              </Grid>
+              <Grid item xs={4} sx={{ marginTop: '50px' }}>
+                <Button
+                  sx={{
+                    ...global.button2,
+                    fontWeight: 'bold',
+                  }}
+                >
+                  Create Account
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: 'bold' }}> Middlename</Typography>
-              <FormControl sx={style.textfield}>
-                <OutlinedInput />
-              </FormControl>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: 'bold' }}> Lastname</Typography>
-              <FormControl sx={style.textfield}>
-                <OutlinedInput />
-              </FormControl>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: 'bold' }}> Username</Typography>
-              <FormControl sx={style.textfield}>
-                <OutlinedInput />
-              </FormControl>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: 'bold' }}> Email</Typography>
-              <FormControl sx={style.textfield}>
-                <OutlinedInput />
-              </FormControl>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: 'bold' }}> Display Name</Typography>
-              <FormControl sx={style.textfield}>
-                <OutlinedInput />
-              </FormControl>
-            </Grid>
-            <Grid item xs>
-              <Typography sx={{ fontWeight: 'bold' }}>
-                Description of Shelter
-              </Typography>
-              <TextField multiline rows={5} sx={style.textfield1} />
-            </Grid>
-            <Grid item xs={4} sx={{ marginTop: '50px' }}>
-              <Button
-                sx={{
-                  ...global.button2,
-                  fontWeight: 'bold',
-                }}
-              >
-                Create Account
-              </Button>
-            </Grid>
-          </Grid>
+          </Box>
         </Box>
-      </Box>
-    </SuperAdminLayout>
-  );
+      </SuperAdminLayout>
+    );
+  }
 }
+
+export default AddNgo;

@@ -16,7 +16,7 @@ const animalAccount = [
     age: '2',
     gender: 'male',
     pet: 'dog',
-    description: 'someone stupid bullshit Cut his ears',
+    description: 'Someone Cut his ears',
     ngo: 'Stray Worth Saving',
     listed: true,
   },
@@ -37,12 +37,79 @@ const animalAccount = [
     age: '1',
     gender: 'dinosaur',
     pet: 'dog',
-    description: 'Nanganggat ng palihim hehe',
+    description: 'Got lost but find by someone',
+    ngo: 'Stray Worth Saving',
+    listed: false,
+  },
+  {
+    id: 3,
+    img: {
+      1: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      2: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      3: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      4: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      5: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      6: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      7: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      8: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      9: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+    },
+    name: 'Rendon',
+    age: '1',
+    gender: 'male',
+    pet: 'cat',
+    description: 'This dog have eye problems',
+    ngo: 'Stray Worth Saving',
+    listed: false,
+  },
+  {
+    id: 4,
+    img: {
+      1: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      2: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      3: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      4: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      5: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      6: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      7: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      8: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      9: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+    },
+    name: 'Casper',
+    age: '1',
+    gender: 'male',
+    pet: 'dog',
+    description: 'Energetic and Playful Dog',
     ngo: 'SWS',
+    listed: false,
+  },
+  {
+    id: 5,
+    img: {
+      1: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      2: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      3: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      4: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      5: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      6: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      7: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      8: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+      9: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
+    },
+    name: 'Jeff',
+    age: '1',
+    gender: 'female',
+    pet: 'cat',
+    description: 'her left arm remove because of an accident',
+    ngo: 'Paws',
     listed: false,
   },
 ];
 
-export function getAnimal() {
+export function getAnimals() {
   return animalAccount;
+}
+
+export function getAnimal(id) {
+  return animalAccount.find((a) => a.id === id);
 }
