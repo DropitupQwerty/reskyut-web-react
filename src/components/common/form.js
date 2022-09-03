@@ -8,9 +8,9 @@ class Form extends Component {
     data: {},
     errors: {},
   };
-  validate = () => {
-    const options = { abortEarly: true };
 
+  validate = () => {
+    const options = { abortEarly: false };
     const { error } = Joi.validate(this.state.data, this.schema, options);
     if (!error) return null;
 
@@ -20,8 +20,8 @@ class Form extends Component {
   };
 
   validateProperty = ({ name, value }) => {
-    const schema = { [name]: this.schema[name] };
     const obj = { [name]: value };
+    const schema = { [name]: this.schema[name] };
     const { error } = Joi.validate(obj, schema);
     return error ? error.details[0].message : null;
   };
@@ -30,43 +30,44 @@ class Form extends Component {
     e.preventDefault();
 
     const errors = this.validate();
-    console.log(errors);
     this.setState({ errors: errors || {} });
-
     if (errors) return;
+
+    this.doSubmit();
   };
 
   handleChange = ({ currentTarget: input }) => {
-    const errors = { ...this.state.error };
+    const errors = { ...this.state.errors };
     const errorMessage = this.validateProperty(input);
     if (errorMessage) errors[input.name] = errorMessage;
     else delete errors[input.name];
 
     const data = { ...this.state.data };
     data[input.name] = input.value;
+
     this.setState({ data, errors });
   };
 
   renderButton = (label, style) => {
     return (
-      <Button sx={style} disabled={this.validate()} className="btn btn-primary">
+      <Button style={style} type="submit" disabled={this.validate()}>
         {label}
       </Button>
     );
   };
 
-  renderInput = (name, label, type = 'text', placeholder, style) => {
+  renderInput = (name, label, type = 'text', style, readOnly = true) => {
     const { data, errors } = this.state;
     return (
       <Input
-        style={style}
         type={type}
-        onChange={this.handleChange}
-        placeholder={placeholder}
-        label={label}
         name={name}
         value={data[name]}
         error={errors[name]}
+        placeholder={label}
+        onChange={this.handleChange}
+        style={style}
+        readOnly={readOnly}
       />
     );
   };

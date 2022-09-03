@@ -1,25 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
 //import Image
 import signInBg from '../src/assets/signInBg.png';
 import logoReskyut from '../src/assets/logoReskyut.png';
 
 import { Box, Paper, Typography, Grid, Button } from '@mui/material';
-import Input from './components/common/input';
+import Form from './components/common/form';
+import Joi from 'joi-browser';
 
-class SignIn extends Component {
-  state = { account: { email: '', password: '' } };
-
-  handleChange = ({ currentTarget: input }) => {
-    const account = { ...this.state.account };
-    account[input.name] = input.value;
-    this.setState({ account });
+class SignIn extends Form {
+  state = {
+    data: { email: '', password: '' },
+    errors: {},
   };
 
-  handleSubmit = (e) => {
-    e.preventDefault();
+  schema = {
+    email: Joi.string().required().email().label('email'),
+    password: Joi.string().required().min(6).label('password'),
+  };
 
-    const email = this.email.current.value;
-    console.log(email);
+  doSubmit = () => {
+    // Call the server
+    console.log('Submitted');
   };
 
   render() {
@@ -46,8 +47,6 @@ class SignIn extends Component {
         width: '410px',
       },
     };
-
-    const { account } = this.state;
     return (
       <Box sx={style.boxContainer}>
         <Paper elevation={3} sx={style.paper1}>
@@ -68,26 +67,41 @@ class SignIn extends Component {
             <form onSubmit={this.handleSubmit}>
               <Grid container spacing={2} direction="column">
                 <Grid item xs={2}>
-                  <Input
+                  {/* <Input
                     style={style.TextField}
                     name="email"
                     label="Email"
                     value={account.email}
                     onChange={this.handleChange}
-                  />
+                  /> */}
+                  {this.renderInput(
+                    'email',
+                    'Email',
+                    'email',
+                    style.TextField,
+                    false
+                  )}
                 </Grid>
                 <Grid item>
-                  <Input
+                  {/* <Input
                     style={style.TextField}
                     name="password"
                     label="Password"
                     type="password"
                     value={account.password}
                     onChange={this.handleChange}
-                  />
+                  /> */}
+                  {this.renderInput(
+                    'password',
+                    'Password',
+                    'password',
+                    style.TextField,
+                    false
+                  )}
                 </Grid>
                 <Grid item>
-                  <Button sx={style.TextField}>LOGIN</Button>
+                  {/* <Button sx={style.TextField}>LOGIN</Button> */}
+                  {this.renderButton('Login', style.TextField)}
                 </Grid>
               </Grid>
             </form>

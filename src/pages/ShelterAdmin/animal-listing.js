@@ -9,19 +9,16 @@ import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import Listed from '../../components/common/listed';
 import {
   Paper,
-  Box,
   Typography,
   Grid,
   Button,
   Checkbox,
-  IconButton,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Badge,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';

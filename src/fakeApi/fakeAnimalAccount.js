@@ -46,13 +46,6 @@ const animalAccount = [
     img: {
       1: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
       2: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
-      3: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
-      4: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
-      5: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
-      6: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
-      7: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
-      8: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
-      9: 'http://cdn.akc.org/content/article-body-image/samoyed_puppy_dog_pictures.jpg',
     },
     name: 'Rendon',
     age: '1',
