@@ -1,9 +1,12 @@
+//fake api's
+import { getAnimals, getAnimal } from '../../fakeApi/fakeAnimalAccount';
+import { getUserAccounts } from '../../fakeApi/fakeUserAccountApi';
+
 import React, { Component } from 'react';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
+
 import { Paper, Box, Typography, Grid } from '@mui/material';
 import global from '../../styles/global';
-import { getUserAccounts } from '../../fakeApi/fakeUserAccountApi';
-import { getAnimals, getAnimal } from '../../fakeApi/fakeAnimalAccount';
 
 class Dashboard extends Component {
   state = {
@@ -11,6 +14,7 @@ class Dashboard extends Component {
     animalDatas: getAnimals(),
     animalAdopted: 0,
   };
+
   handleGetAnimal = (userAccountsId) => {
     const animal = getAnimal(userAccountsId);
     console.log(animal.name);
@@ -22,12 +26,13 @@ class Dashboard extends Component {
       textAlign: 'center',
       marginTop: '30px',
     };
+
     return (
       <ShelterAdminLayout>
         <Box>
-          <Grid container justify="flex-end" spacing={2}>
+          <Grid container spacing={2}>
             <Grid item xs={4}>
-              <Paper elevation={3} sx={{ ...global.paperDashboard }}>
+              <Paper sx={{ ...global.paperDashboard }}>
                 <Typography variant="h5">
                   <b>Wants to adopt TODAY</b>
                 </Typography>
@@ -38,13 +43,9 @@ class Dashboard extends Component {
                 </Box>
               </Paper>
             </Grid>
+
             <Grid item xs={4}>
-              <Paper
-                sx={{
-                  ...global.paperDashboard,
-                }}
-                elevation={3}
-              >
+              <Paper sx={{ ...global.paperDashboard }}>
                 <Typography variant="h5">
                   <b>Total Animals Posted</b>
                 </Typography>
@@ -55,13 +56,9 @@ class Dashboard extends Component {
                 </Box>
               </Paper>
             </Grid>
+
             <Grid item xs={4}>
-              <Paper
-                elevation={3}
-                sx={{
-                  ...global.paperDashboard,
-                }}
-              >
+              <Paper sx={{ ...global.paperDashboard }}>
                 <Typography variant="h5">
                   <b>Total Animals Adopted</b>
                 </Typography>
@@ -72,8 +69,9 @@ class Dashboard extends Component {
                 </Box>
               </Paper>
             </Grid>
+
             <Grid item xs={8}>
-              <Paper sx={{ ...global.paperDashboard }} elevation={3}>
+              <Paper sx={{ ...global.paperDashboard }}>
                 <Grid container spacing={10}>
                   <Grid item xs={6}>
                     <Box>

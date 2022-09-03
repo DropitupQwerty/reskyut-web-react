@@ -18,29 +18,27 @@ import {
 import ImageIcon from '@mui/icons-material/Image';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
-import { Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getAnimal } from './../../../fakeApi/fakeAnimalAccount';
 
 export default function AddAnimal() {
   const [gender, setGender] = React.useState('');
   const [status, setStatus] = React.useState('');
   const [category, setCategory] = React.useState('');
 
-  const style = {
-    button: {
-      width: '52px',
-      height: '52px',
-      borderRadius: '10px',
-      border: '1px solid #E8E6EA',
-      m: 1,
-    },
-  };
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  const petData = getAnimal(id);
 
   const genderHandleChange = (event) => {
     setGender(event.target.value);
   };
+
   const statusHandleChange = (event) => {
     setStatus(event.target.value);
   };
+
   const categoryHandleChange = (event) => {
     setCategory(event.target.value);
   };
@@ -53,10 +51,8 @@ export default function AddAnimal() {
             elevation={3}
             variant="outlined"
             color="primary"
-            sx={style.button}
-            component={Link}
-            to="/animallisting "
-            selected={window.location.pathname.includes('/animallisting')}
+            sx={{ ...global.buttonBack }}
+            onClick={() => navigate(-1)}
           >
             <ArrowBackIosIcon />
           </Button>
@@ -171,7 +167,6 @@ export default function AddAnimal() {
                   >
                     <MenuItem value={'Dog'}>Dog</MenuItem>
                     <MenuItem value={'Cat'}>Cat</MenuItem>
-                    <MenuItem value={'Dinosaur'}>Dinosaur</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>

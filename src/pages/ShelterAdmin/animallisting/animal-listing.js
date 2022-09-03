@@ -1,18 +1,16 @@
 //fake api
-
-import { getAnimals } from '../../fakeApi/fakeAnimalAccount';
+import { getAnimals } from '../../../fakeApi/fakeAnimalAccount';
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import global from '../../styles/global';
-import ShelterAdminLayout from '../../components/shelterAdminLayout';
-import Listed from '../../components/common/listed';
+import global from '../../../styles/global';
+import ShelterAdminLayout from '../../../components/shelterAdminLayout';
+import Listed from '../../../components/common/listed';
 import {
   Paper,
   Typography,
   Grid,
   Button,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -56,7 +54,6 @@ class AnimalListing extends Component {
         </Grid>
 
         <Grid item xs>
-          <Checkbox />
           <Button>
             <RefreshIcon color="primary" />
           </Button>
@@ -87,6 +84,7 @@ class AnimalListing extends Component {
                   <b>Status</b>
                 </TableCell>
                 <TableCell></TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{this.showDataTable()}</TableBody>
@@ -114,10 +112,10 @@ class AnimalListing extends Component {
 
     return this.state.animalData.slice(0, 4).map((animal) => (
       <TableRow key={animal.id}>
-        <TableCell>{animal.ngo}</TableCell>
         <TableCell>{animal.name}</TableCell>
         <TableCell>{animal.age}</TableCell>
         <TableCell>{animal.gender}</TableCell>
+        <TableCell>{animal.petCategory}</TableCell>
         <TableCell>{animal.description}</TableCell>
 
         <TableCell align="right">
@@ -127,7 +125,13 @@ class AnimalListing extends Component {
           />
         </TableCell>
         <TableCell align="right">
-          <Button sx={{ ...global.button2xs }}>EDIT</Button>
+          <Button
+            sx={{ ...global.button2xs }}
+            component={Link}
+            to={`/animallisting/editanimal/${animal.id}`}
+          >
+            Edit
+          </Button>
         </TableCell>
       </TableRow>
     ));

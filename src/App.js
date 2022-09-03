@@ -3,13 +3,13 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from '../src/utils/theme';
 
 //shelter admin pages
+import AnimalListing from './pages/ShelterAdmin/animallisting/animal-listing';
+import AddAnimal from './pages/ShelterAdmin/animallisting/addanimal';
+import EditAnimal from './pages/ShelterAdmin/animallisting/editanimal';
 import SignIn from './sign-in';
 import Dashboard from './pages/ShelterAdmin/dashboard';
 import Profile from './pages/ShelterAdmin/profile';
-import AnimalListing from './pages/ShelterAdmin/animal-listing';
 import AdopptionPage from './pages/ShelterAdmin/adoption-page';
-import AddAnimal from './pages/ShelterAdmin/animallisting/addanimal';
-import EditAnimal from './pages/ShelterAdmin/animallisting/editanimal';
 import Message from './pages/ShelterAdmin/message';
 
 //Super admin pages
@@ -47,7 +47,7 @@ export default function App() {
             element={<AddAnimal />}
           ></Route>
           <Route
-            path="/animallisting/editanimal"
+            path="/animallisting/editanimal/:id"
             element={<EditAnimal />}
           ></Route>
           {/* Super Admin */}

@@ -82,5 +82,13 @@ const global = {
     height: '40px',
     fontWeight: 'bold',
   },
+
+  buttonBack: {
+    width: '52px',
+    height: '52px',
+    borderRadius: '10px',
+    border: '1px solid #E8E6EA',
+    m: 1,
+  },
 };
 export default global;
