@@ -93,6 +93,7 @@ class AnimalListing extends Component {
       </ShelterAdminLayout>
     );
   }
+
   handleListed = (animal) => {
     const animalData = [...this.state.animalData];
     const index = animalData.indexOf(animal);
