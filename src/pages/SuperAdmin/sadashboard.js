@@ -1,13 +1,12 @@
 import SuperAdminLayout from '../../components/superAdminLayout';
-import { getAccounts } from '../../fakeApi/fakeShelterAccountApi';
 
-import React, { Component, useState, useEffect } from 'react';
-import { Box } from '@mui/system';
-import { Paper, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+
+import { Paper, Typography, Box } from '@mui/material';
 import global from '../../styles/global';
 
 import { db } from '../../firebase-config';
-import { collection, getDocs, doc } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 
 export default function SaDashboard() {
   const [accounts, setAccounts] = useState([]);
@@ -20,6 +19,7 @@ export default function SaDashboard() {
     };
     getAccounts();
   }, []);
+
   console.log(accounts);
 
   return (
@@ -37,11 +37,13 @@ export default function SaDashboard() {
               <Typography variant="h5" sx={{ textAlign: 'center' }}>
                 <b>Total Number of NGO</b>
               </Typography>
-              {accounts.length}
+
               <Typography
                 variant="h2"
                 sx={{ textAlign: 'center', marginTop: '20px' }}
-              ></Typography>
+              >
+                {accounts.length}
+              </Typography>
             </Box>
           </Paper>
         </Box>

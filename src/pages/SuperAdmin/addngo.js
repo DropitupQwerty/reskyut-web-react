@@ -11,10 +11,9 @@ import {
   FormGroup,
 } from '@mui/material';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
-import Input from '../../components/common/input';
 import { db } from '../../firebase-config';
 import { collection, addDoc } from 'firebase/firestore';
 
