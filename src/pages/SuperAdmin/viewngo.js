@@ -65,7 +65,6 @@ export default function ViewNgo() {
           >
             <Avatar
               sx={{ bgcolor: deepOrange[500], height: '200px', width: '200px' }}
-              src={account.avatarPhoto}
             ></Avatar>
           </Stack>
 
