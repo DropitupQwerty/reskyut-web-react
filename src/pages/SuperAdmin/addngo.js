@@ -16,8 +16,10 @@ import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
 import { db } from '../../firebase-config';
 import { collection, addDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 export default function AddNgo() {
+  const navigate = useNavigate();
   const [firstName, setFirstName] = useState('');
   const [middleName, setMiddleName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -37,6 +39,7 @@ export default function AddNgo() {
       display_name: displayName,
       desc: desc,
     });
+    navigate('/admin/listofngo');
   };
 
   return (

@@ -1,11 +1,8 @@
-//importing dummy api
-
-//
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
-
+import { Firestore } from 'firebase/firestore';
 import {
   Paper,
   Typography,
@@ -18,13 +15,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Box,
 } from '@mui/material';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { db } from '../../firebase-config';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 
 export default function ListOfNgo() {
   const [accounts, setAccounts] = useState([]);
@@ -37,7 +33,20 @@ export default function ListOfNgo() {
     };
     getAccounts();
   }, []);
+
   console.log(accounts);
+
+  const handleViewButton = async (account) => {
+    const docRef = doc(db, 'ngoshelters', account.id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log('Document data:', docSnap.data());
+    } else {
+      // doc.data() will be undefined in this case
+      console.log('No such document!');
+    }
+  };
 
   return (
     <SuperAdminLayout>
@@ -87,6 +96,7 @@ export default function ListOfNgo() {
                   <Button
                     sx={{ ...global.button1xs }}
                     component={Link}
+                    onClick={() => handleViewButton(account)}
                     to={`/admin/listofngo/viewngo/${account.id}`}
                   >
                     View

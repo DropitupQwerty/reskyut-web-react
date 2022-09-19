@@ -4,11 +4,13 @@ import React, { useState, useEffect } from 'react';
 
 import { Paper, Typography, Box } from '@mui/material';
 import global from '../../styles/global';
+import { Oval } from 'react-loader-spinner';
 
 import { db } from '../../firebase-config';
 import { collection, getDocs } from 'firebase/firestore';
 
 export default function SaDashboard() {
+  const [isLoading, setIsLoading] = useState(true);
   const [accounts, setAccounts] = useState([]);
   const ngoAdminCollectionRef = collection(db, 'ngoshelters');
 
@@ -16,11 +18,35 @@ export default function SaDashboard() {
     const getAccounts = async () => {
       const data = await getDocs(ngoAdminCollectionRef);
       setAccounts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      setIsLoading(false);
     };
     getAccounts();
   }, []);
 
   console.log(accounts);
+
+  const dataLoad = () => {
+    if (isLoading === false) {
+      return accounts.length;
+    }
+
+    return (
+      <Box sx={{ diplay: 'flex', justifyContent: 'center' }} fullWidth>
+        <Oval
+          height={40}
+          width={40}
+          color="#E94057"
+          wrapperStyle={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          visible={isLoading}
+          secondaryColor="primary"
+        />
+      </Box>
+    );
+  };
 
   return (
     <div>
@@ -40,9 +66,9 @@ export default function SaDashboard() {
 
               <Typography
                 variant="h2"
-                sx={{ textAlign: 'center', marginTop: '20px' }}
+                sx={{ textAlign: 'center', marginTop: '30px' }}
               >
-                {accounts.length}
+                {dataLoad()}
               </Typography>
             </Box>
           </Paper>
