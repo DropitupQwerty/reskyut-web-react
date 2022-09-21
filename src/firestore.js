@@ -1,12 +1,38 @@
-import { doc, getDoc } from 'firebase/firestore';
 import { db } from './firebase-config';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  getDocs,
+  doc,
+} from 'firebase/firestore';
 
-const docRef = doc(db, 'ngoshelters');
-const docSnap = await getDoc(docRef);
+const ngoCollectionRef = collection(db, 'ngoshelters');
 
-if (docSnap.exists()) {
-  console.log('Document data:', docSnap.data());
-} else {
-  // doc.data() will be undefined in this case
-  console.log('No such document!');
-}
+export const createAccount = async (
+  firstName,
+  middleName,
+  lastName,
+  username,
+  password,
+  email,
+  displayName,
+  desc
+) => {
+  await addDoc(ngoCollectionRef, {
+    firstName: firstName,
+    middleName: middleName,
+    lastName: lastName,
+    username: username,
+    password: password,
+    email: email,
+    display_name: displayName,
+    desc: desc,
+  });
+  return;
+};
+
+export const deleteAccount = async (id) => {
+  const userDoc = doc(db, 'ngoshelters', id);
+  await deleteDoc(userDoc);
+};

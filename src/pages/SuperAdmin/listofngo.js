@@ -21,6 +21,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { db } from '../../firebase-config';
 import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
+import { deleteAccount } from '../../firestore';
 
 export default function ListOfNgo() {
   const [accounts, setAccounts] = useState([]);
@@ -32,20 +33,10 @@ export default function ListOfNgo() {
       setAccounts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getAccounts();
-  }, []);
+  }, [accounts]);
 
-  console.log(accounts);
-
-  const handleViewButton = async (account) => {
-    const docRef = doc(db, 'ngoshelters', account.id);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      console.log('Document data:', docSnap.data());
-    } else {
-      // doc.data() will be undefined in this case
-      console.log('No such document!');
-    }
+  const handleDelete = (account) => {
+    deleteAccount(account.id);
   };
 
   return (
@@ -89,14 +80,13 @@ export default function ListOfNgo() {
                 <TableCell align="right">
                   <Button
                     sx={{ ...global.button2xs }}
-                    onClick={() => this.handleDelete(account)}
+                    onClick={() => handleDelete(account)}
                   >
                     Disable
                   </Button>
                   <Button
                     sx={{ ...global.button1xs }}
                     component={Link}
-                    onClick={() => handleViewButton(account)}
                     to={`/admin/listofngo/viewngo/${account.id}`}
                   >
                     View
