@@ -33,7 +33,7 @@ export default function ListOfNgo() {
       setAccounts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getAccounts();
-  }, [accounts]);
+  }, []);
 
   const handleDelete = (account) => {
     deleteAccount(account.id);
