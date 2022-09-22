@@ -26,6 +26,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
+import Logout from '@mui/icons-material/Logout';
+import { logout } from './../firebase/auth';
 
 const drawerWidth = 240;
 
@@ -104,6 +106,9 @@ export default function SuperAdminLayout({ children }) {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+  const handleLogOut = () => {
+    logout();
   };
 
   return (
@@ -289,7 +294,8 @@ export default function SuperAdminLayout({ children }) {
               flexGrow: '1',
             }}
             component={Link}
-            to="/admin "
+            to="/"
+            onClick={handleLogOut}
           >
             <ListItemIcon
               sx={{

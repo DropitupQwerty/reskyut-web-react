@@ -16,7 +16,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Link, useParams } from 'react-router-dom';
 import Input from '../../components/common/input';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../../firebase-config';
+import { db } from '../../firebase/firebase-config';
 
 export default function ViewNgo() {
   const { id } = useParams();

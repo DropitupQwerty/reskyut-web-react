@@ -19,9 +19,9 @@ import {
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import { db } from '../../firebase-config';
+import { db } from '../../firebase/firebase-config';
 import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
-import { deleteAccount } from '../../firestore';
+import { deleteAccount } from '../../firebase/auth';
 
 export default function ListOfNgo() {
   const [accounts, setAccounts] = useState([]);
@@ -35,7 +35,11 @@ export default function ListOfNgo() {
     getAccounts();
   }, []);
 
+  console.log(accounts);
+
   const handleDelete = (account) => {
+    console.log('clicked');
+    setAccounts(accounts.filter((a) => a.id !== account.id));
     deleteAccount(account.id);
   };
 

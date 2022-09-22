@@ -14,29 +14,34 @@ import {
 import React, { useState } from 'react';
 import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
-import { createAccount } from '../../firestore';
+
+import { addDoc, collection, doc } from 'firebase/firestore';
+import { auth, db } from '../../firebase/firebase-config';
+import { register } from '../../firebase/auth';
 
 export default function AddNgo() {
-  const [firstName, setFirstName] = useState('');
-  const [middleName, setMiddleName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [username, setUserame] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [desc, setDesc] = useState('');
+  // const ngoCollectionRef = collection(db, 'ngoshelters');
+  const [inputs, setInputs] = useState({
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    username: '',
+    email: '',
+    password: '',
+    display_name: '',
+    desc: '',
+  });
 
-  const handleCreateAccount = () => {
-    createAccount(
-      firstName,
-      middleName,
-      lastName,
-      username,
-      password,
-      email,
-      displayName,
-      desc
-    );
+  const handleChange = (e) => {
+    e.preventDefault();
+    setInputs({ ...inputs, [e.target.name]: e.target.value });
+  };
+
+  const handleCreateAccount = async () => {
+    register(inputs);
+    // await addDoc(ngoCollectionRef, {
+    //   ...inputs,
+    // });
   };
 
   return (
@@ -51,132 +56,127 @@ export default function AddNgo() {
         </Stack>
 
         <Box display="flex" justifyContent="center">
-          <form>
-            <Grid
-              container
-              spacing={3}
-              justifyContent="center"
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                marginTop: '12px',
-              }}
-            >
-              <Grid item xs={4}>
-                <Typography sx={{ fontWeight: 'bold' }}> Firstname</Typography>
-                <FormGroup>
-                  <FormControl fullWidth>
-                    <OutlinedInput
-                      onChange={(event) => {
-                        setFirstName(event.target.value);
-                      }}
-                    />
-                  </FormControl>
-                </FormGroup>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography sx={{ fontWeight: 'bold' }}> Middlename</Typography>
-                <FormGroup>
-                  <FormControl fullWidth>
-                    <OutlinedInput
-                      onChange={(event) => {
-                        setMiddleName(event.target.value);
-                      }}
-                    />
-                  </FormControl>
-                </FormGroup>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography sx={{ fontWeight: 'bold' }}> Lastname</Typography>
-                <FormGroup>
-                  <FormControl fullWidth>
-                    <OutlinedInput
-                      onChange={(event) => {
-                        setLastName(event.target.value);
-                      }}
-                    />
-                  </FormControl>
-                </FormGroup>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography sx={{ fontWeight: 'bold' }}> Username</Typography>
-                <FormGroup>
-                  <FormControl fullWidth>
-                    <OutlinedInput
-                      onChange={(event) => {
-                        setUserame(event.target.value);
-                      }}
-                    />
-                  </FormControl>
-                </FormGroup>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography sx={{ fontWeight: 'bold' }}> Email</Typography>
-                <FormGroup>
-                  <FormControl fullWidth>
-                    <OutlinedInput
-                      onChange={(event) => {
-                        setEmail(event.target.value);
-                      }}
-                    />
-                  </FormControl>
-                </FormGroup>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography sx={{ fontWeight: 'bold' }}>
-                  Display Name
-                </Typography>
-                <FormGroup>
-                  <FormControl fullWidth>
-                    <OutlinedInput
-                      onChange={(event) => {
-                        setDisplayName(event.target.value);
-                      }}
-                    />
-                  </FormControl>
-                </FormGroup>
-              </Grid>
-
-              <Grid item xs={8}>
-                <Typography sx={{ fontWeight: 'bold' }}>
-                  Description of Shelter
-                </Typography>
-                <TextField
-                  multiline
-                  onChange={(event) => {
-                    setDesc(event.target.value);
-                  }}
-                  rows={5}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <Typography sx={{ fontWeight: 'bold' }}>Password</Typography>
-                <FormGroup>
-                  <FormControl fullWidth>
-                    <OutlinedInput
-                      onChange={(event) => {
-                        setPassword(event.target.value);
-                      }}
-                      type="password"
-                    />
-                  </FormControl>
-                </FormGroup>
-              </Grid>
-              <Grid item xs sx={{ marginTop: '50px' }}>
-                <Button
-                  sx={{
-                    ...global.button2,
-                    fontWeight: 'bold',
-                  }}
-                  onClick={handleCreateAccount}
-                  type="submit"
-                >
-                  Create Account
-                </Button>
-              </Grid>
+          <Grid
+            container
+            spacing={3}
+            justifyContent="center"
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '12px',
+            }}
+          >
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: 'bold' }}> Firstname</Typography>
+              <FormGroup>
+                <FormControl fullWidth>
+                  <OutlinedInput
+                    name="firstName"
+                    value={inputs.firstName}
+                    onChange={handleChange}
+                  />
+                </FormControl>
+              </FormGroup>
             </Grid>
-          </form>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: 'bold' }}> Middlename</Typography>
+              <FormGroup>
+                <FormControl fullWidth>
+                  <OutlinedInput
+                    name="middleName"
+                    value={inputs.middleName}
+                    onChange={handleChange}
+                  />
+                </FormControl>
+              </FormGroup>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: 'bold' }}> Lastname</Typography>
+              <FormGroup>
+                <FormControl fullWidth>
+                  <OutlinedInput
+                    name="lastName"
+                    value={inputs.lastName}
+                    onChange={handleChange}
+                  />
+                </FormControl>
+              </FormGroup>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: 'bold' }}> Username</Typography>
+              <FormGroup>
+                <FormControl fullWidth>
+                  <OutlinedInput
+                    name="username"
+                    value={inputs.username}
+                    onChange={handleChange}
+                  />
+                </FormControl>
+              </FormGroup>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: 'bold' }}> Email</Typography>
+              <FormGroup>
+                <FormControl fullWidth>
+                  <OutlinedInput
+                    name="email"
+                    value={inputs.email}
+                    onChange={handleChange}
+                  />
+                </FormControl>
+              </FormGroup>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: 'bold' }}>Display Name</Typography>
+              <FormGroup>
+                <FormControl fullWidth>
+                  <OutlinedInput
+                    name="display_name"
+                    value={inputs.display_name}
+                    onChange={handleChange}
+                  />
+                </FormControl>
+              </FormGroup>
+            </Grid>
+
+            <Grid item xs={8}>
+              <Typography sx={{ fontWeight: 'bold' }}>
+                Description of Shelter
+              </Typography>
+              <TextField
+                multiline
+                name="desc"
+                value={inputs.desc}
+                onChange={handleChange}
+                rows={5}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: 'bold' }}>Password</Typography>
+              <FormGroup>
+                <FormControl fullWidth>
+                  <OutlinedInput
+                    name="password"
+                    value={inputs.password}
+                    onChange={handleChange}
+                    type="password"
+                  />
+                </FormControl>
+              </FormGroup>
+            </Grid>
+            <Grid item xs sx={{ marginTop: '50px' }}>
+              <Button
+                sx={{
+                  ...global.button2,
+                  fontWeight: 'bold',
+                }}
+                onClick={handleCreateAccount}
+              >
+                Create Account
+              </Button>
+            </Grid>
+          </Grid>
         </Box>
       </Box>
     </SuperAdminLayout>

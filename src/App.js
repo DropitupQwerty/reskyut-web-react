@@ -32,7 +32,7 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<SignIn />}></Route>
-          <Route path="/dashboard" exact element={<Dashboard />}></Route>
+          <Route path="/:uid/dashboard" exact element={<Dashboard />}></Route>
           <Route path="/profile" exact element={<Profile />}></Route>
           <Route
             path="/animallisting"
@@ -51,7 +51,6 @@ export default function App() {
             element={<EditAnimal />}
           ></Route>
           {/* Super Admin */}
-          <Route path="/admin" element={<SaSignIn />}></Route>
           <Route path="/admin/dashboard" element={<SaDashboard />}></Route>
           <Route path="/admin/postofngo" element={<PostOfNGO />}></Route>
           <Route path="/admin/addngo" element={<AddNgo />}></Route>

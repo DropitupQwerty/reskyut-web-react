@@ -1,115 +1,102 @@
-import React from 'react';
-//import Image
+import React, { useState } from 'react';
 import signInBg from '../src/assets/signInBg.png';
 import logoReskyut from '../src/assets/logoReskyut.png';
+import { onAuthStateChanged } from 'firebase/auth';
+import { login } from './firebase/auth';
+import {
+  Box,
+  Paper,
+  Typography,
+  Grid,
+  Button,
+  FormGroup,
+  FormControl,
+  OutlinedInput,
+} from '@mui/material';
+import { auth } from './firebase/firebase-config';
+import { Link } from 'react-router-dom';
 
-import { Box, Paper, Typography, Grid, Button } from '@mui/material';
-import Form from './components/common/form';
-import Joi from 'joi-browser';
+export default function SignIn() {
+  const [input, setInputs] = useState({
+    loginEmail: '',
+    loginPassword: '',
+  });
 
-class SignIn extends Form {
-  state = {
-    data: { email: '', password: '' },
-    errors: {},
+  const handleChange = (e) => {
+    e.preventDefault();
+    setInputs({ ...input, [e.target.name]: e.target.value });
   };
 
-  schema = {
-    email: Joi.string().required().email().label('email'),
-    password: Joi.string().required().min(6).label('password'),
+  const handleSignIn = () => {
+    login(input.loginEmail, input.loginPassword);
+    <Link to="/dashboard" />;
   };
 
-  doSubmit = () => {
-    // Call the server
-    console.log('Submitted');
+  const style = {
+    paper1: {
+      height: '450px',
+      width: '450px',
+      borderRadius: '20px',
+    },
+    boxContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+      width: '100vw',
+      backgroundImage: `url(${signInBg})`,
+      backgroundPosition: 'center',
+    },
+    text1: {
+      fontWeight: '700',
+    },
+    TextField: {
+      margin: '10px 20px',
+      width: '410px',
+    },
   };
-
-  render() {
-    const style = {
-      paper1: {
-        height: '450px',
-        width: '450px',
-        borderRadius: '20px',
-      },
-      boxContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        width: '100vw',
-        backgroundImage: `url(${signInBg})`,
-        backgroundPosition: 'center',
-      },
-      text1: {
-        fontWeight: '700',
-      },
-      TextField: {
-        margin: '0px 20px',
-        width: '410px',
-      },
-    };
-    return (
-      <Box sx={style.boxContainer}>
-        <Paper elevation={3} sx={style.paper1}>
-          <Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '20px 20px',
-              }}
-            >
-              <img src={logoReskyut} alt="logo" />
-              <Typography variant="h2" sx={style.text1}>
-                Reskyut
-              </Typography>
-            </Box>
-            <form onSubmit={this.handleSubmit}>
-              <Grid container spacing={2} direction="column">
-                <Grid item xs={2}>
-                  {/* <Input
-                    style={style.TextField}
-                    name="email"
-                    label="Email"
-                    value={account.email}
-                    onChange={this.handleChange}
-                  /> */}
-                  {this.renderInput(
-                    'email',
-                    'Email',
-                    'email',
-                    style.TextField,
-                    false
-                  )}
-                </Grid>
-                <Grid item>
-                  {/* <Input
-                    style={style.TextField}
-                    name="password"
-                    label="Password"
-                    type="password"
-                    value={account.password}
-                    onChange={this.handleChange}
-                  /> */}
-                  {this.renderInput(
-                    'password',
-                    'Password',
-                    'password',
-                    style.TextField,
-                    false
-                  )}
-                </Grid>
-                <Grid item>
-                  {/* <Button sx={style.TextField}>LOGIN</Button> */}
-                  {this.renderButton('Login', style.TextField)}
-                </Grid>
-              </Grid>
-            </form>
+  return (
+    <Box sx={style.boxContainer}>
+      <Paper elevation={3} sx={style.paper1}>
+        <Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '20px 20px',
+            }}
+          >
+            <img src={logoReskyut} alt="logo" />
+            <Typography variant="h2" sx={style.text1}>
+              Reskyut
+            </Typography>
           </Box>
-        </Paper>
-      </Box>
-    );
-  }
+          <FormGroup>
+            <FormControl fullWidth>
+              <OutlinedInput
+                sx={style.TextField}
+                placeholder="Email"
+                name="loginEmail"
+                value={input.loginEmail}
+                onChange={handleChange}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <OutlinedInput
+                sx={style.TextField}
+                placeholder="Password"
+                name="loginPassword"
+                vlaue={input.loginPassword}
+                onChange={handleChange}
+              />
+            </FormControl>
+            <Button onClick={handleSignIn} sx={style.TextField}>
+              Login
+            </Button>
+          </FormGroup>
+        </Box>
+      </Paper>
+    </Box>
+  );
 }
-
-export default SignIn;
