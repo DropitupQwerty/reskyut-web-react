@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import signInBg from '../src/assets/signInBg.png';
 import logoReskyut from '../src/assets/logoReskyut.png';
 import { onAuthStateChanged } from 'firebase/auth';
-import { login } from './firebase/auth';
+import { isAuth, CurrentUser, login } from './firebase/auth';
 import {
   Box,
   Paper,
@@ -14,22 +14,32 @@ import {
   OutlinedInput,
 } from '@mui/material';
 import { auth } from './firebase/firebase-config';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignIn() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState({ uid: '' });
+
   const [input, setInputs] = useState({
     loginEmail: '',
     loginPassword: '',
   });
 
-  const handleChange = (e) => {
-    e.preventDefault();
-    setInputs({ ...input, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+  }, []);
 
   const handleSignIn = () => {
     login(input.loginEmail, input.loginPassword);
-    <Link to="/dashboard" />;
+
+    console.log(isAuth());
+  };
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setInputs({ ...input, [e.target.name]: e.target.value });
   };
 
   const style = {

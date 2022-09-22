@@ -32,7 +32,7 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<SignIn />}></Route>
-          <Route path="/:uid/dashboard" exact element={<Dashboard />}></Route>
+          <Route path="/dashboard" exact element={<Dashboard />}></Route>
           <Route path="/profile" exact element={<Profile />}></Route>
           <Route
             path="/animallisting"

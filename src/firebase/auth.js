@@ -8,19 +8,17 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import { auth } from './firebase-config';
+import { Navigate, useNavigate } from 'react-router-dom';
+
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
   signOut,
 } from 'firebase/auth';
-import { Redirect, Link } from 'react-router-dom';
 
-// export const createAccount = async (inputs) => {
-//   console.log(inputs);
-//   await addDoc(ngoCollectionRef, ...inputs);
-// };
 const ngoCollectionRef = collection(db, 'ngoshelters');
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const deleteAccount = async (id) => {
   const userDoc = doc(db, 'ngoshelters', id);
@@ -34,14 +32,12 @@ export const login = async (loginEmail, loginPassword) => {
       loginEmail,
       loginPassword
     );
-    console.log(auth.currentUser.uid);
-
-    // const userDoc = doc(db, 'ngoshelters', auth.currentUser);
-    // console.log(userDoc);
   } catch (error) {
     console.log(error.message);
   }
 };
+
+export function isAuth() {}
 
 export const register = async (inputs) => {
   try {

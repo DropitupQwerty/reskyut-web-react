@@ -24,6 +24,7 @@ import PetsIcon from '@mui/icons-material/Pets';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { logout } from '../firebase/auth';
 
 const drawerWidth = 240;
 
@@ -102,6 +103,10 @@ export default function ShelterAdminLayout({ children }) {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   const drawermenus = [
@@ -231,7 +236,8 @@ export default function ShelterAdminLayout({ children }) {
               flexGrow: '1',
             }}
             component={Link}
-            to="/ "
+            to="/"
+            onClick={handleLogout}
           >
             <ListItemIcon
               sx={{
