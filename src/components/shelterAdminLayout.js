@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import {
@@ -25,7 +25,8 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { logout } from '../firebase/auth';
-import { auth } from '../firebase/firebase-config';
+import { auth, db } from '../firebase/firebase-config';
+import { doc, getDoc } from 'firebase/firestore';
 
 const drawerWidth = 240;
 
@@ -95,6 +96,25 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function ShelterAdminLayout({ children }) {
+  const [data, setData] = useState('');
+
+  console.log('this uid', auth.currentUser?.uid);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const docRef = doc(db, 'ngoshelters', auth.currentUser?.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setData(docSnap.data());
+      } else {
+        console.log('No such document!');
+      }
+    };
+
+    fetch();
+  }, [auth.currentUser?.uid]);
+
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
 
@@ -147,7 +167,7 @@ export default function ShelterAdminLayout({ children }) {
               <MenuIcon />
             </IconButton>
             <Typography variant="h4" sx={{ fontWeight: '600' }}>
-              {'Stray Worth Saving'}
+              {data.display_name}
             </Typography>
           </Box>
         </Toolbar>
@@ -201,6 +221,7 @@ export default function ShelterAdminLayout({ children }) {
         <List>
           <Divider />
           {/* Profile */}
+
           <ListItem
             button
             sx={{
@@ -211,8 +232,10 @@ export default function ShelterAdminLayout({ children }) {
               flexGrow: '1',
             }}
             component={Link}
-            to="/profile "
-            selected={window.location.pathname.includes('/profile')}
+            to={`/${auth.currentUser?.uid}/profile`}
+            selected={window.location.pathname.includes(
+              `/${auth.currentUser?.uid}/profile`
+            )}
           >
             <ListItemIcon
               sx={{

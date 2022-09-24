@@ -13,16 +13,13 @@ import { useParams } from 'react-router-dom';
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { id } = useParams();
-
-  console.log(id);
 
   const paperText = {
     textAlign: 'center',
     marginTop: '30px',
   };
 
-  if (IsLoggedIn()) {
+  if (IsLoggedIn().loggedIn) {
     return (
       <ShelterAdminLayout>
         <Box>

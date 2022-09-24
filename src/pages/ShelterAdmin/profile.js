@@ -23,16 +23,30 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import React from 'react';
+import React, { useState } from 'react';
 import global from '../../styles/global';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
+import { getDoc, doc, onSnapshot } from 'firebase/firestore';
+import { auth, db } from '../../firebase/firebase-config';
+import IsLoggedIn, { GetData } from './../../firebase/auth';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { async } from '@firebase/util';
 
 export default function Profile() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState('');
+  const { id } = useParams();
 
-  // Passwords
+  console.log(id);
+  console.log('this uid', auth.currentUser?.uid);
+  async function ShowData() {
+    const item = await GetData();
+    setData(item);
+  }
+  ShowData();
 
-  const [values, setValues] = React.useState({
+  const [values, setValues] = useState({
     amount: '',
     password: '',
     oldPassword: '',
@@ -99,27 +113,51 @@ export default function Profile() {
           >
             <Grid item xs={4}>
               <Typography sx={{ fontWeight: 'bold' }}> Firstname</Typography>
-              <TextField inputProps={{ readOnly: true }} sx={style.textfield} />
+              <TextField
+                inputProps={{ readOnly: true }}
+                sx={style.textfield}
+                value={data.firstName}
+              />
             </Grid>
             <Grid item xs={4}>
               <Typography sx={{ fontWeight: 'bold' }}> Middlename</Typography>
-              <TextField inputProps={{ readOnly: true }} sx={style.textfield} />
+              <TextField
+                inputProps={{ readOnly: true }}
+                sx={style.textfield}
+                value={data.middleName}
+              />
             </Grid>
             <Grid item xs={4}>
               <Typography sx={{ fontWeight: 'bold' }}> Lastname</Typography>
-              <TextField inputProps={{ readOnly: true }} sx={style.textfield} />
+              <TextField
+                inputProps={{ readOnly: true }}
+                sx={style.textfield}
+                value={data.lastName}
+              />
             </Grid>
             <Grid item xs={4}>
               <Typography sx={{ fontWeight: 'bold' }}> Username</Typography>
-              <TextField inputProps={{ readOnly: true }} sx={style.textfield} />
+              <TextField
+                inputProps={{ readOnly: true }}
+                sx={style.textfield}
+                value={data.username}
+              />
             </Grid>
             <Grid item xs={4}>
               <Typography sx={{ fontWeight: 'bold' }}>Email</Typography>
-              <TextField inputProps={{ readOnly: true }} sx={style.textfield} />
+              <TextField
+                inputProps={{ readOnly: true }}
+                sx={style.textfield}
+                value={data.email}
+              />
             </Grid>
             <Grid item xs={4}>
               <Typography sx={{ fontWeight: 'bold' }}> Display Name</Typography>
-              <TextField inputProps={{ readOnly: true }} sx={style.textfield} />
+              <TextField
+                inputProps={{ readOnly: true }}
+                sx={style.textfield}
+                value={data.display_name}
+              />
             </Grid>
             <Grid item xs>
               <Typography sx={{ fontWeight: 'bold' }}>
@@ -131,10 +169,7 @@ export default function Profile() {
                 rows={5}
                 sx={style.textfield1}
                 inputProps={{ readOnly: true }}
-                defaultValue=" This page is dedicated to rescuing and helping stray dogs and
-                cats,especially those in pain. We are hoping those who will
-                follow this page can extend prayers and help to these poor abused
-                animals."
+                defaultValue={data.desc}
               />
             </Grid>
             <Grid item container xs={4} spacing={2}>

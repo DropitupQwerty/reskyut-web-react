@@ -21,6 +21,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import { auth } from '../../../firebase/firebase-config';
 
 class AnimalListing extends Component {
   state = { animalData: getAnimals() };
@@ -42,10 +43,7 @@ class AnimalListing extends Component {
               ...global.button2Small,
             }}
             component={Link}
-            to="/animallisting/addanimal"
-            selected={window.location.pathname.includes(
-              '/animallisting/addanimal'
-            )}
+            to={`/${auth.currentUser?.uid}/animallisting/addanimal`}
           >
             <Typography>
               <b> + New Animal</b>
@@ -129,7 +127,7 @@ class AnimalListing extends Component {
           <Button
             sx={{ ...global.button2xs }}
             component={Link}
-            to={`/animallisting/editanimal/${animal.id}`}
+            to={`${auth.currentUser?.uid}/animallisting/editanimal/${animal.id}`}
           >
             Edit
           </Button>

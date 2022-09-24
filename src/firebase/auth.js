@@ -5,57 +5,34 @@ import {
   createUserWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
-import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  setDoc,
+  getDoc,
+  onSnapshot,
+} from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
+import { async } from '@firebase/util';
+import { Snackbar } from '@mui/material';
 
 const ngoCollectionRef = collection(db, 'ngoshelters');
-
-export default function IsLoggedIn() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState();
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  // console.log(user);
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setLoggedIn(true);
-      } else {
-        setLoggedIn(false);
-      }
-
-      setUser(currentUser);
-      console.log(currentUser);
-    });
-  }, []);
-
-  return loggedIn;
-}
-
-export function NavUser() {
-  const navigate = useNavigate();
-  if (IsLoggedIn()) {
-    navigate(`${auth.currentUser?.uid}/dashboard`);
-  } else {
-    navigate(`/`);
-  }
-}
 
 export const deleteAccount = async (id) => {
   const userDoc = doc(db, 'ngoshelters', id);
   await deleteDoc(userDoc);
 };
 
-export const login = async (loginEmail, loginPassword) => {
+export async function login(loginEmail, loginPassword) {
   try {
     await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
   } catch (error) {
-    console.log(error.message);
+    alert(error.message);
   }
-};
+}
 
 export const register = async (inputs) => {
   try {
@@ -74,4 +51,47 @@ export const register = async (inputs) => {
 
 export const logout = async () => {
   await signOut(auth);
+};
+
+export default function IsLoggedIn() {
+  const [user, setUser] = useState({
+    user: null,
+    loggedIn: false,
+  });
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser({ ...user, user: currentUser, loggedIn: true });
+      } else {
+        setUser({ loggedIn: false });
+      }
+    });
+  }, []);
+
+  return user;
+}
+
+// fetching firestore data
+export const GetData = async () => {
+  const [data, setData] = useState('');
+
+  console.log('this uid', auth.currentUser?.uid);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const docRef = doc(db, 'ngoshelters', auth.currentUser?.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setData(docSnap.data());
+      } else {
+        console.log('No such document!');
+      }
+    };
+
+    fetch();
+  }, [auth.currentUser?.uid]);
+
+  return data;
 };

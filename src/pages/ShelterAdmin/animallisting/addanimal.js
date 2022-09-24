@@ -86,7 +86,9 @@ export default function AddAnimal() {
                   alignItems: 'center',
                 }}
               >
-                <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
+                <Typography
+                  sx={{ marginRight: '12px', fontWeight: 'bold', width: 'px' }}
+                >
                   NAME:
                 </Typography>
                 <FormControl fullWidth>
