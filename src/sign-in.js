@@ -1,73 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import signInBg from '../src/assets/signInBg.png';
+import global from './styles/global';
 import logoReskyut from '../src/assets/logoReskyut.png';
-import { onAuthStateChanged } from 'firebase/auth';
-import { isAuth, CurrentUser, login } from './firebase/auth';
 import {
   Box,
   Paper,
   Typography,
-  Grid,
   Button,
   FormGroup,
   FormControl,
   OutlinedInput,
 } from '@mui/material';
-import { auth } from './firebase/firebase-config';
+import IsLoggedIn, { login, NavUser } from './firebase/auth';
+
 import { useNavigate } from 'react-router-dom';
+import { auth } from './firebase/firebase-config';
 
 export default function SignIn() {
   const navigate = useNavigate();
-  const [user, setUser] = useState({ uid: '' });
-
   const [input, setInputs] = useState({
     loginEmail: '',
     loginPassword: '',
   });
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-  }, []);
-
-  const handleSignIn = () => {
-    login(input.loginEmail, input.loginPassword);
-
-    console.log(isAuth());
-  };
 
   const handleChange = (e) => {
     e.preventDefault();
     setInputs({ ...input, [e.target.name]: e.target.value });
   };
 
-  const style = {
-    paper1: {
-      height: '450px',
-      width: '450px',
-      borderRadius: '20px',
-    },
-    boxContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100vh',
-      width: '100vw',
-      backgroundImage: `url(${signInBg})`,
-      backgroundPosition: 'center',
-    },
-    text1: {
-      fontWeight: '700',
-    },
-    TextField: {
-      margin: '10px 20px',
-      width: '410px',
-    },
+  const handleLogin = () => {
+    login(input.loginEmail, input.loginPassword);
   };
+
+  console.log(IsLoggedIn());
+
+  if (IsLoggedIn()) {
+    navigate(`${auth.currentUser?.uid}/dashboard`);
+  }
+
   return (
-    <Box sx={style.boxContainer}>
-      <Paper elevation={3} sx={style.paper1}>
+    <Box sx={{ ...global.boxContainer }}>
+      <Paper elevation={3} sx={{ ...global.signInPaper }}>
         <Box>
           <Box
             sx={{
@@ -78,14 +50,14 @@ export default function SignIn() {
             }}
           >
             <img src={logoReskyut} alt="logo" />
-            <Typography variant="h2" sx={style.text1}>
+            <Typography variant="h2" fontWeight="bold">
               Reskyut
             </Typography>
           </Box>
           <FormGroup>
             <FormControl fullWidth>
               <OutlinedInput
-                sx={style.TextField}
+                sx={{ margin: '10px 20px' }}
                 placeholder="Email"
                 name="loginEmail"
                 value={input.loginEmail}
@@ -94,14 +66,14 @@ export default function SignIn() {
             </FormControl>
             <FormControl fullWidth>
               <OutlinedInput
-                sx={style.TextField}
+                sx={{ margin: '10px 20px' }}
                 placeholder="Password"
                 name="loginPassword"
                 vlaue={input.loginPassword}
                 onChange={handleChange}
               />
             </FormControl>
-            <Button onClick={handleSignIn} sx={style.TextField}>
+            <Button onClick={handleLogin} sx={{ margin: '10px 20px' }}>
               Login
             </Button>
           </FormGroup>

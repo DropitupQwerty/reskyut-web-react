@@ -19,9 +19,10 @@ import {
 import ImageIcon from '@mui/icons-material/Image';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function AddAnimal() {
+  const navigate = useNavigate();
   const [gender, setGender] = React.useState('');
   const [status, setStatus] = React.useState('');
   const [category, setCategory] = React.useState('');
@@ -55,9 +56,7 @@ export default function AddAnimal() {
             variant="outlined"
             color="primary"
             sx={style.button}
-            component={Link}
-            to="/animallisting "
-            selected={window.location.pathname.includes('/animallisting')}
+            onClick={() => navigate(-1)}
           >
             <ArrowBackIosIcon />
           </Button>

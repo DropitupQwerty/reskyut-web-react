@@ -7,26 +7,22 @@ import ShelterAdminLayout from '../../components/shelterAdminLayout';
 
 import { Paper, Box, Typography, Grid } from '@mui/material';
 import global from '../../styles/global';
+import IsLoggedIn from './../../firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-class Dashboard extends Component {
-  state = {
-    userAccounts: getUserAccounts(),
-    animalDatas: getAnimals(),
-    animalAdopted: 0,
+export default function Dashboard() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  console.log(id);
+
+  const paperText = {
+    textAlign: 'center',
+    marginTop: '30px',
   };
 
-  handleGetAnimal = (userAccountsId) => {
-    const animal = getAnimal(userAccountsId);
-    console.log(animal.name);
-    return animal.name;
-  };
-
-  render() {
-    const paperText = {
-      textAlign: 'center',
-      marginTop: '30px',
-    };
-
+  if (IsLoggedIn()) {
     return (
       <ShelterAdminLayout>
         <Box>
@@ -37,9 +33,7 @@ class Dashboard extends Component {
                   <b>Wants to adopt TODAY</b>
                 </Typography>
                 <Box>
-                  <Typography variant="h2" sx={paperText}>
-                    {this.state.userAccounts.length}
-                  </Typography>
+                  <Typography variant="h2" sx={paperText}></Typography>
                 </Box>
               </Paper>
             </Grid>
@@ -50,9 +44,7 @@ class Dashboard extends Component {
                   <b>Total Animals Posted</b>
                 </Typography>
                 <Box>
-                  <Typography variant="h2" sx={paperText}>
-                    {this.state.animalDatas.length}
-                  </Typography>
+                  <Typography variant="h2" sx={paperText}></Typography>
                 </Box>
               </Paper>
             </Grid>
@@ -63,9 +55,7 @@ class Dashboard extends Component {
                   <b>Total Animals Adopted</b>
                 </Typography>
                 <Box>
-                  <Typography variant="h2" sx={paperText}>
-                    {this.state.animalAdopted}
-                  </Typography>
+                  <Typography variant="h2" sx={paperText}></Typography>
                 </Box>
               </Paper>
             </Grid>
@@ -86,18 +76,7 @@ class Dashboard extends Component {
                         flexDirection: 'column',
                         marginTop: '10px',
                       }}
-                    >
-                      {this.state.userAccounts
-                        .slice(0, 4)
-                        .map((userAccount) => (
-                          <Typography
-                            key={userAccount.id}
-                            sx={{ padding: '2px' }}
-                          >
-                            {this.handleGetAnimal(userAccount.petAdopt)}
-                          </Typography>
-                        ))}
-                    </Box>
+                    ></Box>
                   </Grid>
                   <Grid item xs={6}>
                     <Box>
@@ -112,18 +91,7 @@ class Dashboard extends Component {
                         flexDirection: 'column',
                         marginTop: '10px',
                       }}
-                    >
-                      {this.state.userAccounts
-                        .slice(0, 4)
-                        .map((userAccount) => (
-                          <Typography
-                            key={userAccount.id}
-                            sx={{ padding: '2px', alignText: 'center' }}
-                          >
-                            {userAccount.firstName}
-                          </Typography>
-                        ))}
-                    </Box>
+                    ></Box>
                   </Grid>
                 </Grid>
               </Paper>
@@ -132,7 +100,7 @@ class Dashboard extends Component {
         </Box>
       </ShelterAdminLayout>
     );
+  } else {
+    navigate(`/`);
   }
 }
-
-export default Dashboard;

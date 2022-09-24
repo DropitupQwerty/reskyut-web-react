@@ -1,3 +1,5 @@
+import signInBg from '../assets/signInBg.webp';
+
 const global = {
   button1: {
     color: '#333',
@@ -90,5 +92,20 @@ const global = {
     border: '1px solid #E8E6EA',
     m: 1,
   },
+  boxContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    width: '100vw',
+    backgroundImage: `url(${signInBg})`,
+    backgroundPosition: 'center',
+  },
+  signInPaper: {
+    height: '450px',
+    width: '450px',
+    borderRadius: '20px',
+  },
 };
+
 export default global;

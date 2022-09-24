@@ -23,23 +23,28 @@ import ViewNgo from './pages/SuperAdmin/viewngo';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import PagenotFound from './PagenotFound';
+import IsLoggedIn from './firebase/auth';
+import { NavUser } from './firebase/auth';
 
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
         {/* Shelter Admin */}
-
         <Routes>
           <Route path="/" element={<SignIn />}></Route>
-          <Route path="/dashboard" exact element={<Dashboard />}></Route>
-          <Route path="/profile" exact element={<Profile />}></Route>
+          <Route path=":id/dashboard" element={<Dashboard />}></Route>
+          <Route path="/profile" exact element={<Profile />} />
           <Route
-            path="/animallisting"
+            path=":id/adoptionpage"
+            exact
+            element={<AdopptionPage />}
+          ></Route>
+          <Route
+            path=":d/animallisting"
             exact
             element={<AnimalListing />}
           ></Route>
-          <Route path="/adoptionpage" exact element={<AdopptionPage />}></Route>
           <Route path="/message" exact element={<Message />}></Route>
           {/* Animal Listing */}
           <Route
@@ -59,7 +64,6 @@ export default function App() {
             path="/admin/listofngo/viewngo/:id"
             element={<ViewNgo />}
           ></Route>
-
           <Route exact path="/admin/viewanimal" />
           {/* Page not Found */}
           <Route path="*" element={<PagenotFound />}></Route>

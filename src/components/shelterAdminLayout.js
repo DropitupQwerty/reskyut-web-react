@@ -25,6 +25,7 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { logout } from '../firebase/auth';
+import { auth } from '../firebase/firebase-config';
 
 const drawerWidth = 240;
 
@@ -112,17 +113,17 @@ export default function ShelterAdminLayout({ children }) {
   const drawermenus = [
     {
       label: 'Dashboard',
-      link: 'dashboard',
+      link: `${auth.currentUser?.uid}/dashboard`,
       icon: <DashboardIcon color="primary" />,
     },
     {
       label: 'Animal Listing',
-      link: 'animallisting',
+      link: `${auth.currentUser?.uid}/animallisting`,
       icon: <ViewListIcon color="primary" />,
     },
     {
       label: 'Adoption Page',
-      link: 'adoptionpage',
+      link: `${auth.currentUser?.uid}/adoptionpage`,
       icon: <PetsIcon color="primary" />,
     },
   ];
