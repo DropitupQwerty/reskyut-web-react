@@ -24,7 +24,7 @@ import PetsIcon from '@mui/icons-material/Pets';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { logout } from '../firebase/auth';
+import { GetData, logout } from '../firebase/auth';
 import { auth, db } from '../firebase/firebase-config';
 import { doc, getDoc } from 'firebase/firestore';
 
@@ -98,22 +98,11 @@ const Drawer = styled(MuiDrawer, {
 export default function ShelterAdminLayout({ children }) {
   const [data, setData] = useState('');
 
-  console.log('this uid', auth.currentUser?.uid);
-
-  useEffect(() => {
-    const fetch = async () => {
-      const docRef = doc(db, 'ngoshelters', auth.currentUser?.uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        setData(docSnap.data());
-      } else {
-        console.log('No such document!');
-      }
-    };
-
-    fetch();
-  }, [auth.currentUser?.uid]);
+  async function ShowData() {
+    const item = await GetData();
+    setData(item);
+  }
+  ShowData();
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);

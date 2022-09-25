@@ -13,7 +13,7 @@ import {
   getDoc,
   onSnapshot,
 } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { async } from '@firebase/util';
@@ -75,19 +75,19 @@ export default function IsLoggedIn() {
 // fetching firestore data
 export const GetData = async () => {
   const [data, setData] = useState('');
-
-  console.log('this uid', auth.currentUser?.uid);
+  const { id } = useParams();
 
   useEffect(() => {
     const fetch = async () => {
-      const docRef = doc(db, 'ngoshelters', auth.currentUser?.uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        setData(docSnap.data());
-      } else {
-        console.log('No such document!');
-      }
+      if (id === auth.currentUser?.uid) {
+        const docRef = doc(db, 'ngoshelters', auth.currentUser?.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setData(docSnap.data());
+        } else {
+          console.log('No such document!');
+        }
+      } else alert('you hacking me mafriend');
     };
 
     fetch();

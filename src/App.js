@@ -27,7 +27,7 @@ import IsLoggedIn from './firebase/auth';
 import { NavUser } from './firebase/auth';
 
 export default function App() {
-  const user = IsLoggedIn();
+  const user = IsLoggedIn().loggedIn;
 
   return (
     <ThemeProvider theme={theme}>
@@ -44,7 +44,7 @@ export default function App() {
             element={<AdopptionPage />}
           ></Route>
           <Route
-            path=":d/animallisting"
+            path=":id/animallisting"
             exact
             element={<AnimalListing />}
           ></Route>

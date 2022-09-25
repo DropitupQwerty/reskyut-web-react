@@ -26,20 +26,16 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useState } from 'react';
 import global from '../../styles/global';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
-import { getDoc, doc, onSnapshot } from 'firebase/firestore';
-import { auth, db } from '../../firebase/firebase-config';
-import IsLoggedIn, { GetData } from './../../firebase/auth';
-import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { async } from '@firebase/util';
+import { GetData } from './../../firebase/auth';
+import { useContext } from 'react';
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState('');
-  const { id } = useParams();
+  const user = useContext();
 
-  console.log(id);
-  console.log('this uid', auth.currentUser?.uid);
+  console.log('called', user);
+
   async function ShowData() {
     const item = await GetData();
     setData(item);
@@ -79,15 +75,6 @@ export default function Profile() {
   };
 
   // style
-  const style = {
-    textfield: {
-      width: '348px',
-      height: '49px',
-    },
-    textfield1: {
-      width: '830px',
-    },
-  };
 
   return (
     <ShelterAdminLayout>
@@ -115,7 +102,7 @@ export default function Profile() {
               <Typography sx={{ fontWeight: 'bold' }}> Firstname</Typography>
               <TextField
                 inputProps={{ readOnly: true }}
-                sx={style.textfield}
+                fullWidth
                 value={data.firstName}
               />
             </Grid>
@@ -123,7 +110,7 @@ export default function Profile() {
               <Typography sx={{ fontWeight: 'bold' }}> Middlename</Typography>
               <TextField
                 inputProps={{ readOnly: true }}
-                sx={style.textfield}
+                fullWidth
                 value={data.middleName}
               />
             </Grid>
@@ -131,7 +118,7 @@ export default function Profile() {
               <Typography sx={{ fontWeight: 'bold' }}> Lastname</Typography>
               <TextField
                 inputProps={{ readOnly: true }}
-                sx={style.textfield}
+                fullWidth
                 value={data.lastName}
               />
             </Grid>
@@ -139,7 +126,7 @@ export default function Profile() {
               <Typography sx={{ fontWeight: 'bold' }}> Username</Typography>
               <TextField
                 inputProps={{ readOnly: true }}
-                sx={style.textfield}
+                fullWidth
                 value={data.username}
               />
             </Grid>
@@ -147,7 +134,7 @@ export default function Profile() {
               <Typography sx={{ fontWeight: 'bold' }}>Email</Typography>
               <TextField
                 inputProps={{ readOnly: true }}
-                sx={style.textfield}
+                fullWidth
                 value={data.email}
               />
             </Grid>
@@ -155,7 +142,7 @@ export default function Profile() {
               <Typography sx={{ fontWeight: 'bold' }}> Display Name</Typography>
               <TextField
                 inputProps={{ readOnly: true }}
-                sx={style.textfield}
+                fullWidth
                 value={data.display_name}
               />
             </Grid>
@@ -167,7 +154,7 @@ export default function Profile() {
               <TextField
                 multiline
                 rows={5}
-                sx={style.textfield1}
+                sx={{ width: '830px' }}
                 inputProps={{ readOnly: true }}
                 defaultValue={data.desc}
               />
