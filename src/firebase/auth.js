@@ -113,12 +113,13 @@ export const addSubData = async (inputs) => {
 };
 
 //Update List
-export const listUpdate = (updated) => {
-  // const q = query(collection(db, `ngoshelters/${auth.currentUser.uid}/pets`));
-  // const querySnapshot = await getDocs(q);
-  // const queryData = querySnapshot.docs.map((detail) => ({
-  //   ...detail.data(),
-  //   id: detail.id,
-  // }));
-  // console.log(queryData);
+export const listUpdate = async () => {
+  const q = query(collection(db, `ngoshelters/${auth.currentUser?.uid}/pets`));
+  const querySnapshot = await getDocs(q);
+  const queryData = querySnapshot.docs.map((detail) => ({
+    ...detail.data(),
+    id: detail.id,
+  }));
+  console.log(queryData);
+  return queryData;
 };

@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import global from '../../../styles/global';
 import ShelterAdminLayout from '../../../components/shelterAdminLayout';
-import Listed from '../../../components/common/listed';
+
 import {
   Paper,
   Typography,
@@ -22,11 +22,64 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { auth } from '../../../firebase/firebase-config';
+import { listUpdate } from '../../../firebase/auth';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import IsLoggedIn from './../../../firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
-class AnimalListing extends Component {
-  state = { animalData: getAnimals() };
+export default function AnimalListing() {
+  const [animalData, setAnimalData] = useState([]);
+  const navigate = useNavigate();
 
-  render() {
+  useEffect(() => {
+    const getPostList = async () => {
+      const list = await listUpdate();
+      setAnimalData(list);
+    };
+    getPostList();
+  }, [IsLoggedIn().loggedIn]);
+  console.log(animalData);
+
+  const showDataTable = () => {
+    if (animalData.length === 0) {
+      return (
+        <TableRow>
+          <TableCell> No data </TableCell>
+        </TableRow>
+      );
+    }
+    return animalData.map((animal) => (
+      <TableRow key={animal.id}>
+        <TableCell>{animal.name}</TableCell>
+        <TableCell>{animal.age}</TableCell>
+        <TableCell>{animal.gender}</TableCell>
+        <TableCell>{animal.pet_category}</TableCell>
+        <TableCell>{animal.desc}</TableCell>
+
+        <TableCell align="right">
+          <Button
+            variant="contained"
+            color={animal.status}
+            sx={{ ...global.badgeStatus }}
+          >
+            {animal.status}
+          </Button>
+        </TableCell>
+        <TableCell align="right">
+          <Button
+            sx={{ ...global.button2xs }}
+            component={Link}
+            to={`/animallisting/editanimal/${animal.id}`}
+          >
+            Edit
+          </Button>
+        </TableCell>
+      </TableRow>
+    ));
+  };
+
+  if (IsLoggedIn().loggedIn) {
     return (
       <ShelterAdminLayout>
         <Grid item xs>
@@ -84,56 +137,12 @@ class AnimalListing extends Component {
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>{this.showDataTable()}</TableBody>
+            <TableBody>{showDataTable()}</TableBody>
           </Table>
         </TableContainer>
       </ShelterAdminLayout>
     );
-  }
-
-  handleListed = (animal) => {
-    const animalData = [...this.state.animalData];
-    const index = animalData.indexOf(animal);
-    animalData[index] = { ...animalData[index] };
-    animalData[index].listed = !animalData[index].listed;
-    this.setState({ animalData });
-  };
-
-  showDataTable() {
-    if (this.state.animalData.length === 0) {
-      return (
-        <TableRow>
-          <TableCell> No data </TableCell>
-        </TableRow>
-      );
-    }
-
-    return this.state.animalData.slice(0, 4).map((animal) => (
-      <TableRow key={animal.id}>
-        <TableCell>{animal.name}</TableCell>
-        <TableCell>{animal.age}</TableCell>
-        <TableCell>{animal.gender}</TableCell>
-        <TableCell>{animal.petCategory}</TableCell>
-        <TableCell>{animal.description}</TableCell>
-
-        <TableCell align="right">
-          <Listed
-            listed={animal.listed}
-            onToggleListed={() => this.handleListed(animal)}
-          />
-        </TableCell>
-        <TableCell align="right">
-          <Button
-            sx={{ ...global.button2xs }}
-            component={Link}
-            to={`${auth.currentUser?.uid}/animallisting/editanimal/${animal.id}`}
-          >
-            Edit
-          </Button>
-        </TableCell>
-      </TableRow>
-    ));
+  } else {
+    navigate('/');
   }
 }
-
-export default AnimalListing;
