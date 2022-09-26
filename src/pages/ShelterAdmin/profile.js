@@ -32,9 +32,8 @@ import { useContext } from 'react';
 export default function Profile() {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState('');
-  const user = useContext();
 
-  console.log('called', user);
+  // console.log('called', user);
 
   async function ShowData() {
     const item = await GetData();
