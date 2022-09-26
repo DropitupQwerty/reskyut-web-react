@@ -36,7 +36,7 @@ export default function SignIn() {
   console.log(user.loggedIn);
 
   if (user.loggedIn) {
-    navigate(`${auth.currentUser?.uid}/dashboard`);
+    navigate(`/dashboard`);
   } else {
     return (
       <Box sx={{ ...global.boxContainer }}>

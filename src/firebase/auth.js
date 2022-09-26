@@ -12,12 +12,16 @@ import {
   setDoc,
   getDoc,
   onSnapshot,
+  addDoc,
+  query,
+  getDocs,
 } from 'firebase/firestore';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { async } from '@firebase/util';
 import { Snackbar } from '@mui/material';
+import AddAnimal from './../pages/ShelterAdmin/animallisting/editanimal';
 
 const ngoCollectionRef = collection(db, 'ngoshelters');
 
@@ -41,7 +45,7 @@ export const register = async (inputs) => {
       inputs.email,
       inputs.password
     );
-    await setDoc(doc(ngoCollectionRef, auth.currentUser.uid), {
+    await setDoc(doc(ngoCollectionRef, auth.currentUser), {
       ...inputs,
     });
   } catch (error) {
@@ -74,12 +78,11 @@ export default function IsLoggedIn() {
 
 // fetching firestore data
 export const GetData = async () => {
-  const [data, setData] = useState('');
-  const { id } = useParams();
+  const [data, setData] = useState({});
 
   useEffect(() => {
     const fetch = async () => {
-      if (id === auth.currentUser?.uid) {
+      if (auth.currentUser?.uid) {
         const docRef = doc(db, 'ngoshelters', auth.currentUser?.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
@@ -87,11 +90,35 @@ export const GetData = async () => {
         } else {
           console.log('No such document!');
         }
-      } else alert('you hacking me mafriend');
+      }
     };
-
     fetch();
-  }, [auth.currentUser?.uid]);
+  }, [IsLoggedIn().loggedIn]);
 
   return data;
+};
+
+//Add data to document subcollection
+
+export const addSubData = async (inputs) => {
+  try {
+    await addDoc(collection(db, `ngoshelters/${auth.currentUser?.uid}/pets`), {
+      ...inputs,
+    });
+    alert('Success');
+  } catch (error) {
+    console.log(error.message);
+    alert('Failed', error.message);
+  }
+};
+
+//Update List
+export const listUpdate = (updated) => {
+  // const q = query(collection(db, `ngoshelters/${auth.currentUser.uid}/pets`));
+  // const querySnapshot = await getDocs(q);
+  // const queryData = querySnapshot.docs.map((detail) => ({
+  //   ...detail.data(),
+  //   id: detail.id,
+  // }));
+  // console.log(queryData);
 };

@@ -1,5 +1,6 @@
 import { AppBar, Box, Toolbar, Typography } from '@mui/material';
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 
 export default function AppBarLayout({ children }) {
   return (
@@ -7,9 +8,7 @@ export default function AppBarLayout({ children }) {
       <AppBar position="fixed">
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Toolbar>
-            <Typography variant="h4" sx={{ fontWeight: '600' }}>
-              {'Stray Worth Saving'}
-            </Typography>
+            <Typography variant="h4" sx={{ fontWeight: '600' }}></Typography>
           </Toolbar>
         </Box>
       </AppBar>

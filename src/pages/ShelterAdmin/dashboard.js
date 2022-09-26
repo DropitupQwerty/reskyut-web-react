@@ -1,6 +1,4 @@
 //fake api's
-import { getAnimals, getAnimal } from '../../fakeApi/fakeAnimalAccount';
-import { getUserAccounts } from '../../fakeApi/fakeUserAccountApi';
 
 import React, { Component } from 'react';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
@@ -9,15 +7,9 @@ import { Paper, Box, Typography, Grid } from '@mui/material';
 import global from '../../styles/global';
 import IsLoggedIn from './../../firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
 
 export default function Dashboard() {
   const navigate = useNavigate();
-
-  const paperText = {
-    textAlign: 'center',
-    marginTop: '30px',
-  };
 
   if (IsLoggedIn().loggedIn) {
     return (
@@ -101,3 +93,7 @@ export default function Dashboard() {
     navigate(`/`);
   }
 }
+const paperText = {
+  textAlign: 'center',
+  marginTop: '30px',
+};

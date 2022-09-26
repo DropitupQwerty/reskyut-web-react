@@ -122,17 +122,17 @@ export default function ShelterAdminLayout({ children }) {
   const drawermenus = [
     {
       label: 'Dashboard',
-      link: `${auth.currentUser?.uid}/dashboard`,
+      link: 'dashboard',
       icon: <DashboardIcon color="primary" />,
     },
     {
       label: 'Animal Listing',
-      link: `${auth.currentUser?.uid}/animallisting`,
+      link: 'animallisting',
       icon: <ViewListIcon color="primary" />,
     },
     {
       label: 'Adoption Page',
-      link: `${auth.currentUser?.uid}/adoptionpage`,
+      link: 'adoptionpage',
       icon: <PetsIcon color="primary" />,
     },
   ];
@@ -221,7 +221,7 @@ export default function ShelterAdminLayout({ children }) {
               flexGrow: '1',
             }}
             component={Link}
-            to={`/${auth.currentUser?.uid}/profile`}
+            to={'/profile'}
             selected={window.location.pathname.includes(
               `/${auth.currentUser?.uid}/profile`
             )}

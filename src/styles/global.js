@@ -106,6 +106,14 @@ const global = {
     width: '450px',
     borderRadius: '20px',
   },
+  addAnimalLabels: {
+    marginRight: '12px',
+    fontWeight: 'bold',
+    width: '100px',
+  },
+  borderRadius20: {
+    borderRadius: '20px',
+  },
 };
 
 export default global;

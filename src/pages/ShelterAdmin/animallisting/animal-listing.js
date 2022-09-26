@@ -35,7 +35,6 @@ class AnimalListing extends Component {
           </Typography>
         </Grid>
         <Grid item xs sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          {' '}
           <Button
             variant="contained"
             color="primary"
@@ -43,7 +42,7 @@ class AnimalListing extends Component {
               ...global.button2Small,
             }}
             component={Link}
-            to={`/${auth.currentUser?.uid}/animallisting/addanimal`}
+            to="/animallisting/addanimal"
           >
             <Typography>
               <b> + New Animal</b>

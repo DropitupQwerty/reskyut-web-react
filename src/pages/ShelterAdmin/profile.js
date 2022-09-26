@@ -27,7 +27,6 @@ import React, { useState } from 'react';
 import global from '../../styles/global';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import { GetData } from './../../firebase/auth';
-import { useContext } from 'react';
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
@@ -38,6 +37,7 @@ export default function Profile() {
   async function ShowData() {
     const item = await GetData();
     setData(item);
+    console.log(item);
   }
   ShowData();
 
