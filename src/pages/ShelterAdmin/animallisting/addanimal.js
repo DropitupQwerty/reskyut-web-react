@@ -15,12 +15,13 @@ import {
   Paper,
 } from '@mui/material';
 
+import logoReskyut from '../../../../src/assets/logoReskyut.webp';
 import ImageIcon from '@mui/icons-material/Image';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 import { Link, useNavigate } from 'react-router-dom';
 import IsLoggedIn, {
-  addSubData,
+  AddSubData,
   listUpdate,
   updateList,
 } from './../../../firebase/auth';
@@ -34,6 +35,7 @@ import {
   getDownloadURL,
 } from 'firebase/storage';
 import { serverTimestamp } from 'firebase/firestore';
+import CancelIcon from '@mui/icons-material/Cancel';
 export default function AddAnimal() {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({
@@ -43,10 +45,9 @@ export default function AddAnimal() {
     status: '',
     pet_category: '',
     desc: '',
-    imageUrl: '',
+    image: '',
   });
-  const [image, setImage] = useState();
-  const [percent, setPercent] = useState();
+  const [images, setImages] = useState([]);
 
   console.log(inputs);
 
@@ -55,56 +56,25 @@ export default function AddAnimal() {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
-  //handle imageChange
-  function handleImage(e) {
-    e.preventDefault();
-    let pickedFile;
-
-    if (e.target.files && e.target.files.length > 0) {
-      pickedFile = e.target.files[0];
-      setImage(pickedFile);
-    }
-  }
-
-  //Uploading single file first
-  function SingleUpload() {
-    const storageRef = ref(
-      storage,
-      `/${auth.currentUser?.uid}/${inputs.name}_${serverTimestamp()}/${
-        inputs.name
-      }_${auth.currentUser?.uid}`
-    );
-    const uploadTask = uploadBytesResumable(storageRef, image);
-
-    uploadTask.on(
-      'state_changed',
-      (snapshot) => {
-        const percent = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        );
-        setPercent(percent);
-      },
-      (err) => console.log(err),
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          if (url) {
-            setInputs({ ...inputs, imageUrl: url });
-            if (inputs.imageUrl !== '') {
-              console.log('img url', inputs.imageUrl);
-              handleSubmit();
-            }
-          }
-        });
-      }
-    );
-  }
-
-  //multiple uploads
-
-  function multipleUpdload() {}
+  //handle addImages
+  const handleImage = (evnt) => {
+    const selectedFIles = [];
+    const targetFiles = evnt.target.files;
+    const targetFilesObject = [...targetFiles];
+    targetFilesObject.map((file) => {
+      return selectedFIles.push(URL.createObjectURL(file));
+    });
+    setImages(selectedFIles);
+  };
 
   const handleSubmit = () => {
-    addSubData(inputs);
+    //   AddSubData(inputs, images);
+    console.log(images);
+  };
+
+  //Remove photo in UI
+  const handleRemovePhoto = (photo) => {
+    setImages(images.filter((p) => p !== photo));
   };
 
   if (IsLoggedIn().loggedIn) {
@@ -271,7 +241,7 @@ export default function AddAnimal() {
                   <Button sx={{ ...global.button3 }}>CANCEL</Button>
                   <Button
                     sx={{ ...global.button2Small, marginLeft: '20px' }}
-                    onClick={SingleUpload}
+                    onClick={handleSubmit}
                   >
                     SAVE
                   </Button>
@@ -309,42 +279,40 @@ export default function AddAnimal() {
                   onChange={handleImage}
                 />
               </Button>
-              // <Button onClick={multipleUpdload}>Upload</Button>
               {/*ADD ANIMAL PHOTOS */}
               <Box marginTop={2}>
                 <Grid container>
-                  <Grid item>
-                    <IconButton>
+                  {images.map((imageURI) => (
+                    <Grid item>
+                      {console.log(imageURI.index)}
+                      <IconButton onClick={() => handleRemovePhoto(imageURI)}>
+                        <CancelIcon
+                          color="primary"
+                          sx={{
+                            position: 'absolute',
+                            top: '30px',
+                            left: '80px',
+                          }}
+                        />
+                      </IconButton>
                       <Paper
                         elavation={3}
-                        sx={{ height: '98px', width: '93px' }}
-                      ></Paper>
-                    </IconButton>
-                  </Grid>
-                  <Grid item>
-                    <IconButton>
-                      <Paper
-                        elavation={3}
-                        sx={{ height: '98px', width: '93px' }}
-                      ></Paper>
-                    </IconButton>
-                  </Grid>
-                  <Grid item>
-                    <IconButton>
-                      <Paper
-                        elavation={3}
-                        sx={{ height: '98px', width: '93px' }}
-                      ></Paper>
-                    </IconButton>
-                  </Grid>
-                  <Grid item>
-                    <IconButton>
-                      <Paper
-                        elavation={3}
-                        sx={{ height: '98px', width: '93px' }}
-                      ></Paper>
-                    </IconButton>
-                  </Grid>
+                        sx={{ height: '130px', width: '100px', margin: '10px' }}
+                      >
+                        <img
+                          style={{
+                            height: '100%',
+                            width: '100%',
+                            objectFit: 'cover',
+                            borderRadius: '10px',
+                          }}
+                          className="photo-uploaded"
+                          src={imageURI}
+                          alt="Photo uploaded"
+                        />
+                      </Paper>
+                    </Grid>
+                  ))}
                 </Grid>
               </Box>
             </Box>

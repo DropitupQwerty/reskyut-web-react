@@ -1,4 +1,4 @@
-import { db } from './firebase-config';
+import { db, storage } from './firebase-config';
 import { auth } from './firebase-config';
 import {
   signInWithEmailAndPassword,
@@ -23,6 +23,12 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { async } from '@firebase/util';
 import { Snackbar } from '@mui/material';
 import AddAnimal from './../pages/ShelterAdmin/animallisting/editanimal';
+import {
+  ref,
+  uploadBytes,
+  uploadBytesResumable,
+  getDownloadURL,
+} from 'firebase/storage';
 
 const ngoCollectionRef = collection(db, 'ngoshelters');
 
@@ -101,17 +107,16 @@ export const GetData = async () => {
 
 //Add data to document subcollection
 
-export const addSubData = async (inputs) => {
-  try {
-    await addDoc(collection(db, `ngoshelters/${auth.currentUser?.uid}/pets`), {
-      ...inputs,
-      timestamp: serverTimestamp(),
-    });
-    alert('Success');
-  } catch (error) {
-    console.log(error.message);
-    alert('Failed', error.message);
-  }
+export const AddSubData = async (inputs, images) => {
+  // const docRef = await addDoc(
+  //   collection(db, `ngoshelters/${auth.currentUser?.uid}/pets`),
+  //   {
+  //     ...inputs,
+  //     timestamp: serverTimestamp(),
+  //   }
+  // );
+  // console.log(docRef.id);
+  // alert('Success');
 };
 
 //Update List
