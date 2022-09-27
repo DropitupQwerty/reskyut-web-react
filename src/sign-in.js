@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import global from './styles/global';
-import logoReskyut from '../src/assets/logoReskyut.png';
+import logoReskyut from '../src/assets/logoReskyut.webp';
 import {
   Box,
   Paper,
@@ -9,16 +10,13 @@ import {
   FormGroup,
   FormControl,
   OutlinedInput,
-  Snackbar,
 } from '@mui/material';
-import IsLoggedIn, { login, NavUser } from './firebase/auth';
-
-import { useNavigate } from 'react-router-dom';
-import { auth } from './firebase/firebase-config';
+import IsLoggedIn, { login } from './firebase/auth';
 
 export default function SignIn() {
   const navigate = useNavigate();
   const user = IsLoggedIn();
+
   const [input, setInputs] = useState({
     loginEmail: '',
     loginPassword: '',
@@ -32,8 +30,6 @@ export default function SignIn() {
   const handleLogin = () => {
     login(input.loginEmail, input.loginPassword);
   };
-
-  console.log(user.loggedIn);
 
   if (user.loggedIn) {
     navigate(`/dashboard`);

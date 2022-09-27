@@ -15,6 +15,7 @@ import {
   addDoc,
   query,
   getDocs,
+  serverTimestamp,
 } from 'firebase/firestore';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -45,7 +46,7 @@ export const register = async (inputs) => {
       inputs.email,
       inputs.password
     );
-    await setDoc(doc(ngoCollectionRef, auth.currentUser), {
+    await setDoc(doc(ngoCollectionRef, auth.currentUser?.uid), {
       ...inputs,
     });
   } catch (error) {
@@ -104,6 +105,7 @@ export const addSubData = async (inputs) => {
   try {
     await addDoc(collection(db, `ngoshelters/${auth.currentUser?.uid}/pets`), {
       ...inputs,
+      timestamp: serverTimestamp(),
     });
     alert('Success');
   } catch (error) {

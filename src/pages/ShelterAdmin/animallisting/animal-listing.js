@@ -1,7 +1,5 @@
 //fake api
-import { getAnimals } from '../../../fakeApi/fakeAnimalAccount';
-
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import global from '../../../styles/global';
 import ShelterAdminLayout from '../../../components/shelterAdminLayout';
@@ -21,7 +19,6 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import { auth } from '../../../firebase/firebase-config';
 import { listUpdate } from '../../../firebase/auth';
 import { useState } from 'react';
 import { useEffect } from 'react';

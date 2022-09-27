@@ -19,7 +19,6 @@ import ImageIcon from '@mui/icons-material/Image';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 import { useParams, useNavigate } from 'react-router-dom';
-import { getAnimal } from './../../../fakeApi/fakeAnimalAccount';
 
 export default function AddAnimal() {
   const [gender, setGender] = React.useState('');
@@ -28,8 +27,6 @@ export default function AddAnimal() {
 
   const navigate = useNavigate();
   const { id } = useParams();
-
-  const petData = getAnimal(id);
 
   const genderHandleChange = (event) => {
     setGender(event.target.value);

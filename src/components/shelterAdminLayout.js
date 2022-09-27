@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import {
   Box,
@@ -26,7 +26,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { GetData, logout } from '../firebase/auth';
 import { auth, db } from '../firebase/firebase-config';
-import { doc, getDoc } from 'firebase/firestore';
 
 const drawerWidth = 240;
 
@@ -97,12 +96,13 @@ const Drawer = styled(MuiDrawer, {
 
 export default function ShelterAdminLayout({ children }) {
   const [data, setData] = useState('');
+  const navigate = useNavigate('');
 
   async function ShowData() {
     const item = await GetData();
     setData(item);
   }
-  ShowData();
+  console.log();
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
@@ -117,6 +117,10 @@ export default function ShelterAdminLayout({ children }) {
 
   const handleLogout = () => {
     logout();
+  };
+
+  const handleNavigate = (drawermenu) => {
+    navigate(`/${drawermenu}`);
   };
 
   const drawermenus = [
@@ -184,11 +188,7 @@ export default function ShelterAdminLayout({ children }) {
                 justifyContent: open ? 'initial' : 'center',
                 px: 3,
               }}
-              component={Link}
-              to={`/${drawermenu.link}`}
-              selected={window.location.pathname.includes(
-                `/${drawermenu.link}`
-              )}
+              onClick={() => handleNavigate(`${drawermenu.link}`)}
             >
               <ListItemIcon
                 sx={{

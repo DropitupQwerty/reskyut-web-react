@@ -5,10 +5,14 @@ import ShelterAdminLayout from '../../components/shelterAdminLayout';
 
 import { Paper, Box, Typography, Grid } from '@mui/material';
 import global from '../../styles/global';
-import IsLoggedIn, { listUpdate } from './../../firebase/auth';
+import IsLoggedIn, { GetData, listUpdate } from './../../firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { getDoc } from 'firebase/firestore';
+import { auth } from '../../firebase/firebase-config';
+import { db } from './../../firebase/firebase-config';
+import { doc } from 'firebase/firestore';
 
 export default function Dashboard() {
   const navigate = useNavigate();

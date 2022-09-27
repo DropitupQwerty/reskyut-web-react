@@ -1,7 +1,3 @@
-//fake api
-import { getUserAccounts } from '../../fakeApi/fakeUserAccountApi';
-import { getAnimal } from '../../fakeApi/fakeAnimalAccount';
-
 import {
   Paper,
   Typography,
@@ -25,8 +21,8 @@ import PetsIcon from '@mui/icons-material/Pets';
 
 class Adoptionpage extends Component {
   state = {
-    userAccounts: getUserAccounts(),
-    userAnimal: getAnimal(),
+    userAccounts: [{}],
+    userAnimal: [{}],
   };
 
   handleDecline = (userAccount) => {
@@ -35,11 +31,7 @@ class Adoptionpage extends Component {
     );
     this.setState({ userAccounts });
   };
-  handleGetAnimal = (userAccountsId) => {
-    const animal = getAnimal(userAccountsId);
-    console.log(animal.name);
-    return animal.name;
-  };
+  handleGetAnimal = (userAccountsId) => {};
 
   render() {
     return (

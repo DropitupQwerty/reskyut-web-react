@@ -26,6 +26,14 @@ import IsLoggedIn, {
 } from './../../../firebase/auth';
 import Input from './../../../components/common/input';
 
+import { auth, storage } from './../../../firebase/firebase-config';
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from 'firebase/storage';
+import { serverTimestamp } from 'firebase/firestore';
 export default function AddAnimal() {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({
@@ -35,7 +43,11 @@ export default function AddAnimal() {
     status: '',
     pet_category: '',
     desc: '',
+    imageUrl: '',
   });
+  const [image, setImage] = useState();
+  const [percent, setPercent] = useState();
+
   console.log(inputs);
 
   const handleChange = (e) => {
@@ -43,16 +55,56 @@ export default function AddAnimal() {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
+  //handle imageChange
+  function handleImage(e) {
+    e.preventDefault();
+    let pickedFile;
+
+    if (e.target.files && e.target.files.length > 0) {
+      pickedFile = e.target.files[0];
+      setImage(pickedFile);
+    }
+  }
+
+  //Uploading single file first
+  function SingleUpload() {
+    const storageRef = ref(
+      storage,
+      `/${auth.currentUser?.uid}/${inputs.name}_${serverTimestamp()}/${
+        inputs.name
+      }_${auth.currentUser?.uid}`
+    );
+    const uploadTask = uploadBytesResumable(storageRef, image);
+
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const percent = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setPercent(percent);
+      },
+      (err) => console.log(err),
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          if (url) {
+            setInputs({ ...inputs, imageUrl: url });
+            if (inputs.imageUrl !== '') {
+              console.log('img url', inputs.imageUrl);
+              handleSubmit();
+            }
+          }
+        });
+      }
+    );
+  }
+
+  //multiple uploads
+
+  function multipleUpdload() {}
+
   const handleSubmit = () => {
     addSubData(inputs);
-    setInputs({
-      name: '',
-      age: '',
-      gender: '',
-      status: '',
-      pet_category: '',
-      desc: '',
-    });
   };
 
   if (IsLoggedIn().loggedIn) {
@@ -219,13 +271,16 @@ export default function AddAnimal() {
                   <Button sx={{ ...global.button3 }}>CANCEL</Button>
                   <Button
                     sx={{ ...global.button2Small, marginLeft: '20px' }}
-                    onClick={handleSubmit}
+                    onClick={SingleUpload}
                   >
                     SAVE
                   </Button>
                 </Grid>
               </Grid>
             </Grid>
+
+            {/* upload image */}
+
             <Box sx={{ marginLeft: '20px', flexGrow: '1' }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <ImageIcon color="primary" />
@@ -233,7 +288,6 @@ export default function AddAnimal() {
                   variant="h6"
                   sx={{ marginLeft: '10px', fontWeight: 'bold' }}
                 >
-                  {' '}
                   Image
                 </Typography>
               </Box>
@@ -247,11 +301,17 @@ export default function AddAnimal() {
                 sx={{ marginTop: '12px', ...global.button2Small }}
               >
                 Upload
-                <input hidden accept="image/*" multiple type="file" />
+                <input
+                  hidden
+                  accept="image/*"
+                  multiple
+                  type="file"
+                  onChange={handleImage}
+                />
               </Button>
+              // <Button onClick={multipleUpdload}>Upload</Button>
+              {/*ADD ANIMAL PHOTOS */}
               <Box marginTop={2}>
-                {/* ANIMAL PHOTOS */}
-
                 <Grid container>
                   <Grid item>
                     <IconButton>
