@@ -66,20 +66,41 @@ export const logout = async () => {
 
 export default function IsLoggedIn() {
   const [user, setUser] = useState({
-    user: null,
-    loggedIn: false,
+    // user: null,
+    // loggedIn: '',
+    // isAdmin: '',
   });
+
+  //
+
+  ///
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        setUser({ ...user, user: currentUser, loggedIn: true });
+        const CurrentUser = async () => {
+          if (currentUser?.uid) {
+            const docRef = doc(db, 'ngoshelters', auth.currentUser?.uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+              setUser({
+                ...user,
+                user: currentUser,
+                loggedIn: true,
+                isAdmin: docSnap.data().isAdmin,
+              });
+            } else {
+              console.log('No such document!');
+            }
+            return user;
+          }
+        };
+        CurrentUser();
       } else {
         setUser({ loggedIn: false });
       }
     });
   }, []);
-
   return user;
 }
 
@@ -108,15 +129,15 @@ export const GetData = async () => {
 //Add data to document subcollection
 
 export const AddSubData = async (inputs, images) => {
-  // const docRef = await addDoc(
-  //   collection(db, `ngoshelters/${auth.currentUser?.uid}/pets`),
-  //   {
-  //     ...inputs,
-  //     timestamp: serverTimestamp(),
-  //   }
-  // );
-  // console.log(docRef.id);
-  // alert('Success');
+  const docRef = await addDoc(
+    collection(db, `ngoshelters/${auth.currentUser?.uid}/pets`),
+    {
+      ...inputs,
+      timestamp: serverTimestamp(),
+    }
+  );
+  console.log(docRef.id);
+  alert('Success');
 };
 
 //Update List

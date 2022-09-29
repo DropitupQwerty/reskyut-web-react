@@ -19,7 +19,7 @@ import ListOfNGO from './pages/SuperAdmin/listofngo';
 import PostOfNGO from './pages/SuperAdmin/postofngo';
 import AddNgo from './pages/SuperAdmin/addngo';
 import ViewNgo from './pages/SuperAdmin/viewngo';
-
+import AdoptPet from './pages/ShelterAdmin/animallisting/AdoptPet';
 //
 import Testingan from './testingan';
 
@@ -34,7 +34,7 @@ export default function App() {
         <Routes>
           {/* Shelter Admin */}
           <Route path="/" element={<SignIn />} />
-          <Route path="/t" element={<Testingan />} />
+          <Route path="/t" element={<AdoptPet />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" exact element={<Profile />} />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import global from './styles/global';
 import logoReskyut from '../src/assets/logoReskyut.webp';
@@ -12,6 +12,8 @@ import {
   OutlinedInput,
 } from '@mui/material';
 import IsLoggedIn, { login } from './firebase/auth';
+import { auth, db } from './firebase/firebase-config';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -31,8 +33,16 @@ export default function SignIn() {
     login(input.loginEmail, input.loginPassword);
   };
 
-  if (user.loggedIn) {
-    navigate(`/dashboard`);
+  if (user?.loggedIn) {
+    if (user?.isAdmin && user.loggedIn) {
+      navigate('/admin/dashboard');
+    } else {
+      console.log('isNotAdmin');
+      navigate(`/dashboard`);
+    }
+
+    //   // } else {
+    //   // }
   } else {
     return (
       <Box sx={{ ...global.boxContainer }}>

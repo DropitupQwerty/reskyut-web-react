@@ -15,12 +15,9 @@ import React, { useState } from 'react';
 import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
 
-import { addDoc, collection, doc } from 'firebase/firestore';
-import { auth, db } from '../../firebase/firebase-config';
 import { register } from '../../firebase/auth';
 
 export default function AddNgo() {
-  // const ngoCollectionRef = collection(db, 'ngoshelters');
   const [inputs, setInputs] = useState({
     firstName: '',
     middleName: '',
@@ -30,6 +27,7 @@ export default function AddNgo() {
     password: '',
     display_name: '',
     desc: '',
+    isAdmin: false,
   });
 
   const handleChange = (e) => {
@@ -39,9 +37,6 @@ export default function AddNgo() {
 
   const handleCreateAccount = async () => {
     register(inputs);
-    // await addDoc(ngoCollectionRef, {
-    //   ...inputs,
-    // });
   };
 
   return (

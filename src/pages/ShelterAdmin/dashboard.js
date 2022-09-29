@@ -1,6 +1,6 @@
 //fake api's
 
-import React, { Component } from 'react';
+import React from 'react';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
 
 import { Paper, Box, Typography, Grid } from '@mui/material';
@@ -9,14 +9,13 @@ import IsLoggedIn, { GetData, listUpdate } from './../../firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { getDoc } from 'firebase/firestore';
+
 import { auth } from '../../firebase/firebase-config';
-import { db } from './../../firebase/firebase-config';
-import { doc } from 'firebase/firestore';
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [animalData, setAnimalData] = useState([]);
+  console.log(auth.currentUser);
 
   useEffect(() => {
     const getPostList = async () => {

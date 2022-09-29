@@ -68,7 +68,8 @@ export default function AddAnimal() {
   };
 
   const handleSubmit = () => {
-    //   AddSubData(inputs, images);
+    //Submit all image and inputs to collection ngoshelters/
+
     console.log(images);
   };
 

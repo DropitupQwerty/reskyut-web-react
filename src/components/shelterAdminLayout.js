@@ -102,6 +102,7 @@ export default function ShelterAdminLayout({ children }) {
     const item = await GetData();
     setData(item);
   }
+  //ShowData();
   console.log();
 
   const theme = useTheme();

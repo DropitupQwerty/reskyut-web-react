@@ -6,7 +6,7 @@ import { Paper, Typography, Box } from '@mui/material';
 import global from '../../styles/global';
 import { Oval } from 'react-loader-spinner';
 
-import { db } from '../../firebase/firebase-config';
+import { auth, db } from '../../firebase/firebase-config';
 import { collection, getDocs } from 'firebase/firestore';
 
 export default function SaDashboard() {
