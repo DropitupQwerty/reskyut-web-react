@@ -23,24 +23,15 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import global from '../../styles/global';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
-import { GetData } from './../../firebase/auth';
+import IsLoggedIn, { GetData } from './../../firebase/auth';
+import { auth } from '../../firebase/firebase-config';
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState('');
-
-  // console.log('called', user);
-
-  async function ShowData() {
-    const item = await GetData();
-    setData(item);
-    console.log(item);
-  }
-  ShowData();
-
+  const data = IsLoggedIn().userData;
   const [values, setValues] = useState({
     amount: '',
     password: '',
@@ -49,6 +40,7 @@ export default function Profile() {
     weightRange: '',
     showPassword: false,
   });
+  // console.log('called', user);
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -102,7 +94,7 @@ export default function Profile() {
               <TextField
                 inputProps={{ readOnly: true }}
                 fullWidth
-                value={data.firstName}
+                value={data?.firstName}
               />
             </Grid>
             <Grid item xs={4}>
@@ -110,7 +102,7 @@ export default function Profile() {
               <TextField
                 inputProps={{ readOnly: true }}
                 fullWidth
-                value={data.middleName}
+                value={data?.middleName}
               />
             </Grid>
             <Grid item xs={4}>
@@ -118,7 +110,7 @@ export default function Profile() {
               <TextField
                 inputProps={{ readOnly: true }}
                 fullWidth
-                value={data.lastName}
+                value={data?.lastName}
               />
             </Grid>
             <Grid item xs={4}>
@@ -126,7 +118,7 @@ export default function Profile() {
               <TextField
                 inputProps={{ readOnly: true }}
                 fullWidth
-                value={data.username}
+                value={data?.username}
               />
             </Grid>
             <Grid item xs={4}>
@@ -134,7 +126,7 @@ export default function Profile() {
               <TextField
                 inputProps={{ readOnly: true }}
                 fullWidth
-                value={data.email}
+                value={data?.email}
               />
             </Grid>
             <Grid item xs={4}>
@@ -142,7 +134,7 @@ export default function Profile() {
               <TextField
                 inputProps={{ readOnly: true }}
                 fullWidth
-                value={data.display_name}
+                value={data?.display_name}
               />
             </Grid>
             <Grid item xs>
@@ -155,7 +147,7 @@ export default function Profile() {
                 rows={5}
                 sx={{ width: '830px' }}
                 inputProps={{ readOnly: true }}
-                defaultValue={data.desc}
+                defaultValue={data?.desc}
               />
             </Grid>
             <Grid item container xs={4} spacing={2}>

@@ -21,13 +21,13 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PetsIcon from '@mui/icons-material/Pets';
-import ViewListIcon from '@mui/icons-material/ViewList';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ViewListIcon from '@mui/icons-material/ViewList';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 import Logout from '@mui/icons-material/Logout';
-import { logout } from './../firebase/auth';
+import LogoutUser, { logout } from './../firebase/auth';
 
 const drawerWidth = 240;
 
@@ -106,9 +106,6 @@ export default function SuperAdminLayout({ children }) {
 
   const handleDrawerClose = () => {
     setOpen(false);
-  };
-  const handleLogOut = () => {
-    logout();
   };
 
   return (
@@ -295,7 +292,7 @@ export default function SuperAdminLayout({ children }) {
             }}
             component={Link}
             to="/"
-            onClick={handleLogOut}
+            onClick={() => logout()}
           >
             <ListItemIcon
               sx={{

@@ -12,11 +12,11 @@ import {
   OutlinedInput,
 } from '@mui/material';
 import IsLoggedIn, { login } from './firebase/auth';
-import { auth, db } from './firebase/firebase-config';
-import { doc, getDoc } from 'firebase/firestore';
+import { auth } from './firebase/firebase-config';
 
 export default function SignIn() {
   const navigate = useNavigate();
+
   const user = IsLoggedIn();
 
   const [input, setInputs] = useState({
@@ -33,60 +33,58 @@ export default function SignIn() {
     login(input.loginEmail, input.loginPassword);
   };
 
-  if (user?.loggedIn) {
-    if (user?.isAdmin && user.loggedIn) {
-      navigate('/admin/dashboard');
-    } else {
-      console.log('isNotAdmin');
-      navigate(`/dashboard`);
+  useEffect(() => {
+    if (user?.loggedIn) {
+      if (user?.userData.isAdmin && user.loggedIn) {
+        navigate('/admin/dashboard');
+      } else if (!user?.userData.isAdmin) {
+        navigate(`/dashboard`);
+      }
     }
+  }, [auth.currentUser]);
 
-    //   // } else {
-    //   // }
-  } else {
-    return (
-      <Box sx={{ ...global.boxContainer }}>
-        <Paper elevation={3} sx={{ ...global.signInPaper }}>
-          <Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '20px 20px',
-              }}
-            >
-              <img src={logoReskyut} alt="logo" />
-              <Typography variant="h2" fontWeight="bold">
-                Reskyut
-              </Typography>
-            </Box>
-            <FormGroup>
-              <FormControl fullWidth>
-                <OutlinedInput
-                  sx={{ margin: '10px 20px' }}
-                  placeholder="Email"
-                  name="loginEmail"
-                  value={input.loginEmail}
-                  onChange={handleChange}
-                />
-              </FormControl>
-              <FormControl fullWidth>
-                <OutlinedInput
-                  sx={{ margin: '10px 20px' }}
-                  placeholder="Password"
-                  name="loginPassword"
-                  vlaue={input.loginPassword}
-                  onChange={handleChange}
-                />
-              </FormControl>
-              <Button onClick={handleLogin} sx={{ margin: '10px 20px' }}>
-                Login
-              </Button>
-            </FormGroup>
+  return (
+    <Box sx={{ ...global.boxContainer }}>
+      <Paper elevation={3} sx={{ ...global.signInPaper }}>
+        <Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '20px 20px',
+            }}
+          >
+            <img src={logoReskyut} alt="logo" />
+            <Typography variant="h2" fontWeight="bold">
+              Reskyut
+            </Typography>
           </Box>
-        </Paper>
-      </Box>
-    );
-  }
+          <FormGroup>
+            <FormControl fullWidth>
+              <OutlinedInput
+                sx={{ margin: '10px 20px' }}
+                placeholder="Email"
+                name="loginEmail"
+                value={input.loginEmail}
+                onChange={handleChange}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <OutlinedInput
+                sx={{ margin: '10px 20px' }}
+                placeholder="Password"
+                name="loginPassword"
+                vlaue={input.loginPassword}
+                onChange={handleChange}
+              />
+            </FormControl>
+            <Button onClick={handleLogin} sx={{ margin: '10px 20px' }}>
+              Login
+            </Button>
+          </FormGroup>
+        </Box>
+      </Paper>
+    </Box>
+  );
 }

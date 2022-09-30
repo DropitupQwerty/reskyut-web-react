@@ -19,23 +19,20 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import { listUpdate } from '../../../firebase/auth';
+import { ListUpdate } from '../../../firebase/auth';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import IsLoggedIn from './../../../firebase/auth';
-import { useNavigate } from 'react-router-dom';
 
 export default function AnimalListing() {
   const [animalData, setAnimalData] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const getPostList = async () => {
-      const list = await listUpdate();
+      const list = await ListUpdate();
       setAnimalData(list);
     };
     getPostList();
-  }, [IsLoggedIn().loggedIn]);
+  }, []);
   console.log(animalData);
 
   const showDataTable = () => {
@@ -76,70 +73,66 @@ export default function AnimalListing() {
     ));
   };
 
-  if (IsLoggedIn().loggedIn) {
-    return (
-      <ShelterAdminLayout>
-        <Grid item xs>
-          <Typography variant="h4" align="center">
-            <ReceiptLongIcon color="primary" /> <b>Animal Listing</b>
+  return (
+    <ShelterAdminLayout>
+      <Grid item xs>
+        <Typography variant="h4" align="center">
+          <ReceiptLongIcon color="primary" /> <b>Animal Listing</b>
+        </Typography>
+      </Grid>
+      <Grid item xs sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            ...global.button2Small,
+          }}
+          component={Link}
+          to="/animallisting/addanimal"
+        >
+          <Typography>
+            <b> + New Animal</b>
           </Typography>
-        </Grid>
-        <Grid item xs sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              ...global.button2Small,
-            }}
-            component={Link}
-            to="/animallisting/addanimal"
-          >
-            <Typography>
-              <b> + New Animal</b>
-            </Typography>
-          </Button>
-        </Grid>
+        </Button>
+      </Grid>
 
-        <Grid item xs>
-          <Button>
-            <RefreshIcon color="primary" />
-          </Button>
-          <Button>
-            <DeleteIcon color="primary" />
-          </Button>
-        </Grid>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <b>Name</b>
-                </TableCell>
-                <TableCell sx={{ marginLeft: '10vw' }}>
-                  <b>Age</b>
-                </TableCell>
-                <TableCell>
-                  <b>Gender</b>
-                </TableCell>
-                <TableCell>
-                  <b>Pet Category</b>
-                </TableCell>
-                <TableCell>
-                  <b>Description</b>
-                </TableCell>
-                <TableCell align="center">
-                  <b>Status</b>
-                </TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{showDataTable()}</TableBody>
-          </Table>
-        </TableContainer>
-      </ShelterAdminLayout>
-    );
-  } else {
-    navigate('/');
-  }
+      <Grid item xs>
+        <Button>
+          <RefreshIcon color="primary" />
+        </Button>
+        <Button>
+          <DeleteIcon color="primary" />
+        </Button>
+      </Grid>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <b>Name</b>
+              </TableCell>
+              <TableCell sx={{ marginLeft: '10vw' }}>
+                <b>Age</b>
+              </TableCell>
+              <TableCell>
+                <b>Gender</b>
+              </TableCell>
+              <TableCell>
+                <b>Pet Category</b>
+              </TableCell>
+              <TableCell>
+                <b>Description</b>
+              </TableCell>
+              <TableCell align="center">
+                <b>Status</b>
+              </TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>{showDataTable()}</TableBody>
+        </Table>
+      </TableContainer>
+    </ShelterAdminLayout>
+  );
 }

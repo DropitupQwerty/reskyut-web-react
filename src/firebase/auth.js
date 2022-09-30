@@ -1,4 +1,4 @@
-import { db, storage } from './firebase-config';
+import { db } from './firebase-config';
 import { auth } from './firebase-config';
 import {
   signInWithEmailAndPassword,
@@ -11,24 +11,15 @@ import {
   doc,
   setDoc,
   getDoc,
-  onSnapshot,
   addDoc,
   query,
   getDocs,
   serverTimestamp,
+  where,
 } from 'firebase/firestore';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { async } from '@firebase/util';
-import { Snackbar } from '@mui/material';
-import AddAnimal from './../pages/ShelterAdmin/animallisting/editanimal';
-import {
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-  getDownloadURL,
-} from 'firebase/storage';
 
 const ngoCollectionRef = collection(db, 'ngoshelters');
 
@@ -65,15 +56,7 @@ export const logout = async () => {
 };
 
 export default function IsLoggedIn() {
-  const [user, setUser] = useState({
-    // user: null,
-    // loggedIn: '',
-    // isAdmin: '',
-  });
-
-  //
-
-  ///
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
@@ -87,10 +70,8 @@ export default function IsLoggedIn() {
                 ...user,
                 user: currentUser,
                 loggedIn: true,
-                isAdmin: docSnap.data().isAdmin,
+                userData: docSnap.data(),
               });
-            } else {
-              console.log('No such document!');
             }
             return user;
           }
@@ -101,53 +82,44 @@ export default function IsLoggedIn() {
       }
     });
   }, []);
+
   return user;
 }
-
-// fetching firestore data
-export const GetData = async () => {
-  const [data, setData] = useState({});
-
-  useEffect(() => {
-    const fetch = async () => {
-      if (auth.currentUser?.uid) {
-        const docRef = doc(db, 'ngoshelters', auth.currentUser?.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setData(docSnap.data());
-        } else {
-          console.log('No such document!');
-        }
-      }
-    };
-    fetch();
-  }, [IsLoggedIn().loggedIn]);
-
-  return data;
-};
 
 //Add data to document subcollection
 
 export const AddSubData = async (inputs, images) => {
-  const docRef = await addDoc(
-    collection(db, `ngoshelters/${auth.currentUser?.uid}/pets`),
-    {
-      ...inputs,
-      timestamp: serverTimestamp(),
-    }
-  );
+  const docRef = await addDoc(collection(db, `pets`), {
+    ...inputs,
+    timestamp: serverTimestamp(),
+  });
   console.log(docRef.id);
   alert('Success');
 };
 
 //Update List
-export const listUpdate = async () => {
-  const q = query(collection(db, `ngoshelters/${auth.currentUser?.uid}/pets`));
+export const ListUpdate = async () => {
+  const q = query(
+    collection(db, `pets`),
+    where('shelterID', '==', auth.currentUser?.uid)
+  );
   const querySnapshot = await getDocs(q);
   const queryData = querySnapshot.docs.map((detail) => ({
     ...detail.data(),
-    id: detail.id,
   }));
   console.log(queryData);
+
   return queryData;
+};
+
+//Get Subcollection
+
+export const GetSubCollection = async () => {
+  const [allSub, setAllSub] = useState();
+
+  console.log(ListUpdate());
+
+  console.log(allSub);
+
+  return allSub;
 };

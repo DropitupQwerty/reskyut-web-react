@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import {
@@ -16,16 +16,17 @@ import {
 import MuiAppBar from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
 
+import ViewListIcon from '@mui/icons-material/ViewList';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PetsIcon from '@mui/icons-material/Pets';
-import ViewListIcon from '@mui/icons-material/ViewList';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { GetData, logout } from '../firebase/auth';
-import { auth, db } from '../firebase/firebase-config';
+import { logout } from '../firebase/auth';
+import { auth } from '../firebase/firebase-config';
+import IsLoggedIn from './../firebase/auth';
 
 const drawerWidth = 240;
 
@@ -95,18 +96,10 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function ShelterAdminLayout({ children }) {
-  const [data, setData] = useState('');
   const navigate = useNavigate('');
-
-  async function ShowData() {
-    const item = await GetData();
-    setData(item);
-  }
-  //ShowData();
-  console.log();
-
+  const user = IsLoggedIn().userData;
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -116,15 +109,11 @@ export default function ShelterAdminLayout({ children }) {
     setOpen(false);
   };
 
-  const handleLogout = () => {
-    logout();
-  };
-
   const handleNavigate = (drawermenu) => {
     navigate(`/${drawermenu}`);
   };
 
-  const drawermenus = [
+  const userDrawerMenus = [
     {
       label: 'Dashboard',
       link: 'dashboard',
@@ -161,7 +150,7 @@ export default function ShelterAdminLayout({ children }) {
               <MenuIcon />
             </IconButton>
             <Typography variant="h4" sx={{ fontWeight: '600' }}>
-              {data.display_name}
+              {user?.display_name}
             </Typography>
           </Box>
         </Toolbar>
@@ -179,7 +168,7 @@ export default function ShelterAdminLayout({ children }) {
         <Divider />
 
         <List sx={{ flexGrow: 1 }}>
-          {drawermenus.map((drawermenu) => (
+          {userDrawerMenus.map((drawermenu) => (
             <ListItem
               key={drawermenu.label}
               button
@@ -251,7 +240,7 @@ export default function ShelterAdminLayout({ children }) {
             }}
             component={Link}
             to="/"
-            onClick={handleLogout}
+            onClick={() => logout()}
           >
             <ListItemIcon
               sx={{
@@ -264,7 +253,6 @@ export default function ShelterAdminLayout({ children }) {
             </ListItemIcon>
             <ListItemText primary="Logout  " sx={{ opacity: open ? 1 : 0 }} />
           </ListItem>
-          {/* Logout */}
         </List>
       </Drawer>
 

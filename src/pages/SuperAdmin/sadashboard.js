@@ -1,4 +1,5 @@
 import SuperAdminLayout from '../../components/superAdminLayout';
+import ShelterAdminLayout from '../../components/shelterAdminLayout';
 
 import React, { useState, useEffect } from 'react';
 
@@ -6,8 +7,9 @@ import { Paper, Typography, Box } from '@mui/material';
 import global from '../../styles/global';
 import { Oval } from 'react-loader-spinner';
 
-import { auth, db } from '../../firebase/firebase-config';
+import { db } from '../../firebase/firebase-config';
 import { collection, getDocs } from 'firebase/firestore';
+import IsLoggedIn from './../../firebase/auth';
 
 export default function SaDashboard() {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,8 +24,6 @@ export default function SaDashboard() {
     };
     getAccounts();
   }, []);
-
-  console.log(accounts);
 
   const dataLoad = () => {
     if (isLoading === false) {

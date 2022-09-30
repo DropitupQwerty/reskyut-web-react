@@ -19,48 +19,62 @@ import ListOfNGO from './pages/SuperAdmin/listofngo';
 import PostOfNGO from './pages/SuperAdmin/postofngo';
 import AddNgo from './pages/SuperAdmin/addngo';
 import ViewNgo from './pages/SuperAdmin/viewngo';
-import AdoptPet from './pages/ShelterAdmin/animallisting/AdoptPet';
+
 //
-import Testingan from './testingan';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import PagenotFound from './PagenotFound';
+import IsLoggedIn from './firebase/auth';
 
 export default function App() {
+  const user = IsLoggedIn();
+
+  function Path() {
+    if (user?.loggedIn) {
+      if (user?.userData.isAdmin)
+        return (
+          <Route>
+            <Route path="/admin/dashboard" element={<SaDashboard />} />
+            <Route path="/admin/postofngo" element={<PostOfNGO />} />
+            <Route path="/admin/addngo" element={<AddNgo />} />
+            <Route path="/admin/listofngo" element={<ListOfNGO />} />
+            <Route
+              path="/admin/listofngo/viewngo/:id"
+              element={<ViewNgo />}
+            ></Route>
+            <Route exact path="/admin/viewanimal" />
+          </Route>
+        );
+      else if (!user?.isAdmin) {
+        return (
+          <Route>
+            {/* Shelter Admin */}
+
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" exact element={<Profile />} />
+            <Route path="/adoptionpage" exact element={<AdopptionPage />} />
+            <Route path="/animallisting" exact element={<AnimalListing />} />
+            <Route path="/message" exact element={<Message />} />
+            {/* Animal Listing */}
+            <Route path="/animallisting/addanimal" element={<AddAnimal />} />
+            <Route
+              path="/animallisting/editanimal/:id"
+              element={<EditAnimal />}
+            />
+            {/* Super Admin */}
+          </Route>
+        );
+      }
+    }
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <Routes>
-          {/* Shelter Admin */}
-          <Route path="/" element={<SignIn />} />
-          <Route path="/t" element={<AdoptPet />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile" exact element={<Profile />} />
-          <Route path="/adoptionpage" exact element={<AdopptionPage />} />
-          <Route path="/animallisting" exact element={<AnimalListing />} />
-          <Route path="/message" exact element={<Message />} />
-          {/* Animal Listing */}
-          <Route path="/animallisting/addanimal" element={<AddAnimal />} />
-
-          <Route
-            path="/animallisting/editanimal/:id"
-            element={<EditAnimal />}
-          />
-
-          {/* Super Admin */}
-          <Route path="/admin/dashboard" element={<SaDashboard />} />
-          <Route path="/admin/postofngo" element={<PostOfNGO />} />
-          <Route path="/admin/addngo" element={<AddNgo />} />
-          <Route path="/admin/listofngo" element={<ListOfNGO />} />
-          <Route
-            path="/admin/listofngo/viewngo/:id"
-            element={<ViewNgo />}
-          ></Route>
-          <Route exact path="/admin/viewanimal" />
-
-          {/* Page not Found */}
+          {Path()}
+          <Route index element={<SignIn />} />;
           <Route path="*" element={<PagenotFound />} />
         </Routes>
       </Router>
