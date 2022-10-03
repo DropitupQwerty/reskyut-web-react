@@ -73,6 +73,19 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Routes>
+          {/* asd */}
+          <Route>
+            <Route path="/admin/dashboard" element={<SaDashboard />} />
+            <Route path="/admin/postofngo" element={<PostOfNGO />} />
+            <Route path="/admin/addngo" element={<AddNgo />} />
+            <Route path="/admin/listofngo" element={<ListOfNGO />} />
+            <Route
+              path="/admin/listofngo/viewngo/:id"
+              element={<ViewNgo />}
+            ></Route>
+            <Route exact path="/admin/viewanimal" />
+          </Route>
+          {/* asD */}
           {Path()}
           <Route index element={<SignIn />} />;
           <Route path="*" element={<PagenotFound />} />

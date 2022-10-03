@@ -19,12 +19,14 @@ import ImageIcon from '@mui/icons-material/Image';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 import { useNavigate } from 'react-router-dom';
-import { IsLoggedIn, AddSubData } from './../../../firebase/auth';
+import { AddSubData } from './../../../firebase/auth';
 
 import CancelIcon from '@mui/icons-material/Cancel';
 import { auth } from '../../../firebase/firebase-config';
+
 export default function AddAnimal() {
   const navigate = useNavigate();
+
   const [inputs, setInputs] = useState({
     name: '',
     age: '',
@@ -45,7 +47,7 @@ export default function AddAnimal() {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
-  //handle addImages
+  //Handle AddImages
   const handleImage = (evnt) => {
     const selectedFIles = [];
     const targetFiles = evnt.target.files;
@@ -56,17 +58,18 @@ export default function AddAnimal() {
     setImages(selectedFIles);
   };
 
+  //Do Submit
   const handleSubmit = () => {
     AddSubData(inputs, images);
     console.log(images);
   };
 
-  //Remove photo in UI
+  //Remove Photo in UI
   const handleRemovePhoto = (photo) => {
     setImages(images.filter((p) => p !== photo));
   };
 
-  //dropdown
+  //Dropdown
   const Custom = () => setTextField(true);
 
   return (
@@ -211,7 +214,6 @@ export default function AddAnimal() {
                       name="pet_category"
                       value={inputs.pet_category}
                       onChange={handleChange}
-                      //          onBlur={onBlur}
                     />
                   ) : (
                     <Select
@@ -283,7 +285,9 @@ export default function AddAnimal() {
                 onChange={handleImage}
               />
             </Button>
+
             {/*ADD ANIMAL PHOTOS */}
+
             <Box>
               <Grid container>
                 {images.map((imageURI) => (

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
-import { Firestore } from 'firebase/firestore';
+import { Firestore, query, where } from 'firebase/firestore';
 import {
   Paper,
   Typography,
@@ -22,25 +22,26 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { db } from '../../firebase/firebase-config';
 import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 import { deleteAccount } from '../../firebase/auth';
+import { GetAccounts } from './../../firebase/auth';
+import { async } from '@firebase/util';
 
 export default function ListOfNgo() {
   const [accounts, setAccounts] = useState([]);
-  const ngoAdminCollectionRef = collection(db, 'ngoshelters');
 
   useEffect(() => {
-    const getAccounts = async () => {
-      const data = await getDocs(ngoAdminCollectionRef);
-      setAccounts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    const allAccounts = async () => {
+      const acc = await GetAccounts();
+      setAccounts(acc);
     };
-    getAccounts();
+    allAccounts();
   }, []);
 
   console.log(accounts);
 
   const handleDelete = (account) => {
-    console.log('clicked');
+    console.log(account.uid);
     setAccounts(accounts.filter((a) => a.id !== account.id));
-    deleteAccount(account.id);
+    deleteAccount(account.uid);
   };
 
   return (
@@ -78,6 +79,7 @@ export default function ListOfNgo() {
           <TableBody>
             {accounts.map((account) => (
               <TableRow key={account.id}>
+                {console.log(account.id)}
                 <TableCell>{account.firstName}</TableCell>
                 <TableCell>{account.email}</TableCell>
                 <TableCell>{account.display_name}</TableCell>

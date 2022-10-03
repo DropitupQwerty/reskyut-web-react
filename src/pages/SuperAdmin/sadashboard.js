@@ -9,20 +9,18 @@ import { Oval } from 'react-loader-spinner';
 
 import { db } from '../../firebase/firebase-config';
 import { collection, getDocs } from 'firebase/firestore';
-import IsLoggedIn from './../../firebase/auth';
+import IsLoggedIn, { GetAccounts } from './../../firebase/auth';
 
 export default function SaDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [accounts, setAccounts] = useState([]);
-  const ngoAdminCollectionRef = collection(db, 'ngoshelters');
-
   useEffect(() => {
-    const getAccounts = async () => {
-      const data = await getDocs(ngoAdminCollectionRef);
-      setAccounts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    const allAccounts = async () => {
+      const acc = await GetAccounts();
+      setAccounts(acc);
       setIsLoading(false);
     };
-    getAccounts();
+    allAccounts();
   }, []);
 
   const dataLoad = () => {

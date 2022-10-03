@@ -1,6 +1,6 @@
 import { AppBar, Box, Toolbar, Typography } from '@mui/material';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 export default function AppBarLayout({ children }) {
   return (

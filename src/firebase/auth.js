@@ -17,11 +17,11 @@ import {
   serverTimestamp,
   where,
 } from 'firebase/firestore';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { async } from '@firebase/util';
 
 const ngoCollectionRef = collection(db, 'ngoshelters');
+const adoptorsCollectionRef = collection(db, 'adoptors');
 
 export const deleteAccount = async (id) => {
   const userDoc = doc(db, 'ngoshelters', id);
@@ -36,6 +36,8 @@ export async function login(loginEmail, loginPassword) {
   }
 }
 
+// Registeter to authentication and Add documents to Adoptors collection and ngoShelter collection
+
 export const register = async (inputs) => {
   try {
     const user = await createUserWithEmailAndPassword(
@@ -43,7 +45,12 @@ export const register = async (inputs) => {
       inputs.email,
       inputs.password
     );
-    await setDoc(doc(ngoCollectionRef, auth.currentUser?.uid), {
+
+    await setDoc(doc(ngoCollectionRef), {
+      ...inputs,
+    });
+
+    await setDoc(doc(adoptorsCollectionRef), {
       ...inputs,
     });
   } catch (error) {
@@ -65,6 +72,7 @@ export default function IsLoggedIn() {
           if (currentUser?.uid) {
             const docRef = doc(db, 'ngoshelters', auth.currentUser?.uid);
             const docSnap = await getDoc(docRef);
+
             if (docSnap.exists()) {
               setUser({
                 ...user,
@@ -98,15 +106,18 @@ export const AddSubData = async (inputs, images) => {
 };
 
 //Update List
+
 export const ListUpdate = async () => {
   const q = query(
     collection(db, `pets`),
     where('shelterID', '==', auth.currentUser?.uid)
   );
+
   const querySnapshot = await getDocs(q);
   const queryData = querySnapshot.docs.map((detail) => ({
     ...detail.data(),
   }));
+
   console.log(queryData);
 
   return queryData;
@@ -115,11 +126,25 @@ export const ListUpdate = async () => {
 //Get Subcollection
 
 export const GetSubCollection = async () => {
-  const [allSub, setAllSub] = useState();
+  const q = query(collection(db, `adoptors`));
+  const querySnapshot = await getDocs(q);
 
-  console.log(ListUpdate());
+  const queryData = querySnapshot.docs.map((detail) => ({
+    uid: detail.id,
+  }));
 
-  console.log(allSub);
+  console.log(queryData);
+  return queryData;
+};
 
-  return allSub;
+//getAccounts
+export const GetAccounts = async () => {
+  const q = query(collection(db, `ngoshelters`), where('isAdmin', '==', false));
+  const querySnapshot = await getDocs(q);
+
+  const queryData = querySnapshot.docs.map((detail) => ({
+    ...detail.data(),
+    uid: detail.id,
+  }));
+  return queryData;
 };
