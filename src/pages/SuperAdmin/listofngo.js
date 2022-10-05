@@ -19,11 +19,8 @@ import {
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import { db } from '../../firebase/firebase-config';
-import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 import { deleteAccount } from '../../firebase/auth';
 import { GetAccounts } from './../../firebase/auth';
-import { async } from '@firebase/util';
 import axios from 'axios';
 
 export default function ListOfNgo() {
