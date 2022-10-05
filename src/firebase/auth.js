@@ -19,6 +19,7 @@ import {
 } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
+import axios from 'axios';
 
 const ngoCollectionRef = collection(db, 'ngoshelters');
 const adoptorsCollectionRef = collection(db, 'adoptors');
@@ -40,21 +41,9 @@ export async function login(loginEmail, loginPassword) {
 
 export const register = async (inputs) => {
   try {
-    const user = await createUserWithEmailAndPassword(
-      auth,
-      inputs.email,
-      inputs.password
-    );
-
-    await setDoc(doc(ngoCollectionRef), {
-      ...inputs,
-    });
-
-    await setDoc(doc(adoptorsCollectionRef), {
-      ...inputs,
-    });
-  } catch (error) {
-    console.log(error.message);
+    axios.post('http://localhost:5000/api/admin/', inputs);
+  } catch (err) {
+    console.log('message', err.message);
   }
 };
 

@@ -24,6 +24,7 @@ import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 import { deleteAccount } from '../../firebase/auth';
 import { GetAccounts } from './../../firebase/auth';
 import { async } from '@firebase/util';
+import axios from 'axios';
 
 export default function ListOfNgo() {
   const [accounts, setAccounts] = useState([]);
@@ -41,6 +42,7 @@ export default function ListOfNgo() {
   const handleDelete = (account) => {
     console.log(account.uid);
     setAccounts(accounts.filter((a) => a.id !== account.id));
+    axios.post(`http://localhost:5000/api/admin/${account.uid}`);
     deleteAccount(account.uid);
   };
 
