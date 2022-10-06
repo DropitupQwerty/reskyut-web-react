@@ -1,7 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import global from './styles/global';
+
+//styles
 import logoReskyut from '../src/assets/logoReskyut.webp';
+import global from './styles/global';
 import {
   Box,
   Paper,
@@ -11,12 +13,13 @@ import {
   FormControl,
   OutlinedInput,
 } from '@mui/material';
+
+//firebase
 import IsLoggedIn, { login } from './firebase/auth';
 import { auth } from './firebase/firebase-config';
 
 export default function SignIn() {
   const navigate = useNavigate();
-
   const user = IsLoggedIn();
 
   const [input, setInputs] = useState({

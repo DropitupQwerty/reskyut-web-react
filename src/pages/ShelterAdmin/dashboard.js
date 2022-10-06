@@ -1,12 +1,11 @@
 import React from 'react';
-import ShelterAdminLayout from '../../components/shelterAdminLayout';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
+import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import { Paper, Box, Typography, Grid } from '@mui/material';
 import global from '../../styles/global';
 import { ListUpdate } from './../../firebase/auth';
-
-import { useEffect } from 'react';
-import { useState } from 'react';
 
 export default function Dashboard() {
   const [animalData, setAnimalData] = useState([]);
@@ -76,6 +75,7 @@ export default function Dashboard() {
                     }}
                   ></Box>
                 </Grid>
+
                 <Grid item xs={6}>
                   <Box>
                     <Typography variant="h5" sx={{ textAlign: 'center' }}>

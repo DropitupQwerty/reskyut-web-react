@@ -33,17 +33,14 @@ export default function Profile() {
   const [open, setOpen] = useState(false);
   const data = IsLoggedIn().userData;
   const [values, setValues] = useState({
-    amount: '',
-    password: '',
-    oldPassword: '',
-    weight: '',
-    weightRange: '',
+    currentPassword: '',
+    confirmPassword: '',
+    newPassword: '',
     showPassword: false,
   });
-  // console.log('called', user);
 
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
+  const handleChange = (event) => {
+    setValues({ ...values, [event.target.name]: event.target.value });
   };
 
   const handleClickShowPassword = () => {
@@ -64,8 +61,6 @@ export default function Profile() {
   const handleClose = () => {
     setOpen(false);
   };
-
-  // style
 
   return (
     <ShelterAdminLayout>
@@ -181,8 +176,9 @@ export default function Profile() {
                       <FormControl sx={{ m: 1 }} variant="outlined" fullWidth>
                         <OutlinedInput
                           type={values.showPassword ? 'text' : 'password'}
-                          value={values.password}
-                          onChange={handleChange('password')}
+                          value={values.currentPassword}
+                          name="currentPassword"
+                          onChange={handleChange}
                           endAdornment={
                             <InputAdornment position="end">
                               <IconButton
@@ -203,15 +199,16 @@ export default function Profile() {
                       </FormControl>
                       {/* password Old Password */}
 
-                      {/* password Old Password */}
+                      {/* New Password */}
                       <Typography sx={{ fontWeight: 'bold' }}>
                         New Password
                       </Typography>
                       <FormControl sx={{ m: 1 }} variant="outlined" fullWidth>
                         <OutlinedInput
                           type={values.showPassword ? 'text' : 'password'}
-                          value={values.password}
-                          onChange={handleChange('password')}
+                          value={values.newPassword}
+                          name="newPassword"
+                          onChange={handleChange}
                           endAdornment={
                             <InputAdornment position="end">
                               <IconButton
@@ -238,8 +235,9 @@ export default function Profile() {
                       <FormControl sx={{ m: 1 }} fullWidth variant="outlined">
                         <OutlinedInput
                           type={values.showPassword ? 'text' : 'password'}
-                          value={values.password}
-                          onChange={handleChange('password')}
+                          value={values.confirmPassword}
+                          name="confirmPassword"
+                          onChange={handleChange}
                           endAdornment={
                             <InputAdornment position="end">
                               <IconButton
