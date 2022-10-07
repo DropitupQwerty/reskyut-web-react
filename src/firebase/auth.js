@@ -22,6 +22,8 @@ import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import axios from 'axios';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { ConstructionOutlined } from '@mui/icons-material';
+import { arrayUnion } from 'firebase/firestore';
 
 export const deleteAccount = async (id) => {
   const userDoc = doc(db, 'ngoshelters', id);
@@ -77,13 +79,14 @@ export const AddSubData = async (inputs, images) => {
         (error) => console.log(error),
         async () => {
           await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
-            imageURL.push(downloadURLs);
+            imageURL.push();
+            console.log('File available at', downloadURLs);
             async function updateDocs() {
               await updateDoc(
                 doc(db, `pets`, docRef.id),
                 {
-                  imageURL: [imageURL],
                   id: docRef.id,
+                  imageURL: arrayUnion(downloadURLs),
                 },
                 { merge: true }
               );
@@ -93,6 +96,7 @@ export const AddSubData = async (inputs, images) => {
         }
       );
     });
+
     Promise.all(promises)
       .then(() => {
         alert('Pet added to databse');
