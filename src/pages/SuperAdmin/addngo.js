@@ -9,7 +9,10 @@ import {
   FormControl,
   OutlinedInput,
   FormGroup,
+  IconButton,
 } from '@mui/material';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 
 import React, { useState } from 'react';
 import global from '../../styles/global';
@@ -47,7 +50,24 @@ export default function AddNgo() {
           justifyContent="center"
           sx={{ marginTop: '20px' }}
         >
-          <Avatar sx={{ height: '200px', width: '200px' }}></Avatar>
+          <Box sx={{ position: 'relative' }}>
+            <Avatar sx={{ height: '200px', width: '200px' }}></Avatar>
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="label"
+              sx={{
+                position: 'absolute',
+                right: '0px',
+                bottom: '0px',
+                background: '#D8DADF',
+                padding: '20px',
+              }}
+            >
+              <input hidden accept="image/*" type="file" />
+              <AddAPhotoIcon sx={{ height: '30px', width: 'auto' }} />
+            </IconButton>
+          </Box>
         </Stack>
 
         <Box display="flex" justifyContent="center">

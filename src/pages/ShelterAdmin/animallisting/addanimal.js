@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import global from '../../../styles/global';
 import AppBarLayout from '../../../components/appBarLayout';
 import {
@@ -19,7 +19,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 import { useNavigate } from 'react-router-dom';
-import { AddSubData } from './../../../firebase/auth';
+import IsLoggedIn, { AddSubData } from './../../../firebase/auth';
 
 import CancelIcon from '@mui/icons-material/Cancel';
 import { auth } from '../../../firebase/firebase-config';
@@ -29,16 +29,18 @@ export default function AddAnimal() {
 
   const [inputs, setInputs] = useState({
     name: '',
-    age: '',
+    age: 'Puppy',
     gender: '',
-    status: '',
+    status: 'listed',
     pet_category: 'Custom',
     desc: '',
-    image: '',
     shelterID: auth.currentUser?.uid,
+    shelterName: auth.currentUser?.displayName,
   });
+
   const [images, setImages] = useState([]);
   const [textField, setTextField] = useState(false);
+  const [previewImage, setPreviewImage] = useState([]);
 
   console.log(inputs);
 
@@ -47,26 +49,36 @@ export default function AddAnimal() {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
-  //Handle AddImages
+  //handle image changes
   const handleImage = (evnt) => {
-    const selectedFIles = [];
     const targetFiles = evnt.target.files;
     const targetFilesObject = [...targetFiles];
-    targetFilesObject.map((file) => {
-      return selectedFIles.push(URL.createObjectURL(file));
-    });
-    setImages(selectedFIles);
+    setImages(targetFilesObject);
   };
+
+  useEffect(() => {
+    const handlePreview = () => {
+      const selectedFIles = [];
+      images.map((file) => {
+        console.log('file', file);
+        return selectedFIles.push(URL.createObjectURL(file));
+      });
+      setPreviewImage(selectedFIles);
+    };
+    handlePreview();
+  }, [images]);
 
   //Do Submit
   const handleSubmit = () => {
     AddSubData(inputs, images);
-    console.log(images);
   };
 
   //Remove Photo in UI
   const handleRemovePhoto = (photo) => {
-    setImages(images.filter((p) => p !== photo));
+    const image = [...images];
+    const index = previewImage.indexOf(photo);
+    image.splice(index, 1);
+    setImages(image);
   };
 
   //Dropdown
@@ -290,7 +302,7 @@ export default function AddAnimal() {
 
             <Box>
               <Grid container>
-                {images.map((imageURI) => (
+                {previewImage.map((imageURI) => (
                   <Grid item>
                     {console.log(imageURI.index)}
 

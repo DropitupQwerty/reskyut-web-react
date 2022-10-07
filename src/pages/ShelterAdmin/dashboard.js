@@ -6,6 +6,7 @@ import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import { Paper, Box, Typography, Grid } from '@mui/material';
 import global from '../../styles/global';
 import { ListUpdate } from './../../firebase/auth';
+import { auth } from '../../firebase/firebase-config';
 
 export default function Dashboard() {
   const [animalData, setAnimalData] = useState([]);
@@ -17,6 +18,8 @@ export default function Dashboard() {
     };
     getPostList();
   }, []);
+
+  console.log(auth.currentUser.displayName);
 
   return (
     <ShelterAdminLayout>

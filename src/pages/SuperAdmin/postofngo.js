@@ -24,8 +24,8 @@ import ListOfNGO from './listofngo';
 const animalData = [];
 
 export default function PostOfNgo() {
+  //Show no data if table is empty
   function showDataTable() {
-    //Show no data if table is empty
     if (animalData.length === 0) {
       return (
         <TableRow>

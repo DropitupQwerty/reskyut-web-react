@@ -1,4 +1,4 @@
-import { db } from './firebase-config';
+import { db, storage } from './firebase-config';
 import { auth } from './firebase-config';
 import {
   signInWithEmailAndPassword,
@@ -16,17 +16,19 @@ import {
   getDocs,
   serverTimestamp,
   where,
+  updateDoc,
 } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import axios from 'axios';
-
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 
 export const deleteAccount = async (id) => {
   const userDoc = doc(db, 'ngoshelters', id);
   await deleteDoc(userDoc);
 };
 
+// Login Account
 export async function login(loginEmail, loginPassword) {
   try {
     await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
@@ -51,16 +53,56 @@ export const logout = async () => {
 //Add data to document subcollection
 
 export const AddSubData = async (inputs, images) => {
-  const docRef = await addDoc(collection(db, `pets`), {
+  const promises = [];
+  const imageURL = [];
+
+  await addDoc(collection(db, `pets`), {
     ...inputs,
     timestamp: serverTimestamp(),
+  }).then((docRef) => {
+    images.map((file) => {
+      console.log('loop');
+
+      const sotrageRef = ref(storage, `${docRef.id}/${file.name}`);
+
+      const uploadTask = uploadBytesResumable(sotrageRef, file);
+      promises.push(uploadTask);
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const prog = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+        },
+        (error) => console.log(error),
+        async () => {
+          await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
+            imageURL.push(downloadURLs);
+            async function updateDocs() {
+              await updateDoc(
+                doc(db, `pets`, docRef.id),
+                {
+                  imageURL: downloadURLs,
+                  id: docRef.id,
+                },
+                { merge: true }
+              );
+            }
+
+            updateDocs();
+          });
+        }
+      );
+    });
+    Promise.all(promises)
+      .then(() => {
+        alert('Pet added to databse');
+      })
+      .then((err) => console.log(err));
   });
-  console.log(docRef.id);
-  alert('Success');
 };
 
 //Update List
-
 export const ListUpdate = async () => {
   const q = query(
     collection(db, `pets`),
@@ -133,3 +175,5 @@ export default function IsLoggedIn() {
 
   return user;
 }
+
+//Get Pets Doc
