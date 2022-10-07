@@ -19,8 +19,6 @@ export default function Dashboard() {
     getPostList();
   }, []);
 
-  console.log(auth.currentUser.displayName);
-
   return (
     <ShelterAdminLayout>
       <Box>

@@ -82,13 +82,12 @@ export const AddSubData = async (inputs, images) => {
               await updateDoc(
                 doc(db, `pets`, docRef.id),
                 {
-                  imageURL: downloadURLs,
+                  imageURL: [imageURL],
                   id: docRef.id,
                 },
                 { merge: true }
               );
             }
-
             updateDocs();
           });
         }
