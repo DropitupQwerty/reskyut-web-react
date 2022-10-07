@@ -48,7 +48,6 @@ function stringToColor(string) {
     const value = (hash >> (i * 8)) & 0xff;
     color += `00${value.toString(16)}`.slice(-2);
   }
-  /* eslint-enable no-bitwise */
 
   return color;
 }
@@ -91,8 +90,6 @@ export default function MessageArea() {
         </Paper>
         <Avatar {...stringAvatar('Jeffrey Sanches')} />
       </Box>
-
-      {/* sender Info */}
 
       {/* TextField for message Sending */}
       <Paper

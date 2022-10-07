@@ -16,7 +16,6 @@ import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
 
 import { register } from '../../firebase/auth';
-import { auth } from '../../firebase/firebase-config';
 
 export default function AddNgo() {
   const [inputs, setInputs] = useState({

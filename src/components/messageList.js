@@ -47,7 +47,7 @@ function stringAvatar(name) {
   };
 }
 
-export default function MessageList({ children }) {
+export default function MessageList() {
   return (
     <div>
       <AppBar

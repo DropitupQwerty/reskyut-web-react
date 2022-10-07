@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
-import { Firestore, query, where } from 'firebase/firestore';
 import {
   Paper,
   Typography,
@@ -38,7 +37,7 @@ export default function ListOfNgo() {
 
   const handleDelete = (account) => {
     console.log(account.uid);
-    setAccounts(accounts.filter((a) => a.id !== account.id));
+    setAccounts(accounts.filter((a) => a.uid !== account.uid));
     axios.post(`http://localhost:5000/api/admin/${account.uid}`);
     deleteAccount(account.uid);
   };

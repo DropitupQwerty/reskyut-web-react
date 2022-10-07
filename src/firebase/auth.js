@@ -21,8 +21,6 @@ import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import axios from 'axios';
 
-const ngoCollectionRef = collection(db, 'ngoshelters');
-const adoptorsCollectionRef = collection(db, 'adoptors');
 
 export const deleteAccount = async (id) => {
   const userDoc = doc(db, 'ngoshelters', id);
@@ -37,8 +35,7 @@ export async function login(loginEmail, loginPassword) {
   }
 }
 
-// Registeter to authentication and Add documents to Adoptors collection and ngoShelter collection
-
+// Register to authentication and Add documents to Adoptors collection and ngoShelter collection
 export const register = async (inputs) => {
   try {
     axios.post('http://localhost:5000/api/admin/', inputs);
@@ -49,6 +46,60 @@ export const register = async (inputs) => {
 
 export const logout = async () => {
   await signOut(auth);
+};
+
+//Add data to document subcollection
+
+export const AddSubData = async (inputs, images) => {
+  const docRef = await addDoc(collection(db, `pets`), {
+    ...inputs,
+    timestamp: serverTimestamp(),
+  });
+  console.log(docRef.id);
+  alert('Success');
+};
+
+//Update List
+
+export const ListUpdate = async () => {
+  const q = query(
+    collection(db, `pets`),
+    where('shelterID', '==', auth.currentUser?.uid)
+  );
+
+  const querySnapshot = await getDocs(q);
+  const queryData = querySnapshot.docs.map((detail) => ({
+    ...detail.data(),
+  }));
+
+  console.log(queryData);
+
+  return queryData;
+};
+
+//Get Subcollection
+export const GetSubCollection = async () => {
+  const q = query(collection(db, `adoptors`));
+  const querySnapshot = await getDocs(q);
+
+  const queryData = querySnapshot.docs.map((detail) => ({
+    uid: detail.id,
+  }));
+
+  console.log(queryData);
+  return queryData;
+};
+
+//Get ngo Accounts
+export const GetAccounts = async () => {
+  const q = query(collection(db, `ngoshelters`), where('isAdmin', '==', false));
+  const querySnapshot = await getDocs(q);
+
+  const queryData = querySnapshot.docs.map((detail) => ({
+    ...detail.data(),
+    uid: detail.id,
+  }));
+  return queryData;
 };
 
 export default function IsLoggedIn() {
@@ -82,58 +133,3 @@ export default function IsLoggedIn() {
 
   return user;
 }
-
-//Add data to document subcollection
-
-export const AddSubData = async (inputs, images) => {
-  const docRef = await addDoc(collection(db, `pets`), {
-    ...inputs,
-    timestamp: serverTimestamp(),
-  });
-  console.log(docRef.id);
-  alert('Success');
-};
-
-//Update List
-
-export const ListUpdate = async () => {
-  const q = query(
-    collection(db, `pets`),
-    where('shelterID', '==', auth.currentUser?.uid)
-  );
-
-  const querySnapshot = await getDocs(q);
-  const queryData = querySnapshot.docs.map((detail) => ({
-    ...detail.data(),
-  }));
-
-  console.log(queryData);
-
-  return queryData;
-};
-
-//Get Subcollection
-
-export const GetSubCollection = async () => {
-  const q = query(collection(db, `adoptors`));
-  const querySnapshot = await getDocs(q);
-
-  const queryData = querySnapshot.docs.map((detail) => ({
-    uid: detail.id,
-  }));
-
-  console.log(queryData);
-  return queryData;
-};
-
-//getAccounts
-export const GetAccounts = async () => {
-  const q = query(collection(db, `ngoshelters`), where('isAdmin', '==', false));
-  const querySnapshot = await getDocs(q);
-
-  const queryData = querySnapshot.docs.map((detail) => ({
-    ...detail.data(),
-    uid: detail.id,
-  }));
-  return queryData;
-};
