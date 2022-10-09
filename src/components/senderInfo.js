@@ -49,10 +49,10 @@ export default function SenderInfo({ acc }) {
     <div>
       <Drawer
         sx={{
-          width: 450,
+          width: 400,
           flexShrink: 0,
           '& .MuiDrawer-paper': {
-            width: 450,
+            width: 400,
             boxSizing: 'border-box',
             p: 2,
           },

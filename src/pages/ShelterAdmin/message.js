@@ -9,7 +9,6 @@ import { UseBoth } from './../../firebase/auth';
 
 export default function Message() {
   const acc = UseBoth();
-  console.log(acc);
   return (
     <Box sx={{ display: 'flex' }}>
       <MessageList acc={acc} />

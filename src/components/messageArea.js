@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   Toolbar,
   Box,
@@ -32,12 +32,12 @@ import SenderInfo from './senderInfo';
 import { useParams } from 'react-router-dom';
 import ReceiveMessage from './common/receiveMessage';
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 export default function MessageArea() {
   const { id, rid } = useParams();
   const [messages, setMessages] = useState([]);
-  const [value, setValue] = useState();
+  const [value, setValue] = useState('');
   const docRef = collection(db, `matches/${id}${rid}/messages`);
   const [senderInfo, setSenderInfo] = useState();
 
@@ -66,11 +66,21 @@ export default function MessageArea() {
     });
   }, [id]);
 
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
     <Box>
+      <Toolbar />
       <Box>
-        <Toolbar />
-        {/* MESSAGE AREA */}
+        {' '}
         {messages.map((message) => {
           return message.userID === auth.currentUser.uid ? (
             <SenderMessage message={message} />
@@ -78,38 +88,40 @@ export default function MessageArea() {
             <ReceiveMessage message={message} />
           );
         })}
-        {/* TextField for message Sending */}
-        <Paper
-          elevation={3}
+        <Box ref={messagesEndRef} />
+      </Box>
+
+      {/* TextField for message Sending */}
+      <Paper
+        elevation={3}
+        sx={{
+          position: 'fixed',
+          bottom: '0',
+          p: 2,
+          right: '400px',
+          left: drawerWidth,
+        }}
+      >
+        <Box
           sx={{
-            position: 'fixed',
-            bottom: '0',
-            p: 2,
-            right: '450px',
-            left: drawerWidth,
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <TextField
-              fullWidth
-              placeholder="Send Message"
-              multiline
-              maxRows={2}
-              onChange={handleChange}
-            />
-            <Box>
-              <Button type="submit" onClick={handleSend}>
-                send
-              </Button>
-            </Box>
+          <TextField
+            fullWidth
+            placeholder="Send Message"
+            multiline
+            maxRows={2}
+            onChange={handleChange}
+          />
+          <Box>
+            <Button type="submit" onClick={handleSend}>
+              Send
+            </Button>
           </Box>
-        </Paper>
-      </Box>
+        </Box>
+      </Paper>
     </Box>
   );
 }

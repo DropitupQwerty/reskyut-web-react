@@ -15,11 +15,14 @@ import {
   Typography,
 } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import { useNavigate } from 'react-router-dom';
-import updateSenderInfo from './senderInfo';
+import { useNavigate, useParams } from 'react-router-dom';
 import { auth } from '../firebase/firebase-config';
+import { UseBoth } from './../firebase/auth';
+import { orderBy, collection, query, onSnapshot } from 'firebase/firestore';
+import { db } from './../firebase/firebase-config';
+import MessageLists from './messageLists';
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 export default function MessageList({ acc, children }) {
   const navigate = useNavigate();
@@ -63,37 +66,8 @@ export default function MessageList({ acc, children }) {
         </List>
         <Divider />
         <List>
-          {acc.map((user) => {
-            return (
-              <ListItem
-                key={user.uid}
-                alignItems="flex-start"
-                disablePadding
-                onClick={() =>
-                  navigate(`/message/${user.id}/${auth.currentUser?.uid}`)
-                }
-              >
-                <ListItemButton>
-                  <ListItemAvatar>
-                    <Avatar alt="Remy Sharp" src={user.photoURL} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    sx={{
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      width: '300px',
-                    }}
-                    primary={user.displayName}
-                    secondary={
-                      <React.Fragment>
-                        <Typography variant="caption" noWrap></Typography>
-                      </React.Fragment>
-                    }
-                  />
-                </ListItemButton>
-              </ListItem>
-            );
+          {acc.map((a) => {
+            return <MessageLists lastMessage={a} />;
           })}
         </List>
       </Drawer>
