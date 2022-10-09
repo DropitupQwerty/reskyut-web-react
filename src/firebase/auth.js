@@ -184,11 +184,49 @@ export default function IsLoggedIn() {
   return user;
 }
 
-//MEssages
+//getUSerinfo
+export const getUserInfo = async () => {
+  const userss = [];
+  const docRef = collection(db, 'matches');
+  const q = query(
+    docRef,
+    where('usersMatched', 'array-contains', auth.currentUser?.uid)
+  );
+  const querySnapshot = await getDocs(q);
+  const userInfos = querySnapshot.docs.map((detail) => ({
+    ...detail.data(),
+    uid: detail.id,
+  }));
+  console.log('auth userInfos', userInfos);
+
+  return userInfos;
+};
+
+//Messages
 export const getMessages = (userInfo) => {
   const userss = [];
+
   for (let i = 0; i < userInfo.length; i++) {
     userss.push(getMatchedUserInfo(userInfo[i].users, auth.currentUser?.uid));
   }
+
   return userss;
+};
+
+//Gett Messages and Account info
+export const UseBoth = () => {
+  const [userInfo, setUserInfo] = useState('');
+  const [acc, setAcc] = useState([]);
+  useEffect(() => {
+    const getMessages = async () => {
+      setUserInfo(await getUserInfo());
+    };
+
+    getMessages();
+  }, []);
+  useEffect(() => {
+    setAcc(getMessages(userInfo));
+  }, [userInfo]);
+
+  return acc;
 };

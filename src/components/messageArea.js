@@ -7,6 +7,7 @@ import {
   Avatar,
   TextField,
   Button,
+  FormGroup,
 } from '@mui/material';
 
 import SenderMessage from './common/senderMessage';
@@ -103,12 +104,13 @@ export default function MessageArea() {
               onChange={handleChange}
             />
             <Box>
-              <Button onClick={handleSend}>send</Button>
+              <Button type="submit" onClick={handleSend}>
+                send
+              </Button>
             </Box>
           </Box>
         </Paper>
       </Box>
-      <SenderInfo />
     </Box>
   );
 }

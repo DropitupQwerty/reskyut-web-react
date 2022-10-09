@@ -23,13 +23,12 @@ import { auth } from '../../firebase/firebase-config';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from './../../firebase/firebase-config';
 import { GetSubCollection } from '../../firebase/auth';
+import { getMessages, getUserInfo, UseBoth } from './../../firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 export default function AdoptionPage() {
-  const [userAccounts, setUserAccounts] = useState([]);
-
-  const getSubCollection = async () => {
-    GetSubCollection();
-  };
+  const userAccounts = UseBoth();
+  const navigate = useNavigate();
 
   const handleDecline = (userAccount) => {
     const userAccounts = userAccounts.filter((a) => a.id !== userAccount.id);
@@ -73,19 +72,13 @@ export default function AdoptionPage() {
           <TableBody>
             {userAccounts.map((userAccount) => (
               <TableRow key={userAccount.id}>
-                <TableCell>
-                  {userAccount.firstName + ' '}
-                  {userAccount.middleName + ' '}
-                  {userAccount.lastName}
-                </TableCell>
+                <TableCell>{userAccount.displayName}</TableCell>
                 <TableCell>
                   <Link href={userAccount.fbLink} target="_blank">
                     {userAccount.fbLink}
                   </Link>
                 </TableCell>
-                <TableCell>
-                  {this.handleGetAnimal(userAccount.petAdopt)}
-                </TableCell>
+                <TableCell></TableCell>
                 <TableCell>
                   <Button
                     sx={{ ...global.button2xs }}
@@ -98,7 +91,12 @@ export default function AdoptionPage() {
                   <Button sx={{ ...global.button1xs }}>Approve</Button>
                 </TableCell>
                 <TableCell>
-                  <Button sx={{ ...global.button3xs }}>View</Button>
+                  <Button
+                    sx={{ ...global.button3xs }}
+                    onClick={() => navigate(`/message/${userAccount.chatID}`)}
+                  >
+                    View
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
