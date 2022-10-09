@@ -41,11 +41,14 @@ export const deleteAccount = async (id) => {
 
 // Login Account
 export async function login(loginEmail, loginPassword) {
-  try {
-    await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-  } catch (error) {
-    alert(error.message);
-  }
+  await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
+    .then((res) => {
+      console.log('login', res);
+    })
+    .catch((err) => {
+      alert(err.message);
+    });
+  return false;
 }
 
 // Register to authentication and Add documents to Adoptors collection and ngoShelter collection

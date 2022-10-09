@@ -52,7 +52,7 @@ export default function MessageList({ acc, children }) {
 
         <List sx={{ padding: '12px' }}>
           <ListItem disablePadding>
-            <ListItemButton onClick={() => navigate(-1)}>
+            <ListItemButton onClick={() => navigate('/adoptionpage')}>
               <ListItemIcon>
                 <ArrowBackIosIcon color="primary" />
               </ListItemIcon>

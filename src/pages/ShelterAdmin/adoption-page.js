@@ -93,7 +93,11 @@ export default function AdoptionPage() {
                 <TableCell>
                   <Button
                     sx={{ ...global.button3xs }}
-                    onClick={() => navigate(`/message/${userAccount.chatID}`)}
+                    onClick={() =>
+                      navigate(
+                        `/message/${userAccount.id}${auth.currentUser?.uid}`
+                      )
+                    }
                   >
                     View
                   </Button>

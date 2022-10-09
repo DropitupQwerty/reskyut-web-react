@@ -17,10 +17,12 @@ import {
 //firebase
 import IsLoggedIn, { login } from './firebase/auth';
 import { auth } from './firebase/firebase-config';
+import Loader from './components/common/loader';
 
 export default function SignIn() {
   const navigate = useNavigate();
   const user = IsLoggedIn();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [input, setInputs] = useState({
     loginEmail: '',
@@ -32,8 +34,10 @@ export default function SignIn() {
     setInputs({ ...input, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = () => {
-    login(input.loginEmail, input.loginPassword);
+  const handleLogin = async () => {
+    setIsLoading(true);
+    const load = await login(input.loginEmail, input.loginPassword);
+    setIsLoading(load);
   };
 
   useEffect(() => {
@@ -46,9 +50,42 @@ export default function SignIn() {
     }
   }, [auth.currentUser]);
 
+  const showLoad = () => {
+    if (isLoading) {
+      return <Loader isLoading={isLoading} />;
+    } else {
+      return (
+        <FormGroup>
+          <FormControl fullWidth>
+            <OutlinedInput
+              sx={{ margin: '10px 20px' }}
+              placeholder="Email"
+              name="loginEmail"
+              value={input.loginEmail}
+              onChange={handleChange}
+            />
+          </FormControl>
+
+          <FormControl fullWidth>
+            <OutlinedInput
+              sx={{ margin: '10px 20px' }}
+              placeholder="Password"
+              name="loginPassword"
+              vlaue={input.loginPassword}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <Button onClick={handleLogin} sx={{ margin: '10px 20px' }}>
+            Login
+          </Button>
+        </FormGroup>
+      );
+    }
+  };
+
   return (
     <Box sx={{ ...global.boxContainer }}>
-      <Paper elevation={3} sx={{ ...global.signInPaper }}>
+      <Paper elevation={3} sx={{ ...global.signInPaper, position: 'relative' }}>
         <Box>
           <Box
             sx={{
@@ -63,29 +100,7 @@ export default function SignIn() {
               Reskyut
             </Typography>
           </Box>
-          <FormGroup>
-            <FormControl fullWidth>
-              <OutlinedInput
-                sx={{ margin: '10px 20px' }}
-                placeholder="Email"
-                name="loginEmail"
-                value={input.loginEmail}
-                onChange={handleChange}
-              />
-            </FormControl>
-            <FormControl fullWidth>
-              <OutlinedInput
-                sx={{ margin: '10px 20px' }}
-                placeholder="Password"
-                name="loginPassword"
-                vlaue={input.loginPassword}
-                onChange={handleChange}
-              />
-            </FormControl>
-            <Button onClick={handleLogin} sx={{ margin: '10px 20px' }}>
-              Login
-            </Button>
-          </FormGroup>
+          {showLoad()}
         </Box>
       </Paper>
     </Box>
