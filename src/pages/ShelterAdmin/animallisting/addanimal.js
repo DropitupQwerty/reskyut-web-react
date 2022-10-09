@@ -156,6 +156,7 @@ export default function AddAnimal() {
                     value={inputs.age}
                     onChange={handleChange}
                   >
+                    <MenuItem value={'Kitten'}>Kitten</MenuItem>
                     <MenuItem value={'Puppy'}>Puppy</MenuItem>
                     <MenuItem value={'Adult'}>Adult</MenuItem>
                     <MenuItem value={'Senior'}>Senior</MenuItem>

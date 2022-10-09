@@ -22,16 +22,6 @@ export default function ViewNgo() {
   const { id } = useParams();
   const [account, setAccount] = useState([]);
 
-  // const read = async () => {
-  //   const docRef = doc(db, 'ngoshelters', id);
-  //   const docSnap = await getDoc(docRef);
-
-  //   if (docSnap.exists()) {
-  //     setAccount(docSnap.data());
-  //   } else {
-  //     console.log('No such document!');
-  //   }
-  // };
   const getUsers = async () => {
     const docRef = doc(db, 'ngoshelters', id);
     const docSnap = await getDoc(docRef);

@@ -1,15 +1,10 @@
 import { db, storage } from './firebase-config';
 import { auth } from './firebase-config';
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-} from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import {
   collection,
   deleteDoc,
   doc,
-  setDoc,
   getDoc,
   addDoc,
   query,
@@ -22,12 +17,26 @@ import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import axios from 'axios';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { ConstructionOutlined } from '@mui/icons-material';
 import { arrayUnion } from 'firebase/firestore';
+import backendURL from '../services/config.json';
+import getMatchedUserInfo from './../lib/getMatchedUserInfo';
+
+export const apiEnpoint = backendURL;
 
 export const deleteAccount = async (id) => {
+  //Delete user Auth
+  axios.post(`${apiEnpoint}/api/admin/${id}`);
+
+  //Delete user Doc
   const userDoc = doc(db, 'ngoshelters', id);
   await deleteDoc(userDoc);
+
+  //delete  pets with thesame shelterID
+  const q = query(collection(db, `pets`), where('shelterID', '==', id));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.map((snap) => {
+    deleteDoc(snap);
+  });
 };
 
 // Login Account
@@ -42,7 +51,7 @@ export async function login(loginEmail, loginPassword) {
 // Register to authentication and Add documents to Adoptors collection and ngoShelter collection
 export const register = async (inputs) => {
   try {
-    axios.post('http://localhost:5000/api/admin/', inputs);
+    axios.post(apiEnpoint + '/api/admin', inputs);
   } catch (err) {
     console.log('message', err.message);
   }
@@ -53,7 +62,6 @@ export const logout = async () => {
 };
 
 //Add data to document subcollection
-
 export const AddSubData = async (inputs, images) => {
   const promises = [];
   const imageURL = [];
@@ -111,13 +119,10 @@ export const ListUpdate = async () => {
     collection(db, `pets`),
     where('shelterID', '==', auth.currentUser?.uid)
   );
-
   const querySnapshot = await getDocs(q);
   const queryData = querySnapshot.docs.map((detail) => ({
     ...detail.data(),
   }));
-
-  console.log(queryData);
 
   return queryData;
 };
@@ -179,4 +184,11 @@ export default function IsLoggedIn() {
   return user;
 }
 
-//Get Pets Doc
+//MEssages
+export const getMessages = (userInfo) => {
+  const userss = [];
+  for (let i = 0; i < userInfo.length; i++) {
+    userss.push(getMatchedUserInfo(userInfo[i].users, auth.currentUser?.uid));
+  }
+  return userss;
+};

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Drawer,
   Toolbar,
@@ -10,9 +10,16 @@ import {
   ListItemText,
   Button,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-export default function SenderInfo() {
+export default function SenderInfo({ acc }) {
+  const { id } = useParams();
+
+  // const [acc, setAcc] = useState([]);
+  // useEffect(() => {
+  //   setAcc(getMessages(userInf));
+  // }, [userInfo]);
+
   const style = {
     text1: {
       fontSize: '20px',

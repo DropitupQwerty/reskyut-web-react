@@ -26,7 +26,6 @@ import { GetSubCollection } from '../../firebase/auth';
 
 export default function AdoptionPage() {
   const [userAccounts, setUserAccounts] = useState([]);
-  const [allSub, setAllSub] = useState();
 
   const getSubCollection = async () => {
     GetSubCollection();
@@ -54,7 +53,6 @@ export default function AdoptionPage() {
         </Button>
       </Grid>
       <TableContainer component={Paper}>
-        <Button onClick={() => getSubCollection()}>asd</Button>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>

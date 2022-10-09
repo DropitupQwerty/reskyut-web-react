@@ -38,7 +38,6 @@ export default function ListOfNgo() {
   const handleDelete = (account) => {
     console.log(account.uid);
     setAccounts(accounts.filter((a) => a.uid !== account.uid));
-    axios.post(`http://localhost:5000/api/admin/${account.uid}`);
     deleteAccount(account.uid);
   };
 

@@ -23,6 +23,7 @@ import ViewNgo from './pages/SuperAdmin/viewngo';
 
 import PagenotFound from './PagenotFound';
 import IsLoggedIn from './firebase/auth';
+import MessageArea from './components/messageArea';
 
 export default function App() {
   const user = IsLoggedIn();
@@ -51,7 +52,7 @@ export default function App() {
             <Route path="/profile" exact element={<Profile />} />
             <Route path="/adoptionpage" exact element={<AdopptionPage />} />
             <Route path="/animallisting" exact element={<AnimalListing />} />
-            <Route path="/message" exact element={<Message />} />
+            <Route path="/message/:id" element={<Message />} />
             {/* Animal Listing */}
             <Route path="/animallisting/addanimal" element={<AddAnimal />} />
             <Route

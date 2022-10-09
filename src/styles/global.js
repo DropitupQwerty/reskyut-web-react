@@ -114,6 +114,25 @@ const global = {
   borderRadius20: {
     borderRadius: '20px',
   },
+  messageRight: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: '20px',
+    marginBottom: '10px',
+  },
+  messageLeft: {
+    display: 'flex',
+    padding: '20px',
+    marginBottom: '10px',
+    justifyContent: 'flex-start',
+  },
+
+  msgStyle: {
+    padding: '20px',
+    fontSize: '14px',
+    lineHeight: '150%',
+    bgcolor: '#FDF1F3',
+  },
 };
 
 export default global;
