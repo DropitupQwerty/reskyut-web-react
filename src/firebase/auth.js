@@ -20,6 +20,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { arrayUnion } from 'firebase/firestore';
 import backendURL from '../services/config.json';
 import getMatchedUserInfo from './../lib/getMatchedUserInfo';
+import { async } from '@firebase/util';
 
 export const apiEnpoint = backendURL;
 
@@ -189,7 +190,6 @@ export default function IsLoggedIn() {
 
 //getUSerinfo
 export const getUserInfo = async () => {
-  const userss = [];
   const docRef = collection(db, 'matches');
   const q = query(
     docRef,

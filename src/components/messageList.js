@@ -16,7 +16,8 @@ import {
 } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useNavigate } from 'react-router-dom';
-import SenderInfo from './senderInfo';
+import updateSenderInfo from './senderInfo';
+import { auth } from '../firebase/firebase-config';
 
 const drawerWidth = 240;
 
@@ -68,7 +69,9 @@ export default function MessageList({ acc, children }) {
                 key={user.uid}
                 alignItems="flex-start"
                 disablePadding
-                onClick={() => navigate(`/message/${user.chatID}`)}
+                onClick={() =>
+                  navigate(`/message/${user.id}/${auth.currentUser?.uid}`)
+                }
               >
                 <ListItemButton>
                   <ListItemAvatar>
@@ -94,7 +97,6 @@ export default function MessageList({ acc, children }) {
           })}
         </List>
       </Drawer>
-      <Box>{children}</Box>
     </div>
   );
 }

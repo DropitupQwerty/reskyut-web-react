@@ -95,7 +95,7 @@ export default function AdoptionPage() {
                     sx={{ ...global.button3xs }}
                     onClick={() =>
                       navigate(
-                        `/message/${userAccount.id}${auth.currentUser?.uid}`
+                        `/message/${userAccount.id}/${auth.currentUser?.uid}`
                       )
                     }
                   >

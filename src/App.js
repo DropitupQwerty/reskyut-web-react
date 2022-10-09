@@ -52,7 +52,7 @@ export default function App() {
             <Route path="/profile" exact element={<Profile />} />
             <Route path="/adoptionpage" exact element={<AdopptionPage />} />
             <Route path="/animallisting" exact element={<AnimalListing />} />
-            <Route path="/message/:id" element={<Message />} />
+            <Route path="/message/:id/:rid" element={<Message />} />
             {/* Animal Listing */}
             <Route path="/animallisting/addanimal" element={<AddAnimal />} />
             <Route

@@ -35,10 +35,10 @@ import ReceiveMessage from './common/receiveMessage';
 const drawerWidth = 240;
 
 export default function MessageArea() {
-  const { id } = useParams();
+  const { id, rid } = useParams();
   const [messages, setMessages] = useState([]);
   const [value, setValue] = useState();
-  const docRef = collection(db, `matches/${id}/messages`);
+  const docRef = collection(db, `matches/${id}${rid}/messages`);
   const [senderInfo, setSenderInfo] = useState();
 
   const handleChange = (event) => {
@@ -66,7 +66,6 @@ export default function MessageArea() {
     });
   }, [id]);
 
-  console.log(messages);
   return (
     <Box>
       <Box>

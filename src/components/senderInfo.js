@@ -11,14 +11,24 @@ import {
   Button,
 } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
+import { getUser } from '../firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase/firebase-config';
+
+export const updateSenderInfo = () => {};
 
 export default function SenderInfo({ acc }) {
+  const [info, setInfo] = useState();
   const { id } = useParams();
 
-  // const [acc, setAcc] = useState([]);
-  // useEffect(() => {
-  //   setAcc(getMessages(userInf));
-  // }, [userInfo]);
+  useEffect(() => {
+    const getInfo = async () => {
+      const docRef = doc(db, `users/${id}`);
+      const docSnap = await getDoc(docRef);
+      setInfo(docSnap.data());
+    };
+    getInfo();
+  }, [id]);
 
   const style = {
     text1: {
@@ -54,10 +64,13 @@ export default function SenderInfo({ acc }) {
 
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Box sx={{ p: 2 }}>
-            <Avatar sx={{ height: '150px', width: '150px' }} />
+            <Avatar
+              sx={{ height: '150px', width: '150px' }}
+              src={info?.photoURL}
+            />
           </Box>
           <Box noWrap sx={{ p: 1 }}>
-            <Typography sx={style.text1}>Jeffrey Sanchez Tabao</Typography>
+            <Typography sx={style.text1}>{info?.displayName}</Typography>
             <Link href="#">
               <Typography sx={style.text3}> {'www.facebook.com'}</Typography>
             </Link>
@@ -74,11 +87,7 @@ export default function SenderInfo({ acc }) {
         </Box>
         <Box>
           <Typography sx={style.text2}>About</Typography>
-          <Typography variant="caption">
-            My name is Jeffrey Tabao, and I believe that adopting pets from
-            shelters is the same as rescuing them. What we don't realize is that
-            the pets we saved will end up rescuing us when we're in trouble.
-          </Typography>
+          <Typography variant="caption">{info?.About}</Typography>
         </Box>
         <Box sx={{ paddingTop: '20px' }}>
           <Typography
