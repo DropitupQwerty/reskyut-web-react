@@ -72,7 +72,6 @@ export default function MessageArea() {
         <Toolbar />
         {/* MESSAGE AREA */}
         {messages.map((message) => {
-          setSenderInfo(message);
           return message.userID === auth.currentUser.uid ? (
             <SenderMessage message={message} />
           ) : (
