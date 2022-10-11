@@ -39,20 +39,24 @@ export default function MessageArea() {
   const [messages, setMessages] = useState([]);
   const [value, setValue] = useState('');
   const docRef = collection(db, `matches/${id}${rid}/messages`);
-  const [senderInfo, setSenderInfo] = useState();
 
   const handleChange = (event) => {
     setValue(event.target.value);
   };
 
   const handleSend = async () => {
-    await addDoc(docRef, {
-      message: value,
-      displayName: auth.currentUser?.displayName,
-      photoURL: '',
-      timestamp: serverTimestamp(),
-      userID: auth.currentUser.uid,
-    });
+    if (value !== '') {
+      await addDoc(docRef, {
+        message: value,
+        displayName: auth.currentUser?.displayName,
+        photoURL: '',
+        timestamp: serverTimestamp(),
+        userID: auth.currentUser.uid,
+      });
+      setValue('');
+    } else {
+      return;
+    }
   };
 
   useEffect(() => {

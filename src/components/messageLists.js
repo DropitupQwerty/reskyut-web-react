@@ -22,7 +22,7 @@ const MessagesLists = ({ lastMessage }) => {
 
   useEffect(() => {
     const q = query(docRef, orderBy('timestamp', 'desc'));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    onSnapshot(q, (querySnapshot) => {
       const message = querySnapshot.docs.map((detail) => ({
         ...detail.data(),
         uid: detail.id,

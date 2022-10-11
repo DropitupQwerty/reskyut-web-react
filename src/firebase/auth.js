@@ -156,6 +156,7 @@ export const GetAccounts = async () => {
   return queryData;
 };
 
+//Set the user login
 export default function IsLoggedIn() {
   const [user, setUser] = useState({});
 
@@ -188,8 +189,9 @@ export default function IsLoggedIn() {
   return user;
 }
 
-//getUSerinfo
+//Getting the user information
 export const getUserInfo = async () => {
+  const users = [];
   const docRef = collection(db, 'matches');
   const q = query(
     docRef,
@@ -200,36 +202,13 @@ export const getUserInfo = async () => {
     ...detail.data(),
     uid: detail.id,
   }));
-  console.log('auth userInfos', userInfos);
 
-  return userInfos;
-};
-
-//Messages
-export const getMessages = (userInfo) => {
-  const userss = [];
-
-  for (let i = 0; i < userInfo.length; i++) {
-    userss.push(getMatchedUserInfo(userInfo[i].users, auth.currentUser?.uid));
+  if (userInfos) {
+    for (let i = 0; i < userInfos.length; i++) {
+      users.push(getMatchedUserInfo(userInfos[i].users, auth.currentUser?.uid));
+    }
   }
-
-  return userss;
+  return users;
 };
 
-//Gett Messages and Account info
-export const UseBoth = () => {
-  const [userInfo, setUserInfo] = useState('');
-  const [acc, setAcc] = useState([]);
-  useEffect(() => {
-    const getMessages = async () => {
-      setUserInfo(await getUserInfo());
-    };
-
-    getMessages();
-  }, []);
-  useEffect(() => {
-    setAcc(getMessages(userInfo));
-  }, [userInfo]);
-
-  return acc;
-};
+//Delete Adoption Request

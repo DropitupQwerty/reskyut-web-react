@@ -12,26 +12,31 @@ import {
   TableRow,
   Link,
 } from '@mui/material';
-import global from '../../styles/global';
-import React, { Component, useEffect, useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import PetsIcon from '@mui/icons-material/Pets';
-import { auth } from '../../firebase/firebase-config';
+
 // import { GetSubCollection } from '../../firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from './../../firebase/firebase-config';
-import { GetSubCollection } from '../../firebase/auth';
-import { getMessages, getUserInfo, UseBoth } from './../../firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import { getUserInfo } from './../../firebase/auth';
+import AdoptionRow from '../../components/adoptionRow';
 
 export default function AdoptionPage() {
-  const userAccounts = UseBoth();
-  const navigate = useNavigate();
+  const [userAccounts, setUserAccounts] = useState([]);
+
+  useEffect(() => {
+    const getAcc = async () => {
+      const accounts = await getUserInfo();
+      setUserAccounts(accounts);
+    };
+    getAcc();
+  }, []);
 
   const handleDecline = (userAccount) => {
-    const userAccounts = userAccounts.filter((a) => a.id !== userAccount.id);
+    const deleteAccount = userAccounts.filter((u) => u.id !== userAccount.id);
+    setUserAccounts(deleteAccount);
   };
   const handleGetAnimal = (userAccountsId) => {};
 
@@ -71,38 +76,11 @@ export default function AdoptionPage() {
           </TableHead>
           <TableBody>
             {userAccounts.map((userAccount) => (
-              <TableRow key={userAccount.id}>
-                <TableCell>{userAccount.displayName}</TableCell>
-                <TableCell>
-                  <Link href={userAccount.fbLink} target="_blank">
-                    {userAccount.fbLink}
-                  </Link>
-                </TableCell>
-                <TableCell></TableCell>
-                <TableCell>
-                  <Button
-                    sx={{ ...global.button2xs }}
-                    onClick={() => this.handleDecline(userAccount)}
-                  >
-                    Decline
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button sx={{ ...global.button1xs }}>Approve</Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    sx={{ ...global.button3xs }}
-                    onClick={() =>
-                      navigate(
-                        `/message/${userAccount.id}/${auth.currentUser?.uid}`
-                      )
-                    }
-                  >
-                    View
-                  </Button>
-                </TableCell>
-              </TableRow>
+              <AdoptionRow
+                userAccount={userAccount}
+                key={userAccount.id}
+                decline={handleDecline}
+              />
             ))}
           </TableBody>
         </Table>

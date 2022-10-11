@@ -19,7 +19,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 import { useNavigate } from 'react-router-dom';
-import IsLoggedIn, { AddSubData } from './../../../firebase/auth';
+import { AddSubData } from './../../../firebase/auth';
 
 import CancelIcon from '@mui/icons-material/Cancel';
 import { auth } from '../../../firebase/firebase-config';
