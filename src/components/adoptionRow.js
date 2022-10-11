@@ -16,6 +16,7 @@ export default function AdoptionRow({ userAccount, decline }) {
         </Link>
       </TableCell>
       <TableCell></TableCell>
+      <TableCell>Points</TableCell>
       <TableCell>
         <Button
           sx={{ ...global.button2xs }}
@@ -27,6 +28,7 @@ export default function AdoptionRow({ userAccount, decline }) {
       <TableCell>
         <Button sx={{ ...global.button1xs }}>Approve</Button>
       </TableCell>
+
       <TableCell>
         <Button
           sx={{ ...global.button3xs }}

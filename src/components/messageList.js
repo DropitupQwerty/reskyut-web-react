@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   AppBar,
-  Avatar,
   Box,
   Divider,
   Drawer,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemButton,
   ListItemIcon,
   ListItemText,
@@ -15,16 +13,12 @@ import {
   Typography,
 } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import { useNavigate, useParams } from 'react-router-dom';
-import { auth } from '../firebase/firebase-config';
-import { UseBoth } from './../firebase/auth';
-import { orderBy, collection, query, onSnapshot } from 'firebase/firestore';
-import { db } from './../firebase/firebase-config';
+import { useNavigate } from 'react-router-dom';
 import MessageLists from './messageLists';
 
 const drawerWidth = 260;
 
-export default function MessageList({ acc, children }) {
+export default function MessageList({ acc }) {
   const navigate = useNavigate();
 
   return (

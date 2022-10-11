@@ -20,7 +20,6 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { deleteAccount } from '../../firebase/auth';
 import { GetAccounts } from './../../firebase/auth';
-import axios from 'axios';
 
 export default function ListOfNgo() {
   const [accounts, setAccounts] = useState([]);

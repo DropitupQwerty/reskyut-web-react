@@ -23,7 +23,7 @@ import ViewNgo from './pages/SuperAdmin/viewngo';
 
 import PagenotFound from './PagenotFound';
 import IsLoggedIn from './firebase/auth';
-import MessageArea from './components/messageArea';
+import { useEffect } from 'react';
 
 export default function App() {
   const user = IsLoggedIn();

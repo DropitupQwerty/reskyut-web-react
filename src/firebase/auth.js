@@ -20,7 +20,6 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { arrayUnion } from 'firebase/firestore';
 import backendURL from '../services/config.json';
 import getMatchedUserInfo from './../lib/getMatchedUserInfo';
-import { async } from '@firebase/util';
 
 export const apiEnpoint = backendURL;
 
@@ -156,7 +155,7 @@ export const GetAccounts = async () => {
   return queryData;
 };
 
-//Set the user login
+//Set the user if logged in
 export default function IsLoggedIn() {
   const [user, setUser] = useState({});
 
@@ -210,5 +209,3 @@ export const getUserInfo = async () => {
   }
   return users;
 };
-
-//Delete Adoption Request

@@ -43,9 +43,10 @@ export default function MessageArea() {
   const handleChange = (event) => {
     setValue(event.target.value);
   };
+  console.log(value.length);
 
   const handleSend = async () => {
-    if (value !== '') {
+    if (value.length === 0) {
       await addDoc(docRef, {
         message: value,
         displayName: auth.currentUser?.displayName,
@@ -53,7 +54,6 @@ export default function MessageArea() {
         timestamp: serverTimestamp(),
         userID: auth.currentUser.uid,
       });
-      setValue('');
     } else {
       return;
     }

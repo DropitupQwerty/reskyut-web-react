@@ -38,7 +38,7 @@ export default function AdoptionPage() {
     const deleteAccount = userAccounts.filter((u) => u.id !== userAccount.id);
     setUserAccounts(deleteAccount);
   };
-  const handleGetAnimal = (userAccountsId) => {};
+  const handleApprove = (userAccountsId) => {};
 
   return (
     <ShelterAdminLayout>
@@ -49,7 +49,7 @@ export default function AdoptionPage() {
       </Grid>
       <Grid item xs>
         <Checkbox />
-        <Button>
+        <Button onClick={() => window.location.reload(false)}>
           <RefreshIcon color="primary" />
         </Button>
         <Button>
@@ -68,6 +68,9 @@ export default function AdoptionPage() {
               </TableCell>
               <TableCell>
                 <b>Want to Adopt</b>
+              </TableCell>
+              <TableCell>
+                <b>Score</b>
               </TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
