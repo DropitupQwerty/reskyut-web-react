@@ -29,7 +29,7 @@ const MessagesLists = ({ lastMessage }) => {
       }));
       setlastMessages(message[1]);
     });
-  }, [lastMessage]);
+  }, []);
 
   console.log(lastMessages);
 

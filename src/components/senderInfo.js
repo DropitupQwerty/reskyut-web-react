@@ -11,24 +11,31 @@ import {
   Button,
 } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
-import { getUser } from '../firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase-config';
+import { getUser, getUserInfo } from './../firebase/auth';
 
 export const updateSenderInfo = () => {};
 
-export default function SenderInfo({ acc }) {
+export default function SenderInfo() {
+  const [form, setForm] = useState();
   const [info, setInfo] = useState();
   const { id } = useParams();
 
   useEffect(() => {
     const getInfo = async () => {
+      //Get User Info
       const docRef = doc(db, `users/${id}`);
       const docSnap = await getDoc(docRef);
       setInfo(docSnap.data());
+      //Get Form Infos
+      const formSnap = await getDoc(doc(docRef, '/form/form'));
+      setForm(formSnap.data());
     };
     getInfo();
   }, [id]);
+
+  console.log('form', form);
 
   const style = {
     text1: {
@@ -71,17 +78,14 @@ export default function SenderInfo({ acc }) {
           </Box>
           <Box noWrap sx={{ p: 1 }}>
             <Typography sx={style.text1}>{info?.displayName}</Typography>
-            <Link href="#">
-              <Typography sx={style.text3}> {'www.facebook.com'}</Typography>
+            <Link href={form?.BestWayToContact} target="_blank">
+              <Typography sx={style.text3}>{form?.BestWayToContact}</Typography>
             </Link>
             <Box>
               <Typography sx={({ paddingTop: '20px' }, style.text2)}>
                 Location
               </Typography>
-              <Typography variant="caption">
-                {'105 J. Garcia St. Poblacion, Plaridel, Bulacan'}
-              </Typography>
-              <Typography variant="caption">{'Plaridel Bulacan'}</Typography>
+              <Typography variant="caption">{form?.FullAddress}</Typography>
             </Box>
           </Box>
         </Box>

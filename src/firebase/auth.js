@@ -60,11 +60,12 @@ export const register = async (inputs) => {
   }
 };
 
+//logout user
 export const logout = async () => {
   await signOut(auth);
 };
 
-//Add data to document subcollection
+//Adding Pet document to pet Collection
 export const AddSubData = async (inputs, images) => {
   const promises = [];
   const imageURL = [];
@@ -188,8 +189,8 @@ export default function IsLoggedIn() {
   return user;
 }
 
-//Getting the user information
-export const getUserInfo = async () => {
+//Getting the users information
+export const getUsersInfo = async () => {
   const users = [];
   const docRef = collection(db, 'matches');
   const q = query(
@@ -208,4 +209,42 @@ export const getUserInfo = async () => {
     }
   }
   return users;
+};
+
+export const Adoption = (userAccount) => {
+  const [rowData, setRowData] = useState({
+    facebookURL: '',
+    petToAdopt: '',
+    score: '',
+  });
+
+  const { id } = userAccount;
+
+  useEffect(() => {
+    const getInfo = async () => {
+      //Getting the value for table
+      const docRef = doc(db, `users/${id}`);
+      const userSnap = await getDoc(docRef);
+      const formSnap = await getDoc(doc(docRef, '/form/form'));
+      await getDoc(doc(db, `matches/${id}${auth.currentUser?.uid}`)).then(
+        (res) => {
+          const getPet = async () => {
+            const petSnap = await getDoc(
+              doc(db, `pets/${res.data().petToAdopt}`)
+            );
+            setRowData({
+              ...rowData,
+              name: userAccount.name,
+              facebookURL: formSnap.data().BestWayToContact,
+              petToAdopt: petSnap.data().name,
+              score: userSnap.data().score,
+            });
+          };
+          getPet();
+        }
+      );
+    };
+    getInfo();
+  }, [userAccount.id]);
+  return rowData;
 };

@@ -25,6 +25,10 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { auth } from '../../../firebase/firebase-config';
 
 export default function AddAnimal() {
+  const [images, setImages] = useState([]);
+  const [textField, setTextField] = useState(false);
+  const [previewImage, setPreviewImage] = useState([]);
+
   const navigate = useNavigate();
 
   const [inputs, setInputs] = useState({
@@ -38,24 +42,19 @@ export default function AddAnimal() {
     shelterName: auth.currentUser?.displayName,
   });
 
-  const [images, setImages] = useState([]);
-  const [textField, setTextField] = useState(false);
-  const [previewImage, setPreviewImage] = useState([]);
-
-  console.log(inputs);
-
   const handleChange = (e) => {
     e.preventDefault();
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
-  //handle image changes
+  //Handle Image File
   const handleImage = (evnt) => {
     const targetFiles = evnt.target.files;
     const targetFilesObject = [...targetFiles];
     setImages(targetFilesObject);
   };
 
+  //Preview image into Object Url
   useEffect(() => {
     const handlePreview = () => {
       const selectedFIles = [];

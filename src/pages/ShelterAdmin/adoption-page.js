@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   Paper,
   Typography,
@@ -10,17 +11,13 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Link,
 } from '@mui/material';
 
-import React, { useEffect, useState } from 'react';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import PetsIcon from '@mui/icons-material/Pets';
-
-// import { GetSubCollection } from '../../firebase/auth';
-import { getUserInfo } from './../../firebase/auth';
+import { getUsersInfo } from './../../firebase/auth';
 import AdoptionRow from '../../components/adoptionRow';
 
 export default function AdoptionPage() {
@@ -28,8 +25,9 @@ export default function AdoptionPage() {
 
   useEffect(() => {
     const getAcc = async () => {
-      const accounts = await getUserInfo();
+      const accounts = await getUsersInfo();
       setUserAccounts(accounts);
+      console.log(accounts);
     };
     getAcc();
   }, []);

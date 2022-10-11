@@ -43,10 +43,9 @@ export default function MessageArea() {
   const handleChange = (event) => {
     setValue(event.target.value);
   };
-  console.log(value.length);
 
   const handleSend = async () => {
-    if (value.length === 0) {
+    if (value !== null) {
       await addDoc(docRef, {
         message: value,
         displayName: auth.currentUser?.displayName,
@@ -84,7 +83,6 @@ export default function MessageArea() {
     <Box>
       <Toolbar />
       <Box>
-        {' '}
         {messages.map((message) => {
           return message.userID === auth.currentUser.uid ? (
             <SenderMessage message={message} />

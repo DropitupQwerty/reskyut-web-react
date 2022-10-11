@@ -5,14 +5,14 @@ import React, { useEffect, useState } from 'react';
 import SenderInfo from '../../components/senderInfo';
 import MessageArea from './../../components/messageArea';
 
-import { getUserInfo } from './../../firebase/auth';
+import { getUsersInfo } from './../../firebase/auth';
 
 export default function Message() {
   const [acc, setAcc] = useState([]);
 
   useEffect(() => {
     const getAcc = async () => {
-      const accounts = await getUserInfo();
+      const accounts = await getUsersInfo();
       setAcc(accounts);
     };
     getAcc();
