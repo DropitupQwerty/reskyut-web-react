@@ -11,7 +11,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebase-config';
 import { query, collection, orderBy, onSnapshot } from 'firebase/firestore';
-import { db } from './../firebase/firebase-config';
+import { db } from '../firebase/firebase-config';
 
 const MessagesLists = ({ lastMessage }) => {
   const [lastMessages, setlastMessages] = useState();

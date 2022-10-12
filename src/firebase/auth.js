@@ -111,7 +111,7 @@ export default function IsLoggedIn() {
   return user;
 }
 
-/**This is for managing animal Collection */
+/**This is for managing collection of pets */
 
 //Get All pets Collection
 export const getPetsCollection = async () => {
@@ -120,7 +120,6 @@ export const getPetsCollection = async () => {
     .catch((error) => {
       console.log(error);
     });
-
   return petCollection.data;
 };
 
@@ -196,17 +195,15 @@ export const getAnimalProfile = async (id) => {
 //Update Animal Profile
 export const updateAnimalProfile = async (id, inputs, images) => {
   const promises = [];
-  const imageURL = [];
   const docRef = doc(db, `pets/${id}`);
-  const deleteRef = ref(storage, `${id}/`);
-  deleteObject({ prefix: deleteRef });
   await updateDoc(docRef, {
     ...inputs,
     timestamp: serverTimestamp(),
   }).then(() => {
     images.map((file) => {
       console.log('auth', file);
-
+      // const deleteRef = ref(storage, `${id}/`);
+      // deleteObject({ prefix: deleteRef });
       // .then(() => {
       // const sotrageRef = ref(storage, `${id}/${file.name}`);
       // const uploadTask = uploadBytesResumable(sotrageRef, file);

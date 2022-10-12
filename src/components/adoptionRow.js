@@ -4,23 +4,27 @@ import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebase-config';
 import { Adoption } from './../firebase/auth';
 
-import { Button, TableCell, TableRow } from '@mui/material';
+import { Button, TableCell, TableRow, Typography } from '@mui/material';
 import global from '../styles/global';
 
 export default function AdoptionRow({ userAccount, decline }) {
   const navigate = useNavigate();
   const dataRow = Adoption(userAccount);
 
-  const { displayName, id } = userAccount;
-  const { facebookURL, petToAdopt, score } = dataRow;
+  const { displayName, id } = userAccount || {};
+  const { facebookURL, petToAdopt, score } = dataRow || {};
 
   return (
     <TableRow key={userAccount.id}>
       <TableCell>{displayName}</TableCell>
       <TableCell>
-        <Link href={facebookURL} target="_blank">
-          {facebookURL}
-        </Link>
+        {facebookURL ? (
+          <Link href={facebookURL} target="_blank">
+            {facebookURL}
+          </Link>
+        ) : (
+          <Typography variant="caption">No facebook added</Typography>
+        )}
       </TableCell>
       <TableCell>{petToAdopt}</TableCell>
       <TableCell>{score}</TableCell>

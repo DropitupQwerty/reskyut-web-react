@@ -12,6 +12,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Badge,
 } from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
@@ -24,9 +25,12 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PetsIcon from '@mui/icons-material/Pets';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { logout } from '../firebase/auth';
-import { auth } from '../firebase/firebase-config';
+import { getUsersInfo, logout } from '../firebase/auth';
+import { auth, db } from '../firebase/firebase-config';
 import IsLoggedIn from './../firebase/auth';
+import { async } from '@firebase/util';
+import { addDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const drawerWidth = 240;
 
@@ -97,9 +101,29 @@ const Drawer = styled(MuiDrawer, {
 
 export default function ShelterAdminLayout({ children }) {
   const navigate = useNavigate('');
-  const user = IsLoggedIn().userData;
+
   const theme = useTheme();
   const [open, setOpen] = useState(true);
+  const [invisible, setInvisible] = useState();
+  const [adoptionCount, setAdoptionCount] = useState();
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    const notif = async () => {
+      const count = await getUsersInfo();
+      setAdoptionCount(count.length);
+    };
+    notif();
+    if (user?.notification === adoptionCount) {
+      setInvisible(true);
+    } else {
+      setInvisible(false);
+    }
+  }, []);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -112,6 +136,7 @@ export default function ShelterAdminLayout({ children }) {
   const handleNavigate = (drawermenu) => {
     navigate(`/${drawermenu}`);
   };
+  const handleBadgeNotification = async () => {};
 
   const userDrawerMenus = [
     {
@@ -128,6 +153,10 @@ export default function ShelterAdminLayout({ children }) {
       label: 'Adoption Page',
       link: 'adoptionpage',
       icon: <PetsIcon color="primary" />,
+      badge: (
+        <Badge invisible={invisible} color="primary" variant="dot"></Badge>
+      ),
+      click: () => handleBadgeNotification(),
     },
   ];
 
@@ -150,7 +179,7 @@ export default function ShelterAdminLayout({ children }) {
               <MenuIcon />
             </IconButton>
             <Typography variant="h4" sx={{ fontWeight: '600' }}>
-              {user?.display_name}
+              {user?.displayName}
             </Typography>
           </Box>
         </Toolbar>
@@ -178,7 +207,9 @@ export default function ShelterAdminLayout({ children }) {
                 justifyContent: open ? 'initial' : 'center',
                 px: 3,
               }}
-              onClick={() => handleNavigate(`${drawermenu.link}`)}
+              onClick={() => {
+                handleNavigate(`${drawermenu.link}`);
+              }}
             >
               <ListItemIcon
                 sx={{
@@ -193,6 +224,7 @@ export default function ShelterAdminLayout({ children }) {
                 primary={`${drawermenu.label}`}
                 sx={{ opacity: open ? 1 : 0 }}
               />
+              {drawermenu?.badge}
             </ListItem>
           ))}
         </List>

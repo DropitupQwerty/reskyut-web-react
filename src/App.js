@@ -23,6 +23,8 @@ import ViewNgo from './pages/SuperAdmin/viewngo';
 
 import PagenotFound from './PagenotFound';
 import IsLoggedIn from './firebase/auth';
+import { Switch } from '@mui/material';
+import ShelterAdminLayout from './components/shelterAdminLayout';
 
 export default function App() {
   const user = IsLoggedIn();

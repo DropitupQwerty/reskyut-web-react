@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useNavigate } from 'react-router-dom';
-import MessageLists from './messageLists';
+import MessageListRow from './messageListRow';
 
 const drawerWidth = 260;
 
@@ -61,7 +61,7 @@ export default function MessageList({ acc }) {
         <Divider />
         <List>
           {acc.map((a) => {
-            return <MessageLists lastMessage={a} />;
+            return <MessageListRow lastMessage={a} />;
           })}
         </List>
       </Drawer>

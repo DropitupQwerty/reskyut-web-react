@@ -23,11 +23,11 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import global from '../../styles/global';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
-import IsLoggedIn, { GetData } from './../../firebase/auth';
-import { auth } from '../../firebase/firebase-config';
+import IsLoggedIn from './../../firebase/auth';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
@@ -70,7 +70,24 @@ export default function Profile() {
           justifyContent="center"
           sx={{ marginTop: '20px' }}
         >
-          <Avatar sx={{ height: '200px', width: '200px' }}></Avatar>
+          <Box sx={{ position: 'relative' }}>
+            <Avatar sx={{ height: '200px', width: '200px' }}></Avatar>
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="label"
+              sx={{
+                position: 'absolute',
+                right: '0px',
+                bottom: '0px',
+                background: '#D8DADF',
+                padding: '20px',
+              }}
+            >
+              <input hidden accept="image/*" type="file" />
+              <AddAPhotoIcon sx={{ height: '30px', width: 'auto' }} />
+            </IconButton>
+          </Box>
         </Stack>
 
         <Box display="flex" justifyContent="center">

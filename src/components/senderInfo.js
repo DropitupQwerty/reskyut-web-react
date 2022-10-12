@@ -13,14 +13,15 @@ import {
 import { Link, useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase-config';
-import { getUser, getUserInfo } from './../firebase/auth';
-
-export const updateSenderInfo = () => {};
 
 export default function SenderInfo() {
   const [form, setForm] = useState();
   const [info, setInfo] = useState();
   const { id } = useParams();
+
+  const { text1, text2, text3 } = style;
+  const { BestWayToContact, FullAddress } = form || {};
+  const { displayName, About, photoURL } = info || {};
 
   useEffect(() => {
     const getInfo = async () => {
@@ -28,29 +29,12 @@ export default function SenderInfo() {
       const docRef = doc(db, `users/${id}`);
       const docSnap = await getDoc(docRef);
       setInfo(docSnap.data());
-      //Get Form Infos
+      //Get Fulladdress and Fb URL
       const formSnap = await getDoc(doc(docRef, '/form/form'));
       setForm(formSnap.data());
     };
     getInfo();
   }, [id]);
-
-  console.log('form', form);
-
-  const style = {
-    text1: {
-      fontSize: '20px',
-      fontWeight: 'bold',
-    },
-
-    text2: {
-      fontSize: '16px',
-      fontWeight: 'bold',
-    },
-    text3: {
-      fontSize: '14px',
-    },
-  };
 
   return (
     <div>
@@ -73,25 +57,27 @@ export default function SenderInfo() {
           <Box sx={{ p: 2 }}>
             <Avatar
               sx={{ height: '150px', width: '150px' }}
-              src={info?.photoURL}
+              src={photoURL || 'No Phot Uploaded'}
             />
           </Box>
           <Box noWrap sx={{ p: 1 }}>
-            <Typography sx={style.text1}>{info?.displayName}</Typography>
-            <Link href={form?.BestWayToContact} target="_blank">
-              <Typography sx={style.text3}>{form?.BestWayToContact}</Typography>
+            <Typography sx={text1}>{displayName}</Typography>
+            <Link href={BestWayToContact} target="_blank">
+              <Typography sx={text3}>{BestWayToContact || ''}</Typography>
             </Link>
             <Box>
-              <Typography sx={({ paddingTop: '20px' }, style.text2)}>
+              <Typography sx={({ paddingTop: '20px' }, text2)}>
                 Location
               </Typography>
-              <Typography variant="caption">{form?.FullAddress}</Typography>
+              <Typography variant="caption">
+                {FullAddress || 'Unknown Location'}
+              </Typography>
             </Box>
           </Box>
         </Box>
         <Box>
-          <Typography sx={style.text2}>About</Typography>
-          <Typography variant="caption">{info?.About}</Typography>
+          <Typography sx={text2}>About</Typography>
+          <Typography variant="caption">{About || 'No Information'}</Typography>
         </Box>
         <Box sx={{ paddingTop: '20px' }}>
           <Typography
@@ -111,55 +97,47 @@ export default function SenderInfo() {
                 <ListItemText
                   sx={{ display: 'flex', alignItems: 'center' }}
                   primary={
-                    <Typography sx={style.text2} paddingRight={1}>
+                    <Typography sx={text2} paddingRight={1}>
                       Name:
                     </Typography>
                   }
-                  secondary={
-                    <Typography sx={style.text3}>{'saipa'} </Typography>
-                  }
+                  secondary={<Typography sx={text3}>{'saipa'} </Typography>}
                 />
                 <ListItemText
                   sx={{ display: 'flex', alignItems: 'center' }}
                   primary={
-                    <Typography sx={style.text2} paddingRight={1}>
+                    <Typography sx={text2} paddingRight={1}>
                       Age:
                     </Typography>
                   }
-                  secondary={
-                    <Typography sx={style.text3}>{'Adult'} </Typography>
-                  }
+                  secondary={<Typography sx={text3}>{'Adult'} </Typography>}
                 />
                 <ListItemText
                   sx={{ display: 'flex', alignItems: 'center' }}
                   primary={
-                    <Typography sx={style.text2} paddingRight={1}>
+                    <Typography sx={text2} paddingRight={1}>
                       Gender:
                     </Typography>
                   }
-                  secondary={
-                    <Typography sx={style.text3}>{'Male'} </Typography>
-                  }
+                  secondary={<Typography sx={text3}>{'Male'} </Typography>}
                 />
                 <ListItemText
                   sx={{ display: 'flex', alignItems: 'center' }}
                   primary={
-                    <Typography sx={style.text2} paddingRight={1}>
+                    <Typography sx={text2} paddingRight={1}>
                       Pet Category:
                     </Typography>
                   }
-                  secondary={
-                    <Typography sx={style.text3}>{'Dogs'} </Typography>
-                  }
+                  secondary={<Typography sx={text3}>{'Dogs'} </Typography>}
                 />
                 <ListItemText
                   primary={
-                    <Typography sx={style.text2} paddingRight={1}>
+                    <Typography sx={text2} paddingRight={1}>
                       Description:
                     </Typography>
                   }
                   secondary={
-                    <Typography sx={style.text3}>
+                    <Typography sx={text3}>
                       {
                         'his ears and tail were chopped off by some stupid Person.'
                       }
@@ -184,3 +162,18 @@ export default function SenderInfo() {
     </div>
   );
 }
+
+const style = {
+  text1: {
+    fontSize: '20px',
+    fontWeight: 'bold',
+  },
+
+  text2: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+  },
+  text3: {
+    fontSize: '14px',
+  },
+};
