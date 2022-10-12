@@ -13,7 +13,7 @@ import IsLoggedIn, { GetAccounts } from './../../firebase/auth';
 
 export default function SaDashboard() {
   const [isLoading, setIsLoading] = useState(true);
-  const [accounts, setAccounts] = useState([]);
+  const [accounts, setAccounts] = useState([1, 1]);
   useEffect(() => {
     const allAccounts = async () => {
       const acc = await GetAccounts();

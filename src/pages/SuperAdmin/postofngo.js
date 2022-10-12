@@ -1,6 +1,6 @@
 import SuperAdminLayout from '../../components/superAdminLayout';
 import global from '../../styles/global';
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 
 import {
   Paper,
@@ -20,10 +20,18 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import LayersIcon from '@mui/icons-material/Layers';
 import ListOfNGO from './listofngo';
-
-const animalData = [];
+import { getPetsCollection } from './../../firebase/auth';
 
 export default function PostOfNgo() {
+  const [animalData, setAnimalData] = useState([]);
+  useEffect(() => {
+    const getpCollection = async () => {
+      setAnimalData(await getPetsCollection());
+    };
+    getpCollection();
+  }, []);
+  console.log(animalData);
+
   //Show no data if table is empty
   function showDataTable() {
     if (animalData.length === 0) {
@@ -35,11 +43,11 @@ export default function PostOfNgo() {
     } else {
       return animalData.map((animal) => (
         <TableRow key={animal.id}>
-          <TableCell>{animal.ngo}</TableCell>
+          <TableCell>{animal.shelterName}</TableCell>
           <TableCell>{animal.name}</TableCell>
           <TableCell>{animal.age}</TableCell>
           <TableCell>{animal.gender}</TableCell>
-          <TableCell>{animal.description}</TableCell>
+          <TableCell>{animal.desc}</TableCell>
           <TableCell align="right">
             <Button sx={{ ...global.button1xs }}>View</Button>
           </TableCell>
