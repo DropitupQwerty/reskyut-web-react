@@ -26,10 +26,12 @@ export default function Dashboard() {
           <Grid item xs={4}>
             <Paper sx={{ ...global.paperDashboard }}>
               <Typography variant="h5">
-                <b>Wants to adopt TODAY</b>
+                <b>Want to adopt TODAY</b>
               </Typography>
               <Box>
-                <Typography variant="h2" sx={paperText}></Typography>
+                <Typography variant="h2" sx={paperText}>
+                  9999
+                </Typography>
               </Box>
             </Paper>
           </Grid>
@@ -64,7 +66,7 @@ export default function Dashboard() {
                 <Grid item xs={6}>
                   <Box>
                     <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                      <b>Animal Name</b>
+                      <b>Adoptor Name</b>
                     </Typography>
                   </Box>
                   <Box
@@ -80,7 +82,7 @@ export default function Dashboard() {
                 <Grid item xs={6}>
                   <Box>
                     <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                      <b>Wants to Adopt</b>
+                      <b>Want to Adopt</b>
                     </Typography>
                   </Box>
                   <Box

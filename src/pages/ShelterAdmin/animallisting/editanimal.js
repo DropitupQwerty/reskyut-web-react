@@ -48,8 +48,13 @@ export default function AddAnimal() {
   useEffect(() => {
     const getAnimalPro = async () => {
       const animalProfile = await getAnimalProfile(id);
+
       setInputs({ ...animalProfile });
-      setPreviewImage([animalProfile.imageURL]);
+
+      //Check the Images if a Valid URL
+      animalProfile.imageURL.map((urlString) => {
+        const go = Boolean(new URL(urlString));
+      });
     };
     getAnimalPro();
   }, [id]);
@@ -69,17 +74,17 @@ export default function AddAnimal() {
   };
 
   //Preview image into Object Url
-  useEffect(() => {
-    const handlePreview = () => {
-      const selectedFIles = [];
-      images.map((file) => {
-        console.log('file', file);
-        return selectedFIles.push(URL.createObjectURL(file));
-      });
-      setPreviewImage(selectedFIles);
-    };
-    handlePreview();
-  }, [images]);
+  // useEffect(() => {
+  //   const handlePreview = () => {
+  //     const selectedFIles = [];
+  //     images.map((file) => {
+  //       console.log('file', file);
+  //       return selectedFIles.push(URL.createObjectURL(file));
+  //     });
+  //     setPreviewImage(selectedFIles);
+  //   };
+  //   handlePreview();
+  // }, [handleImage]);
 
   //Do Submit
   const handleSubmit = () => {
@@ -316,7 +321,7 @@ export default function AddAnimal() {
 
             <Box>
               <Grid container>
-                {previewImage.map((imageURI) => (
+                {images.map((imageURI) => (
                   <Grid key={imageURI.id} item>
                     {console.log(imageURI.index)}
 

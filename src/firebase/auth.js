@@ -211,41 +211,34 @@ export const updateAnimalProfile = async (id, inputs, images) => {
   }).then(() => {
     images.map((file) => {
       console.log('auth', file);
-      // const deleteRef = ref(storage, `${id}/`);
-      // deleteObject({ prefix: deleteRef });
-      // .then(() => {
-      // const sotrageRef = ref(storage, `${id}/${file.name}`);
-      // const uploadTask = uploadBytesResumable(sotrageRef, file);
-      // promises.push(uploadTask);
-      // uploadTask.on(
-      //   'state_changed',
-      //   (snapshot) => {
-      //     const prog = Math.round(
-      //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-      //     );
-      //   },
-      //   (error) => console.log(error),
-      //   async () => {
-      //     await getDownloadURL(uploadTask.snapshot.ref).then(
-      //       (downloadURLs) => {
-      //         imageURL.push();
-      //         console.log('File available at', downloadURLs);
-      //         async function updateDocs() {
-      //           await updateDoc(
-      //             docRef,
-      //             {
-      //               id: docRef.id,
-      //               imageURL: arrayUnion(downloadURLs),
-      //             },
-      //             { merge: true }
-      //           );
-      //         }
-      //         updateDocs();
-      //       }
-      //     );
-      //   }
-      // );
-      // });
+      const sotrageRef = ref(storage, `${id}/${file.name}`);
+      const uploadTask = uploadBytesResumable(sotrageRef, file);
+      promises.push(uploadTask);
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const prog = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+        },
+        (error) => console.log(error),
+        async () => {
+          await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
+            console.log('File available at', downloadURLs);
+            async function updateDocs() {
+              await updateDoc(
+                docRef,
+                {
+                  id: docRef.id,
+                  imageURL: arrayUnion(downloadURLs),
+                },
+                { merge: true }
+              );
+            }
+            updateDocs();
+          });
+        }
+      );
     });
     Promise.all(promises)
       .then(() => {

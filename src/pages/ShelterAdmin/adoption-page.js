@@ -19,9 +19,11 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import PetsIcon from '@mui/icons-material/Pets';
 import { getUsersInfo } from './../../firebase/auth';
 import AdoptionRow from '../../components/adoptionRow';
+import { useNavigate } from 'react-router-dom';
 
 export default function AdoptionPage() {
   const [userAccounts, setUserAccounts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getAcc = async () => {
@@ -47,7 +49,7 @@ export default function AdoptionPage() {
       </Grid>
       <Grid item xs>
         <Checkbox />
-        <Button onClick={() => window.location.reload(false)}>
+        <Button onClick={() => navigate('/adoptionpage')}>
           <RefreshIcon color="primary" />
         </Button>
         <Button>
@@ -58,6 +60,9 @@ export default function AdoptionPage() {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
+              <TableCell>
+                <Checkbox />
+              </TableCell>
               <TableCell>
                 <b>Name</b>
               </TableCell>

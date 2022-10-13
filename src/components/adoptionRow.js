@@ -4,7 +4,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebase-config';
 import { Adoption } from './../firebase/auth';
 
-import { Button, TableCell, TableRow, Typography } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  TableCell,
+  TableRow,
+  Typography,
+} from '@mui/material';
 import global from '../styles/global';
 
 export default function AdoptionRow({ userAccount, decline }) {
@@ -16,6 +22,9 @@ export default function AdoptionRow({ userAccount, decline }) {
 
   return (
     <TableRow key={userAccount.id}>
+      <TableCell>
+        <Checkbox />
+      </TableCell>
       <TableCell>{displayName}</TableCell>
       <TableCell>
         {facebookURL ? (

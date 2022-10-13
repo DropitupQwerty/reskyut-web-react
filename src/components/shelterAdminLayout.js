@@ -31,6 +31,7 @@ import IsLoggedIn from './../firebase/auth';
 import { async } from '@firebase/util';
 import { addDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
+import HistoryIcon from '@mui/icons-material/History';
 
 const drawerWidth = 240;
 
@@ -116,7 +117,7 @@ export default function ShelterAdminLayout({ children }) {
 
     const notif = async () => {
       await getUser().then((userDoc) => {
-        setIsAdmin(userDoc.data()?.isAdmin);
+        setIsAdmin(userDoc?.isAdmin);
       });
       await getUsersInfo().then((count) => {
         setAdoptionCount(count.length);
@@ -150,6 +151,11 @@ export default function ShelterAdminLayout({ children }) {
       label: 'Adoption Page',
       link: 'adoptionpage',
       icon: <PetsIcon color="primary" />,
+    },
+    {
+      label: 'Adoption History',
+      link: 'adoptionhistory',
+      icon: <HistoryIcon color="primary" />,
     },
   ];
 

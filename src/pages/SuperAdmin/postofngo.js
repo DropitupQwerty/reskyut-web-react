@@ -43,11 +43,17 @@ export default function PostOfNgo() {
     } else {
       return animalData.map((animal) => (
         <TableRow key={animal.id}>
+          <TableCell>
+            <Checkbox />
+          </TableCell>
           <TableCell>{animal.shelterName}</TableCell>
           <TableCell>{animal.name}</TableCell>
           <TableCell>{animal.age}</TableCell>
           <TableCell>{animal.gender}</TableCell>
           <TableCell>{animal.desc}</TableCell>
+          <TableCell align="right">
+            <Button sx={{ ...global.button2xs }}>Delete</Button>
+          </TableCell>
           <TableCell align="right">
             <Button sx={{ ...global.button1xs }}>View</Button>
           </TableCell>
@@ -77,6 +83,9 @@ export default function PostOfNgo() {
           <TableHead>
             <TableRow>
               <TableCell>
+                <Checkbox />
+              </TableCell>
+              <TableCell>
                 <b>NGO Name</b>
               </TableCell>
               <TableCell sx={{ marginLeft: '10vw' }}>
@@ -91,6 +100,7 @@ export default function PostOfNgo() {
               <TableCell>
                 <b>Description</b>
               </TableCell>
+              <TableCell></TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
