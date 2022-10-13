@@ -25,6 +25,7 @@ import {
 import { arrayUnion } from 'firebase/firestore';
 import config from '../services/config.json';
 import getMatchedUserInfo from './../lib/getMatchedUserInfo';
+import { Navigate, Route, useNavigate } from 'react-router-dom';
 import { async } from '@firebase/util';
 
 const { backendURL } = config;
@@ -80,9 +81,17 @@ export const deleteAccount = async (id) => {
   });
 };
 
+//Get
+export const getUser = async () => {
+  const docRef = doc(db, `ngoshelters/${auth.currentUser?.uid}`);
+  const docSnap = await getDoc(docRef);
+  return docSnap.data();
+};
+
 //Set the user if logged in
 export default function IsLoggedIn() {
   const [user, setUser] = useState({});
+
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {

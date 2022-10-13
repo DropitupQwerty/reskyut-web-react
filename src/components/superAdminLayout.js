@@ -290,8 +290,6 @@ export default function SuperAdminLayout({ children }) {
               px: 3,
               flexGrow: '1',
             }}
-            component={Link}
-            to="/"
             onClick={() => logout()}
           >
             <ListItemIcon

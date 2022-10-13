@@ -1,4 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+  Navigate,
+} from 'react-router-dom';
 
 //themes
 import { ThemeProvider } from '@mui/material/styles';
@@ -23,15 +29,24 @@ import ViewNgo from './pages/SuperAdmin/viewngo';
 
 import PagenotFound from './PagenotFound';
 import IsLoggedIn from './firebase/auth';
-import { Switch } from '@mui/material';
-import ShelterAdminLayout from './components/shelterAdminLayout';
+import { auth } from './firebase/firebase-config';
+import { useEffect, useState } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export default function App() {
   const user = IsLoggedIn();
+  const [current, setCurrent] = useState();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      setCurrent(currentUser);
+    });
+  }, []);
+  console.log(current);
 
   function Path() {
     if (user?.loggedIn) {
-      if (user?.userData.isAdmin)
+      if (user?.userData.isAdmin) {
         return (
           <Route>
             <Route path="/admin/dashboard" element={<SaDashboard />} />
@@ -45,7 +60,7 @@ export default function App() {
             <Route exact path="/admin/viewanimal" />
           </Route>
         );
-      else if (!user?.isAdmin) {
+      } else if (!user?.isAdmin) {
         return (
           <Route>
             {/* Shelter Admin */}
@@ -63,6 +78,8 @@ export default function App() {
           </Route>
         );
       }
+    } else {
+      return <Route path="*" element={<Navigate to="/" replace={true} />} />;
     }
   }
 
@@ -73,7 +90,11 @@ export default function App() {
           {/* Super Admin */}
           {Path()}
           <Route index element={<SignIn />} />;
-          <Route path="*" element={<PagenotFound />} />
+          <Route
+            path="*"
+            element={<Navigate to="/Page-Not-Found" replace={true} />}
+          />
+          <Route path="/Page-Not-Found" element={<PagenotFound />} />
         </Routes>
       </Router>
     </ThemeProvider>

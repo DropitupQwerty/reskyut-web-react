@@ -6,14 +6,12 @@ import React, { useState, useEffect } from 'react';
 import { Paper, Typography, Box } from '@mui/material';
 import global from '../../styles/global';
 import { Oval } from 'react-loader-spinner';
-
-import { db } from '../../firebase/firebase-config';
-import { collection, getDocs } from 'firebase/firestore';
-import IsLoggedIn, { GetAccounts } from './../../firebase/auth';
+import { GetAccounts } from './../../firebase/auth';
 
 export default function SaDashboard() {
   const [isLoading, setIsLoading] = useState(true);
-  const [accounts, setAccounts] = useState([1, 1]);
+  const [accounts, setAccounts] = useState([]);
+
   useEffect(() => {
     const allAccounts = async () => {
       const acc = await GetAccounts();

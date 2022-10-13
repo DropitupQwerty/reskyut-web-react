@@ -15,13 +15,15 @@ import {
 } from '@mui/material';
 
 //firebase
-import IsLoggedIn, { login } from './firebase/auth';
-import { auth } from './firebase/firebase-config';
+import IsLoggedIn, { getUser, login } from './firebase/auth';
+import { auth, db } from './firebase/firebase-config';
 import Loader from './components/common/loader';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function SignIn() {
   const navigate = useNavigate();
-  const user = IsLoggedIn();
+  const [user, setUser] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
   const [input, setInputs] = useState({
@@ -39,15 +41,21 @@ export default function SignIn() {
     const load = await login(input.loginEmail, input.loginPassword);
     setIsLoading(load);
   };
-
   useEffect(() => {
-    if (user?.loggedIn) {
-      if (user?.userData.isAdmin && user.loggedIn) {
-        navigate('/admin/dashboard');
-      } else if (!user?.userData.isAdmin) {
-        navigate(`/dashboard`);
-      }
-    }
+    onAuthStateChanged(auth, (currentUser) => {
+      const log = async () => {
+        if (currentUser) {
+          await getUser().then((userDoc) => {
+            if (userDoc.isAdmin) {
+              navigate('/admin/dashboard');
+            } else {
+              navigate('/dashboard');
+            }
+          });
+        }
+      };
+      log();
+    });
   }, [auth.currentUser]);
 
   const showLoad = () => {

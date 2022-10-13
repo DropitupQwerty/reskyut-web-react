@@ -25,7 +25,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PetsIcon from '@mui/icons-material/Pets';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { getUsersInfo, logout } from '../firebase/auth';
+import { getUser, getUsersInfo, logout } from '../firebase/auth';
 import { auth, db } from '../firebase/firebase-config';
 import IsLoggedIn from './../firebase/auth';
 import { async } from '@firebase/util';
@@ -107,6 +107,7 @@ export default function ShelterAdminLayout({ children }) {
   const [invisible, setInvisible] = useState();
   const [adoptionCount, setAdoptionCount] = useState();
   const [user, setUser] = useState();
+  const [isAdmin, setIsAdmin] = useState();
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
@@ -114,8 +115,12 @@ export default function ShelterAdminLayout({ children }) {
     });
 
     const notif = async () => {
-      const count = await getUsersInfo();
-      setAdoptionCount(count.length);
+      await getUser().then((userDoc) => {
+        setIsAdmin(userDoc.data()?.isAdmin);
+      });
+      await getUsersInfo().then((count) => {
+        setAdoptionCount(count.length);
+      });
     };
     notif();
     if (user?.notification === adoptionCount) {
@@ -124,14 +129,6 @@ export default function ShelterAdminLayout({ children }) {
       setInvisible(false);
     }
   }, []);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
 
   const handleNavigate = (drawermenu) => {
     navigate(`/${drawermenu}`);
@@ -153,10 +150,6 @@ export default function ShelterAdminLayout({ children }) {
       label: 'Adoption Page',
       link: 'adoptionpage',
       icon: <PetsIcon color="primary" />,
-      badge: (
-        <Badge invisible={invisible} color="primary" variant="dot"></Badge>
-      ),
-      click: () => handleBadgeNotification(),
     },
   ];
 
@@ -169,7 +162,9 @@ export default function ShelterAdminLayout({ children }) {
             <IconButton
               color="inherit"
               aria-label="open drawer"
-              onClick={handleDrawerOpen}
+              onClick={() => {
+                setOpen(true);
+              }}
               edge="start"
               sx={{
                 marginRight: 5,
@@ -186,7 +181,7 @@ export default function ShelterAdminLayout({ children }) {
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={() => setOpen(false)}>
             {theme.direction === 'rtl' ? (
               <ChevronRightIcon />
             ) : (
@@ -210,6 +205,9 @@ export default function ShelterAdminLayout({ children }) {
               onClick={() => {
                 handleNavigate(`${drawermenu.link}`);
               }}
+              selected={window.location.pathname.includes(
+                `/${drawermenu.link}`
+              )}
             >
               <ListItemIcon
                 sx={{
@@ -224,7 +222,6 @@ export default function ShelterAdminLayout({ children }) {
                 primary={`${drawermenu.label}`}
                 sx={{ opacity: open ? 1 : 0 }}
               />
-              {drawermenu?.badge}
             </ListItem>
           ))}
         </List>
@@ -232,7 +229,6 @@ export default function ShelterAdminLayout({ children }) {
         <List>
           <Divider />
           {/* Profile */}
-
           <ListItem
             button
             sx={{
@@ -244,9 +240,7 @@ export default function ShelterAdminLayout({ children }) {
             }}
             component={Link}
             to={'/profile'}
-            selected={window.location.pathname.includes(
-              `/${auth.currentUser?.uid}/profile`
-            )}
+            selected={window.location.pathname.includes(`/profile`)}
           >
             <ListItemIcon
               sx={{
@@ -270,8 +264,6 @@ export default function ShelterAdminLayout({ children }) {
               px: 3,
               flexGrow: '1',
             }}
-            component={Link}
-            to="/"
             onClick={() => logout()}
           >
             <ListItemIcon
