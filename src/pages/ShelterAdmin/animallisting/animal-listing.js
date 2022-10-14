@@ -53,6 +53,7 @@ export default function AnimalListing() {
           <Typography
             sx={{
               ...global.noWrapEllip,
+              width: 200,
             }}
           >
             {animal.desc}
