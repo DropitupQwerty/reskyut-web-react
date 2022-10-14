@@ -22,14 +22,19 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { ListUpdate } from '../../../firebase/auth';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import Loader from './../../../components/common/loader';
+import { Box } from '@mui/material';
 
 export default function AnimalListing() {
   const [animalData, setAnimalData] = useState([]);
+  const [isLoading, setIsloading] = useState();
 
   useEffect(() => {
     const getPostList = async () => {
+      setIsloading(true);
       const list = await ListUpdate();
       setAnimalData(list);
+      setIsloading(false);
     };
     getPostList();
   }, []);
@@ -139,7 +144,19 @@ export default function AnimalListing() {
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>{showDataTable()}</TableBody>
+          <TableBody>
+            {isLoading ? (
+              <Box>
+                <TableRow>
+                  <TableCell>
+                    <Loader isLoading={isLoading} height={30} width={30} />
+                  </TableCell>
+                </TableRow>
+              </Box>
+            ) : (
+              showDataTable()
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
     </ShelterAdminLayout>

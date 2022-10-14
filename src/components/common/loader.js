@@ -10,15 +10,12 @@ const Loader = ({ isLoading, height, width }) => {
         height: '100%',
         display: 'flex',
         justifyContent: 'center',
-        marginTop: '100px',
       }}
     >
       <Oval
         height={height}
         width={width}
         color="#E94057"
-        wrapperStyle={{}}
-        wrapperClass=""
         visible={isLoading}
         ariaLabel="oval-loading"
         secondaryColor="primary"

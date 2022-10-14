@@ -11,6 +11,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Box,
 } from '@mui/material';
 
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
@@ -18,18 +19,22 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import PetsIcon from '@mui/icons-material/Pets';
 import { getUsersInfo } from './../../firebase/auth';
-import AdoptionRow from '../../components/adoptionRow';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../../components/common/loader';
+import AdoptionRow from './../../components/adoptionRow';
 
 export default function AdoptionPage() {
   const [userAccounts, setUserAccounts] = useState([]);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState();
 
   useEffect(() => {
     const getAcc = async () => {
+      setIsLoading(true);
       const accounts = await getUsersInfo();
       setUserAccounts(accounts);
       console.log(accounts);
+      setIsLoading(false);
     };
     getAcc();
   }, []);
@@ -39,6 +44,25 @@ export default function AdoptionPage() {
     setUserAccounts(deleteAccount);
   };
   const handleApprove = (userAccountsId) => {};
+
+  const showDataTable = () => {
+    if (userAccounts.length === 0) {
+      return (
+        <TableRow>
+          <TableCell> No data </TableCell>
+        </TableRow>
+      );
+    } else {
+      return userAccounts.map((userAccount) => (
+        <AdoptionRow
+          userAccount={userAccount}
+          key={userAccount.id}
+          decline={handleDecline}
+        />
+      ));
+    }
+    return;
+  };
 
   return (
     <ShelterAdminLayout>
@@ -81,13 +105,17 @@ export default function AdoptionPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {userAccounts.map((userAccount) => (
-              <AdoptionRow
-                userAccount={userAccount}
-                key={userAccount.id}
-                decline={handleDecline}
-              />
-            ))}
+            {isLoading ? (
+              <Box>
+                <TableRow>
+                  <TableCell>
+                    <Loader isLoading={isLoading} height={30} width={30} />
+                  </TableCell>
+                </TableRow>
+              </Box>
+            ) : (
+              showDataTable()
+            )}
           </TableBody>
         </Table>
       </TableContainer>

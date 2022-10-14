@@ -32,7 +32,7 @@ export default function AdoptionRow({ userAccount, decline }) {
           <Link
             href={facebookURL}
             target="_blank"
-            sx={{ ...global.noWrapEllip, width: 200 }}
+            sx={{ ...global.noWrapEllip, width: 100 }}
           >
             {facebookURL}
           </Link>
