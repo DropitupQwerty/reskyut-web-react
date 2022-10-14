@@ -38,29 +38,32 @@ export default function SignIn() {
 
   const handleLogin = async () => {
     setIsLoading(true);
-    const load = await login(input.loginEmail, input.loginPassword);
-    setIsLoading(load);
+    await login(input.loginEmail, input.loginPassword);
   };
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
       const log = async () => {
-        if (currentUser) {
-          await getUser().then((userDoc) => {
-            if (userDoc.isAdmin) {
-              navigate('/admin/dashboard');
-            } else {
-              navigate('/dashboard');
-            }
-          });
-        }
+        await getUser().then((userDoc) => {
+          setIsLoading(false);
+          if (userDoc.isAdmin) {
+            navigate('/admin/dashboard');
+          } else {
+            navigate('/dashboard');
+          }
+        });
       };
       log();
     });
-  }, [auth.currentUser]);
+  }, [isLoading]);
 
   const showLoad = () => {
     if (isLoading) {
-      return <Loader isLoading={isLoading} />;
+      return (
+        <Box sx={{ marginTop: '100px' }}>
+          {' '}
+          <Loader isLoading={isLoading} />
+        </Box>
+      );
     } else {
       return (
         <FormGroup>
