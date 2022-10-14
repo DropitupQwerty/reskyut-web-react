@@ -2,7 +2,7 @@ import React from 'react';
 import { Oval } from 'react-loader-spinner';
 import { Box } from '@mui/material';
 
-const Loader = ({ isLoading }) => {
+const Loader = ({ isLoading, height, width }) => {
   console.log(isLoading);
   return (
     <Box
@@ -14,12 +14,12 @@ const Loader = ({ isLoading }) => {
       }}
     >
       <Oval
-        height={80}
-        width={80}
+        height={height}
+        width={width}
         color="#E94057"
         wrapperStyle={{}}
         wrapperClass=""
-        visible={true}
+        visible={isLoading}
         ariaLabel="oval-loading"
         secondaryColor="primary"
         strokeWidth={2}

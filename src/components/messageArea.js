@@ -85,9 +85,9 @@ export default function MessageArea() {
       <Box>
         {messages.map((message) => {
           return message.userID === auth.currentUser.uid ? (
-            <SenderMessage message={message} />
+            <SenderMessage key={message.id} message={message} />
           ) : (
-            <ReceiveMessage message={message} />
+            <ReceiveMessage key={message.id} message={message} />
           );
         })}
         <Box ref={messagesEndRef} />

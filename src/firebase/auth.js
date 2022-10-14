@@ -290,14 +290,14 @@ export const Adoption = (userAccount) => {
         (res) => {
           const getPet = async () => {
             const petSnap = await getDoc(
-              doc(db, `pets/${res.data().petToAdopt}`)
+              doc(db, `pets/${res.data()?.petToAdopt}`)
             );
             setRowData({
               ...rowData,
-              name: userAccount.name,
-              facebookURL: formSnap.data().BestWayToContact,
-              petToAdopt: petSnap.data().name,
-              score: userSnap.data().score,
+              name: userAccount?.name,
+              facebookURL: formSnap.data()?.BestWayToContact,
+              petToAdopt: petSnap.data()?.name,
+              score: userSnap.data()?.score,
             });
           };
           getPet();

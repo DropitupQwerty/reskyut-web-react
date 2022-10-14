@@ -31,8 +31,6 @@ const MessagesLists = ({ lastMessage }) => {
     });
   }, []);
 
-  console.log(lastMessages);
-
   const navigate = useNavigate();
   return (
     <Box>
