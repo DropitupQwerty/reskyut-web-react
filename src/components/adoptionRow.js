@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { auth } from '../firebase/firebase-config';
 import { Adoption } from './../firebase/auth';
@@ -10,6 +10,7 @@ import {
   TableCell,
   TableRow,
   Typography,
+  Link,
 } from '@mui/material';
 import global from '../styles/global';
 
@@ -28,7 +29,11 @@ export default function AdoptionRow({ userAccount, decline }) {
       <TableCell>{displayName}</TableCell>
       <TableCell>
         {facebookURL ? (
-          <Link href={facebookURL} target="_blank">
+          <Link
+            href={facebookURL}
+            target="_blank"
+            sx={{ ...global.noWrapEllip, width: 200 }}
+          >
             {facebookURL}
           </Link>
         ) : (

@@ -9,12 +9,14 @@ import {
   Button,
   Card,
   CardMedia,
+  Link,
 } from '@mui/material';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebase-config';
 import Loader from '../components/common/loader';
 import Box from '@mui/material/Box';
+import global from '../styles/global';
 
 export default function SenderInfo() {
   const [form, setForm] = useState();
@@ -82,7 +84,14 @@ export default function SenderInfo() {
           <Box noWrap sx={{ p: 1 }}>
             <Typography sx={text1}>{displayName}</Typography>
             <Link href={BestWayToContact} target="_blank">
-              <Typography sx={text3}>{BestWayToContact || ''}</Typography>
+              <Typography
+                sx={
+                  (text3,
+                  { ...global.noWrapEllip, width: 150, display: 'block' })
+                }
+              >
+                {BestWayToContact || ''}
+              </Typography>
             </Link>
             <Box>
               <Typography sx={({ paddingTop: '20px' }, text2)}>

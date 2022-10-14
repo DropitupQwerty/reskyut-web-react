@@ -49,7 +49,15 @@ export default function AnimalListing() {
         <TableCell>{animal.age}</TableCell>
         <TableCell>{animal.gender}</TableCell>
         <TableCell>{animal.pet_category}</TableCell>
-        <TableCell>{animal.desc}</TableCell>
+        <TableCell>
+          <Typography
+            sx={{
+              ...global.noWrapEllip,
+            }}
+          >
+            {animal.desc}
+          </Typography>
+        </TableCell>
 
         <TableCell align="right">
           <Button

@@ -133,6 +133,12 @@ const global = {
     lineHeight: '150%',
     bgcolor: '#FDF1F3',
   },
+  noWrapEllip: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'noWrap',
+    display: 'block',
+  },
 };
 
 export default global;
