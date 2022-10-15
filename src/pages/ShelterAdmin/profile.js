@@ -34,6 +34,7 @@ import IsLoggedIn, {
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { auth, db } from './../../firebase/firebase-config';
 import { doc, getDoc } from 'firebase/firestore';
+import Loader from './../../components/common/loader';
 import {
   EmailAuthProvider,
   reauthenticateWithCredential,
@@ -41,6 +42,7 @@ import {
 } from 'firebase/auth';
 
 export default function Profile() {
+  const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState([]);
   const [previewImage, setPreviewImage] = useState([]);
@@ -117,8 +119,8 @@ export default function Profile() {
     setOpen(false);
   };
 
-  const handleUpdatePassword = () => {
-    updateNgoPassword({ ...values });
+  const handleUpdatePassword = async () => {
+    updateNgoPassword({ ...values }, inputs.email);
   };
 
   const handleUpdate = () => {

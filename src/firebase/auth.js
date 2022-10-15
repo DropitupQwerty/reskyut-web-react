@@ -326,6 +326,7 @@ export const getUsersInfo = async () => {
       users.push(getMatchedUserInfo(userInfos[i].users, auth.currentUser?.uid));
     }
   }
+  users.map((userAccount) => listAdoptor(userAccount));
   return users;
 };
 
@@ -376,6 +377,8 @@ export const updateNgoAccount = async (inputs, image) => {
   }).then(() => {
     updateProfile(user, {
       displayName: inputs.display_name,
+    }).then(() => {
+      alert('Profile Updated');
     });
   });
 
@@ -419,13 +422,15 @@ export const updateNgoAccount = async (inputs, image) => {
       );
     });
   }
+  return;
 };
 
-export const updateNgoPassword = async (values) => {
+export const updateNgoPassword = async (values, email) => {
   console.log(values);
-  if (values.confirmPassword === values.newPassword) {
-    const user = auth.currentUser;
-    try {
+  try {
+    if (values.confirmPassword === values.newPassword) {
+      const user = auth.currentUser;
+
       const credential = EmailAuthProvider.credential(
         user.email,
         values.currentPassword
@@ -439,6 +444,30 @@ export const updateNgoPassword = async (values) => {
         .catch((error) => {
           Alert(error);
         });
-    } catch (error) {}
-  }
+    }
+  } catch (error) {}
+};
+
+export const listAdoptor = async (userAccount) => {
+  const { id } = userAccount;
+
+  //Getting the value for table
+  const docRef = doc(db, `users/${id}`);
+  const userSnap = await getDoc(docRef);
+  const formSnap = await getDoc(doc(docRef, '/form/form'));
+  await getDoc(doc(db, `matches/${id}${auth.currentUser?.uid}`)).then(
+    async (res) => {
+      const petSnap = await getDoc(doc(db, `pets/${res.data()?.petToAdopt}`));
+      await setDoc(
+        doc(db, `ngoshelters/${auth.currentUser?.uid}/adoptionlist/${id}`),
+        {
+          id: userAccount?.id,
+          name: userAccount?.displayName,
+          facebookURL: formSnap.data()?.BestWayToContact,
+          petToAdopt: petSnap.data()?.name,
+          score: userSnap.data()?.score,
+        }
+      );
+    }
+  );
 };

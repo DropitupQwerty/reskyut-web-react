@@ -23,7 +23,7 @@ const MessagesLists = ({ lastMessage }) => {
   );
 
   useEffect(() => {
-    const q = query(docRef, orderBy('timestamp'));
+    const q = query(docRef, orderBy('timestamp', 'desc'));
     onSnapshot(q, (querySnapshot) => {
       const message = querySnapshot.docs.map((detail) => ({
         ...detail.data(),
