@@ -49,7 +49,7 @@ export default function MessageArea() {
       await addDoc(docRef, {
         message: value,
         displayName: auth.currentUser?.displayName,
-        photoURL: '',
+        photoURL: auth.currentUser.photoURL,
         timestamp: serverTimestamp(),
         userID: auth.currentUser.uid,
       });
