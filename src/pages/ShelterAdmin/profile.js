@@ -18,20 +18,44 @@ import {
   FormHelperText,
   OutlinedInput,
   InputAdornment,
+  FormGroup,
 } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import global from '../../styles/global';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
-import IsLoggedIn from './../../firebase/auth';
+import IsLoggedIn, {
+  updateNgoAccount,
+  updateNgoPassword,
+} from './../../firebase/auth';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import { auth, db } from './../../firebase/firebase-config';
+import { doc, getDoc } from 'firebase/firestore';
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+} from 'firebase/auth';
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
-  const data = IsLoggedIn().userData;
+  const [image, setImage] = useState([]);
+  const [previewImage, setPreviewImage] = useState([]);
+  const [inputs, setInputs] = useState({
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    username: '',
+    email: '',
+    password: '',
+    display_name: '',
+    desc: '',
+    isAdmin: false,
+    photoURL: '',
+  });
   const [values, setValues] = useState({
     currentPassword: '',
     confirmPassword: '',
@@ -39,8 +63,39 @@ export default function Profile() {
     showPassword: false,
   });
 
-  const handleChange = (event) => {
-    setValues({ ...values, [event.target.name]: event.target.value });
+  const handleImage = (e) => {
+    setImage([...e.target.files]);
+  };
+
+  useEffect(() => {
+    const handlePreview = () => {
+      const selectedFIles = [];
+      image.map((file) => {
+        console.log('file', file);
+        return selectedFIles.push(URL.createObjectURL(file));
+      });
+      setPreviewImage(selectedFIles);
+    };
+    handlePreview();
+  }, [image]);
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const docRef = doc(db, 'ngoshelters', auth.currentUser?.uid);
+      const docSnap = await getDoc(docRef);
+      setInputs({ ...docSnap.data() });
+    };
+    getUsers();
+  }, [auth.currentUser]);
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setInputs({ ...inputs, [e.target.name]: e.target.value });
+  };
+
+  const handlePasswordChange = (e) => {
+    e.preventDefault();
+    setValues({ ...values, [e.target.name]: e.target.value });
   };
 
   const handleClickShowPassword = () => {
@@ -62,6 +117,50 @@ export default function Profile() {
     setOpen(false);
   };
 
+  const handleUpdatePassword = () => {
+    updateNgoPassword({ ...values });
+  };
+
+  const handleUpdate = () => {
+    updateNgoAccount({ ...inputs }, image);
+  };
+
+  const inputsComp = [
+    {
+      label: 'Firstname',
+      value: inputs.firstName,
+      name: 'firstName',
+    },
+    {
+      label: 'Middlename',
+      value: inputs.middleName,
+      name: 'middleName',
+    },
+    {
+      label: 'Lastname',
+      value: inputs.lastName,
+      name: 'lastName',
+    },
+    {
+      label: 'Username',
+      value: inputs.username,
+      name: 'username',
+    },
+    {
+      readOnly: true,
+      label: 'Email',
+      value: inputs.email,
+      name: 'email',
+    },
+    {
+      label: 'Display Name',
+      value: inputs.display_name,
+      name: 'display_name',
+    },
+  ];
+
+  console.log('prev', values);
+
   return (
     <ShelterAdminLayout>
       <Box>
@@ -71,7 +170,20 @@ export default function Profile() {
           sx={{ marginTop: '20px' }}
         >
           <Box sx={{ position: 'relative' }}>
-            <Avatar sx={{ height: '200px', width: '200px' }}></Avatar>
+            {image.length === 0 ? (
+              <Avatar
+                src={inputs?.photoURL}
+                alt={inputs?.photoURL}
+                sx={{ height: '200px', width: '200px' }}
+              ></Avatar>
+            ) : (
+              <Avatar
+                src={previewImage}
+                alt={previewImage}
+                sx={{ height: '200px', width: '200px' }}
+              ></Avatar>
+            )}
+
             <IconButton
               color="primary"
               aria-label="upload picture"
@@ -84,7 +196,12 @@ export default function Profile() {
                 padding: '20px',
               }}
             >
-              <input hidden accept="image/*" type="file" />
+              <input
+                onChange={handleImage}
+                hidden
+                accept="image/*"
+                type="file"
+              />
               <AddAPhotoIcon sx={{ height: '30px', width: 'auto' }} />
             </IconButton>
           </Box>
@@ -101,65 +218,37 @@ export default function Profile() {
               marginTop: '12px',
             }}
           >
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: 'bold' }}> Firstname</Typography>
-              <TextField
-                inputProps={{ readOnly: true }}
-                fullWidth
-                value={data?.firstName}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: 'bold' }}> Middlename</Typography>
-              <TextField
-                inputProps={{ readOnly: true }}
-                fullWidth
-                value={data?.middleName}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: 'bold' }}> Lastname</Typography>
-              <TextField
-                inputProps={{ readOnly: true }}
-                fullWidth
-                value={data?.lastName}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: 'bold' }}> Username</Typography>
-              <TextField
-                inputProps={{ readOnly: true }}
-                fullWidth
-                value={data?.username}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: 'bold' }}>Email</Typography>
-              <TextField
-                inputProps={{ readOnly: true }}
-                fullWidth
-                value={data?.email}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: 'bold' }}> Display Name</Typography>
-              <TextField
-                inputProps={{ readOnly: true }}
-                fullWidth
-                value={data?.display_name}
-              />
-            </Grid>
+            {inputsComp.map((input) => {
+              return (
+                <Grid item xs={4}>
+                  <Typography sx={{ fontWeight: 'bold' }}>
+                    {input.label}
+                  </Typography>
+                  <FormGroup>
+                    <FormControl fullWidth>
+                      <OutlinedInput
+                        name={input.name}
+                        value={input.value}
+                        onChange={handleChange}
+                        readOnly={input?.readOnly}
+                      />
+                    </FormControl>
+                  </FormGroup>
+                </Grid>
+              );
+            })}
+
             <Grid item xs>
               <Typography sx={{ fontWeight: 'bold' }}>
-                {' '}
                 Description of Shelter
               </Typography>
               <TextField
                 multiline
                 rows={5}
                 sx={{ width: '830px' }}
-                inputProps={{ readOnly: true }}
-                defaultValue={data?.desc}
+                name="desc"
+                value={inputs?.desc}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item container xs={4} spacing={2}>
@@ -188,14 +277,14 @@ export default function Profile() {
                     <DialogContent>
                       {/* password Old Password */}
                       <Typography sx={{ fontWeight: 'bold' }}>
-                        Old Password
+                        Current Password
                       </Typography>
                       <FormControl sx={{ m: 1 }} variant="outlined" fullWidth>
                         <OutlinedInput
                           type={values.showPassword ? 'text' : 'password'}
                           value={values.currentPassword}
                           name="currentPassword"
-                          onChange={handleChange}
+                          onChange={handlePasswordChange}
                           endAdornment={
                             <InputAdornment position="end">
                               <IconButton
@@ -225,7 +314,7 @@ export default function Profile() {
                           type={values.showPassword ? 'text' : 'password'}
                           value={values.newPassword}
                           name="newPassword"
-                          onChange={handleChange}
+                          onChange={handlePasswordChange}
                           endAdornment={
                             <InputAdornment position="end">
                               <IconButton
@@ -254,7 +343,7 @@ export default function Profile() {
                           type={values.showPassword ? 'text' : 'password'}
                           value={values.confirmPassword}
                           name="confirmPassword"
-                          onChange={handleChange}
+                          onChange={handlePasswordChange}
                           endAdornment={
                             <InputAdornment position="end">
                               <IconButton
@@ -287,7 +376,7 @@ export default function Profile() {
                         Cancel
                       </Button>
                       <Button
-                        onClick={handleClose}
+                        onClick={handleUpdatePassword}
                         autoFocus
                         sx={{ ...global.button2Small }}
                       >
@@ -298,7 +387,11 @@ export default function Profile() {
                 </Box>
               </Grid>
               <Grid item>
-                <Button sx={{ ...global.button2, fontWeight: 'bold' }}>
+                <Button
+                  sx={{ ...global.button2, fontWeight: 'bold' }}
+                  type="submit"
+                  onClick={handleUpdate}
+                >
                   Save
                 </Button>
               </Grid>

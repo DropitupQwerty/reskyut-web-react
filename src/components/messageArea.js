@@ -106,6 +106,7 @@ export default function MessageArea() {
       >
         <Box
           sx={{
+            height: '6vh',
             display: 'flex',
             alignItems: 'center',
           }}

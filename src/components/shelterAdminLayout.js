@@ -116,9 +116,6 @@ export default function ShelterAdminLayout({ children }) {
     });
 
     const notif = async () => {
-      await getUser().then((userDoc) => {
-        setIsAdmin(userDoc?.isAdmin);
-      });
       await getUsersInfo().then((count) => {
         setAdoptionCount(count.length);
       });

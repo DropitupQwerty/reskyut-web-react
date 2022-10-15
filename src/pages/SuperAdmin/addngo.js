@@ -11,16 +11,16 @@ import {
   FormGroup,
   IconButton,
 } from '@mui/material';
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
-
 import { register } from '../../firebase/auth';
+import Loader from './../../components/common/loader';
 
 export default function AddNgo() {
+  const [isLoading, setIsLoading] = useState();
   const [inputs, setInputs] = useState({
     firstName: '',
     middleName: '',
@@ -32,6 +32,8 @@ export default function AddNgo() {
     desc: '',
     isAdmin: false,
   });
+  const [image, setImage] = useState([]);
+  const [previewImage, setPreviewImage] = useState();
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -39,8 +41,26 @@ export default function AddNgo() {
   };
 
   const handleCreateAccount = async () => {
-    register(inputs);
+    setIsLoading(true);
+    await register(inputs, image);
+    setIsLoading(false);
   };
+
+  const handleImage = (e) => {
+    setImage([...e.target.files]);
+  };
+
+  useEffect(() => {
+    const handlePreview = () => {
+      const selectedFIles = [];
+      image.map((file) => {
+        console.log('file', file);
+        return selectedFIles.push(URL.createObjectURL(file));
+      });
+      setPreviewImage(selectedFIles);
+    };
+    handlePreview();
+  }, [image]);
 
   return (
     <SuperAdminLayout>
@@ -51,7 +71,12 @@ export default function AddNgo() {
           sx={{ marginTop: '20px' }}
         >
           <Box sx={{ position: 'relative' }}>
-            <Avatar sx={{ height: '200px', width: '200px' }}></Avatar>
+            <Avatar
+              src={previewImage}
+              alt={previewImage}
+              sx={{ height: '200px', width: '200px' }}
+            />
+
             <IconButton
               color="primary"
               aria-label="upload picture"
@@ -64,7 +89,13 @@ export default function AddNgo() {
                 padding: '20px',
               }}
             >
-              <input hidden accept="image/*" type="file" />
+              <input
+                hidden
+                name="photoUrl"
+                accept="image/*"
+                type="file"
+                onChange={handleImage}
+              />
               <AddAPhotoIcon sx={{ height: '30px', width: 'auto' }} />
             </IconButton>
           </Box>
@@ -181,15 +212,19 @@ export default function AddNgo() {
               </FormGroup>
             </Grid>
             <Grid item xs sx={{ marginTop: '50px' }}>
-              <Button
-                sx={{
-                  ...global.button2,
-                  fontWeight: 'bold',
-                }}
-                onClick={handleCreateAccount}
-              >
-                Create Account
-              </Button>
+              {isLoading ? (
+                <Loader isLoading={isLoading} height={20} width={20} />
+              ) : (
+                <Button
+                  sx={{
+                    ...global.button2,
+                    fontWeight: 'bold',
+                  }}
+                  onClick={handleCreateAccount}
+                >
+                  Create Account
+                </Button>
+              )}
             </Grid>
           </Grid>
         </Box>

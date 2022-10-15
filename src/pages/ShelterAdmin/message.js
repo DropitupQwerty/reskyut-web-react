@@ -21,7 +21,15 @@ export default function Message() {
   return (
     <Box sx={{ display: 'flex' }}>
       <MessageList acc={acc} />
-      <Box component="main" sx={{ flexGrow: '2' }}>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: '2',
+          height: '90vh',
+          overflow: 'scroll',
+          overflowX: 'hidden',
+        }}
+      >
         <MessageArea />
       </Box>
       <SenderInfo />

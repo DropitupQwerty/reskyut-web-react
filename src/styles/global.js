@@ -117,12 +117,12 @@ const global = {
   messageRight: {
     display: 'flex',
     justifyContent: 'flex-end',
-    padding: '20px',
+    padding: '10px',
     marginBottom: '10px',
   },
   messageLeft: {
     display: 'flex',
-    padding: '20px',
+    padding: '10px',
     marginBottom: '10px',
     justifyContent: 'flex-start',
   },

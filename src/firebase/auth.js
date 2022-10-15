@@ -1,6 +1,12 @@
-import { db, storage } from './firebase-config';
+import { db, storage, auth2 } from './firebase-config';
 import { auth } from './firebase-config';
-import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  EmailAuthProvider,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile,
+} from 'firebase/auth';
 import {
   collection,
   deleteDoc,
@@ -12,21 +18,27 @@ import {
   serverTimestamp,
   where,
   updateDoc,
+  setDoc,
 } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import {
+  onAuthStateChanged,
+  updatePassword,
+  reauthenticateWithCredential,
+} from 'firebase/auth';
 import axios from 'axios';
 import {
   deleteObject,
   getDownloadURL,
   ref,
+  uploadBytes,
   uploadBytesResumable,
 } from 'firebase/storage';
 import { arrayUnion } from 'firebase/firestore';
 import config from '../services/config.json';
 import getMatchedUserInfo from './../lib/getMatchedUserInfo';
-import { Navigate, Route, useNavigate } from 'react-router-dom';
 import { async } from '@firebase/util';
+import { Alert } from '@mui/material';
 
 const { backendURL } = config;
 
@@ -42,13 +54,55 @@ export async function login(loginEmail, loginPassword) {
   return false;
 }
 
-// Register to authentication and Add documents to Adoptors collection and ngoShelter collection
-export const register = async (inputs) => {
-  try {
-    axios.post(backendURL + '/admin', inputs);
-  } catch (err) {
-    console.log('message', err.message);
-  }
+//Create account in asecondary authentication
+export const register = async (inputs, image) => {
+  await createUserWithEmailAndPassword(
+    auth2,
+    inputs.email,
+    inputs.password
+  ).then(() => {
+    image.map((file) => {
+      const profileRef = ref(storage, `profiles/${auth2.currentUser.uid}.jpg`);
+      const uploadTask = uploadBytesResumable(profileRef, file);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+        },
+        (error) => {
+          alert('image error', error.message);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            const user = auth2.currentUser;
+            updateProfile(user, {
+              displayName: inputs.display_name,
+              photoURL: downloadURL,
+            })
+              .then(async () => {
+                await setDoc(doc(db, `ngoshelters/${auth2.currentUser?.uid}`), {
+                  id: user?.uid,
+                  ...inputs,
+                  photoURL: downloadURL,
+                });
+
+                console.log('dpName', user.displayName);
+                console.log('imgUrl', user.photoURL);
+                signOut(auth2);
+              })
+              .catch((error) => {
+                // An error occurred
+                // ...
+              });
+          });
+        }
+      );
+    });
+  });
+  return;
 };
 
 //logout user
@@ -60,8 +114,12 @@ export const logout = async () => {
 
 //Get ngo Accounts
 export const GetAccounts = async () => {
-  const response = await axios.get(`${backendURL}/admin`);
-  return response.data;
+  const q = query(collection(db, `ngoshelters`), where('isAdmin', '==', false));
+  const querySnapshot = await getDocs(q);
+  const queryData = querySnapshot.docs.map((detail) => ({
+    ...detail.data(),
+  }));
+  return queryData;
 };
 
 //Delete ngo Accounts
@@ -307,4 +365,80 @@ export const Adoption = (userAccount) => {
     getInfo();
   }, [userAccount.id]);
   return rowData;
+};
+
+export const updateNgoAccount = async (inputs, image) => {
+  console.log('update Account', inputs);
+  const user = auth.currentUser;
+
+  await updateDoc(doc(db, `ngoshelters/${inputs.id}`), {
+    ...inputs,
+  }).then(() => {
+    updateProfile(user, {
+      displayName: inputs.display_name,
+    });
+  });
+
+  if ((await image.length) !== 0) {
+    image.map((file) => {
+      const profileRef = ref(storage, `profiles/${auth.currentUser.uid}.jpg`);
+      const uploadTask = uploadBytesResumable(profileRef, file);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+        },
+        (error) => {
+          alert('image error', error.message);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            const user = auth.currentUser;
+            updateProfile(user, {
+              displayName: inputs.display_name,
+              photoURL: downloadURL,
+            })
+              .then(async () => {
+                await setDoc(doc(db, `ngoshelters/${user.uid}`), {
+                  id: user?.uid,
+                  ...inputs,
+                  photoURL: downloadURL,
+                });
+                alert('photoupdated');
+                signOut(auth2);
+              })
+              .catch((error) => {
+                // An error occurred
+                // ...
+              });
+          });
+        }
+      );
+    });
+  }
+};
+
+export const updateNgoPassword = async (values) => {
+  console.log(values);
+  if (values.confirmPassword === values.newPassword) {
+    const user = auth.currentUser;
+    try {
+      const credential = EmailAuthProvider.credential(
+        user.email,
+        values.currentPassword
+      );
+      reauthenticateWithCredential(user, credential)
+        .then(() => {
+          updatePassword(user, values.newPassword).then(() => {
+            alert('password Updated');
+          });
+        })
+        .catch((error) => {
+          Alert(error);
+        });
+    } catch (error) {}
+  }
 };

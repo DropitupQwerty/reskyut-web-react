@@ -22,12 +22,25 @@ export default function ViewNgo() {
   const { id } = useParams();
   const [account, setAccount] = useState([]);
 
-  const getUsers = async () => {
-    const docRef = doc(db, 'ngoshelters', id);
-    const docSnap = await getDoc(docRef);
-    setAccount(docSnap.data());
-  };
-  getUsers();
+  useEffect(() => {
+    const getUsers = async () => {
+      const docRef = doc(db, 'ngoshelters', id);
+      const docSnap = await getDoc(docRef);
+      setAccount(docSnap.data());
+    };
+    getUsers();
+  }, []);
+
+  const {
+    photoURL,
+    firstName,
+    middleName,
+    lastName,
+    email,
+    username,
+    display_name,
+    desc,
+  } = account || {};
 
   const style = {
     textfield: {
@@ -54,6 +67,8 @@ export default function ViewNgo() {
             sx={{ marginTop: '20px' }}
           >
             <Avatar
+              src={photoURL}
+              alt={photoURL}
               sx={{ bgcolor: deepOrange[500], height: '200px', width: '200px' }}
             ></Avatar>
           </Stack>
@@ -73,7 +88,7 @@ export default function ViewNgo() {
                 <Typography sx={{ fontWeight: 'bold' }}> Firstname</Typography>
                 <Input
                   sx={style.textfield}
-                  value={account.firstName}
+                  value={firstName}
                   id="firstname"
                   readOnly={true}
                 />
@@ -82,7 +97,7 @@ export default function ViewNgo() {
                 <Typography sx={{ fontWeight: 'bold' }}> Middlename</Typography>
                 <Input
                   sx={style.textfield}
-                  value={account.middleName}
+                  value={middleName}
                   id="middlename"
                   readOnly={true}
                 />
@@ -91,7 +106,7 @@ export default function ViewNgo() {
                 <Typography sx={{ fontWeight: 'bold' }}> Lastname</Typography>
                 <Input
                   sx={style.textfield}
-                  value={account.lastName}
+                  value={lastName}
                   id="lastname"
                   readOnly={true}
                 />
@@ -100,7 +115,7 @@ export default function ViewNgo() {
                 <Typography sx={{ fontWeight: 'bold' }}> Username</Typography>
                 <Input
                   sx={style.textfield}
-                  value={account.username}
+                  value={username}
                   id="username"
                   readOnly={true}
                 />
@@ -109,19 +124,18 @@ export default function ViewNgo() {
                 <Typography sx={{ fontWeight: 'bold' }}> Email</Typography>
                 <Input
                   sx={style.textfield}
-                  value={account.email}
+                  value={email}
                   id="email"
                   readOnly={true}
                 />
               </Grid>
               <Grid item xs={4}>
                 <Typography sx={{ fontWeight: 'bold' }}>
-                  {' '}
                   Display Name
                 </Typography>
                 <Input
                   sx={style.textfield}
-                  value={account.display_name}
+                  value={display_name}
                   id="displayName"
                   readOnly={true}
                 />
@@ -130,7 +144,7 @@ export default function ViewNgo() {
                 <Typography sx={{ fontWeight: 'bold' }}>
                   Description of Shelter
                 </Typography>
-                <TextField multiline value={account.desc} rows={5} fullWidth />
+                <TextField multiline value={desc} rows={5} fullWidth />
               </Grid>
               <Grid
                 item

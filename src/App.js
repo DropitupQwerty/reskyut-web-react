@@ -2,7 +2,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useNavigate,
   Navigate,
 } from 'react-router-dom';
 
@@ -53,10 +52,7 @@ export default function App() {
             <Route path="/admin/postofngo" element={<PostOfNGO />} />
             <Route path="/admin/addngo" element={<AddNgo />} />
             <Route path="/admin/listofngo" element={<ListOfNGO />} />
-            <Route
-              path="/admin/listofngo/viewngo/:id"
-              element={<ViewNgo />}
-            ></Route>
+            <Route path="/admin/listofngo/viewngo/:id" element={<ViewNgo />} />
             <Route exact path="/admin/viewanimal" />
           </Route>
         );

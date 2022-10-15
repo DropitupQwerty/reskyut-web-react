@@ -39,18 +39,20 @@ export default function SignIn() {
   const handleLogin = async () => {
     setIsLoading(true);
     await login(input.loginEmail, input.loginPassword);
+    setIsLoading(false);
   };
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
       const log = async () => {
-        await getUser().then((userDoc) => {
-          setIsLoading(false);
-          if (userDoc.isAdmin) {
-            navigate('/admin/dashboard');
-          } else {
-            navigate('/dashboard');
-          }
-        });
+        if (currentUser) {
+          await getUser().then((userDoc) => {
+            if (userDoc.isAdmin) {
+              navigate('/admin/dashboard');
+            } else {
+              navigate('/dashboard');
+            }
+          });
+        }
       };
       log();
     });
@@ -60,7 +62,6 @@ export default function SignIn() {
     if (isLoading) {
       return (
         <Box sx={{ marginTop: '100px' }}>
-          {' '}
           <Loader isLoading={isLoading} />
         </Box>
       );

@@ -33,7 +33,7 @@ export default function AdoptionPage() {
       setIsLoading(true);
       const accounts = await getUsersInfo();
       setUserAccounts(accounts);
-      console.log(accounts);
+      console.log('minfo', accounts);
       setIsLoading(false);
     };
     getAcc();
@@ -61,7 +61,6 @@ export default function AdoptionPage() {
         />
       ));
     }
-    return;
   };
 
   return (
@@ -106,13 +105,11 @@ export default function AdoptionPage() {
           </TableHead>
           <TableBody>
             {isLoading ? (
-              <Box>
-                <TableRow>
-                  <TableCell>
-                    <Loader isLoading={isLoading} height={30} width={30} />
-                  </TableCell>
-                </TableRow>
-              </Box>
+              <TableRow>
+                <TableCell>
+                  <Loader isLoading={isLoading} height={30} width={30} />
+                </TableCell>
+              </TableRow>
             ) : (
               showDataTable()
             )}

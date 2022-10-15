@@ -12,8 +12,10 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebase-config';
 import { query, collection, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase/firebase-config';
+import global from '../styles/global';
 
 const MessagesLists = ({ lastMessage }) => {
+  const navigate = useNavigate();
   const [lastMessages, setlastMessages] = useState();
   const docRef = collection(
     db,
@@ -21,17 +23,16 @@ const MessagesLists = ({ lastMessage }) => {
   );
 
   useEffect(() => {
-    const q = query(docRef, orderBy('timestamp', 'desc'));
+    const q = query(docRef, orderBy('timestamp'));
     onSnapshot(q, (querySnapshot) => {
       const message = querySnapshot.docs.map((detail) => ({
         ...detail.data(),
         uid: detail.id,
       }));
-      setlastMessages(message[1]);
+      setlastMessages(message[0]);
     });
   }, []);
 
-  const navigate = useNavigate();
   return (
     <Box>
       <ListItem
@@ -56,11 +57,13 @@ const MessagesLists = ({ lastMessage }) => {
             primary={lastMessage?.displayName}
             secondary={
               <React.Fragment>
-                <Typography variant="caption" noWrap>
+                <Typography
+                  sx={{ ...global.noWrapEllip, width: 100 }}
+                  variant="caption"
+                  noWrap
+                >
                   {lastMessages?.message}
                 </Typography>
-
-                <Typography variant="caption" noWrap></Typography>
               </React.Fragment>
             }
           />

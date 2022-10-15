@@ -28,6 +28,7 @@ export default function ListOfNgo() {
     const allAccounts = async () => {
       const acc = await GetAccounts();
       setAccounts(acc);
+      console.log(acc);
     };
     allAccounts();
   }, []);
@@ -36,8 +37,8 @@ export default function ListOfNgo() {
 
   const handleDelete = (account) => {
     console.log(account.uid);
-    setAccounts(accounts.filter((a) => a.uid !== account.uid));
-    deleteAccount(account.uid);
+    setAccounts(accounts.filter((a) => a.id !== account.id));
+    // deleteAccount(account.uid);
   };
 
   return (
