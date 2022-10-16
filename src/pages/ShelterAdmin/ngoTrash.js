@@ -64,7 +64,11 @@ export default function NgoTrash() {
             Delete
           </Button>
         ) : (
-          <Typography color="primary" variant="caption">
+          <Typography
+            color="primary"
+            sx={{ textAlign: 'center', padding: '0 20px' }}
+            variant="caption"
+          >
             Admin Deletion
           </Typography>
         );
@@ -75,16 +79,18 @@ export default function NgoTrash() {
       field: 'Restore',
       sortable: false,
       renderCell: (rows) => {
-        return (
-          <Button
-            sx={{ ...global.button1xs }}
-            onClick={(event) => {
-              handleRestore(event, rows);
-            }}
-          >
-            Restore
-          </Button>
-        );
+        if (!rows.row?.adminDelete) {
+          return (
+            <Button
+              sx={{ ...global.button1xs }}
+              onClick={(event) => {
+                handleRestore(event, rows);
+              }}
+            >
+              Restore
+            </Button>
+          );
+        }
       },
       width: 150,
     },

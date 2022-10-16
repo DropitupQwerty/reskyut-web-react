@@ -37,7 +37,6 @@ import {
 import { arrayUnion } from 'firebase/firestore';
 import config from '../services/config.json';
 import getMatchedUserInfo from './../lib/getMatchedUserInfo';
-import { async } from '@firebase/util';
 import { Alert } from '@mui/material';
 
 const { backendURL } = config;
@@ -225,48 +224,55 @@ export const getPetsCollection = async () => {
 export const AddSubData = async (inputs, images) => {
   const promises = [];
   const imageURL = [];
-  await addDoc(collection(db, `pets`), {
-    ...inputs,
-    timestamp: serverTimestamp(),
-  }).then((docRef) => {
-    images.map((file) => {
-      console.log('loop');
-      const sotrageRef = ref(storage, `${docRef.id}/${file.name}`);
-      const uploadTask = uploadBytesResumable(sotrageRef, file);
-      promises.push(uploadTask);
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const prog = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-        },
-        (error) => console.log(error),
-        async () => {
-          await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
-            imageURL.push();
-            console.log('File available at', downloadURLs);
-            async function updateDocs() {
-              await updateDoc(
-                doc(db, `pets`, docRef.id),
-                {
-                  id: docRef.id,
-                  imageURL: arrayUnion(downloadURLs),
-                },
-                { merge: true }
-              );
-            }
-            updateDocs();
-          });
-        }
-      );
+  if (images.length !== 0) {
+    await addDoc(collection(db, `pets`), {
+      ...inputs,
+      timestamp: serverTimestamp(),
+    }).then((docRef) => {
+      images.map((file) => {
+        console.log('loop');
+        const sotrageRef = ref(
+          storage,
+          `animals/${auth.currentUser.uid}/${docRef.id}/${file.name}`
+        );
+        const uploadTask = uploadBytesResumable(sotrageRef, file);
+        promises.push(uploadTask);
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {},
+          (error) => console.log(error),
+          async () => {
+            await getDownloadURL(uploadTask.snapshot.ref).then(
+              (downloadURLs) => {
+                imageURL.push();
+                console.log('File available at', downloadURLs);
+                async function updateDocs() {
+                  await updateDoc(
+                    doc(db, `pets`, docRef.id),
+                    {
+                      id: docRef.id,
+                      imageURL: arrayUnion(downloadURLs),
+                    },
+                    { merge: true }
+                  );
+                }
+                updateDocs();
+              }
+            );
+          }
+        );
+      });
+      Promise.all(promises)
+        .then(() => {
+          alert('Pet added to databse');
+        })
+        .then((err) => console.log(err));
     });
-    Promise.all(promises)
-      .then(() => {
-        alert('Pet added to databse');
-      })
-      .then((err) => console.log(err));
-  });
+  } else if (images.length > 9) {
+    alert('Must upload 9 images or less');
+  } else {
+    alert('Must add a photo');
+  }
 };
 
 //Update List of pets

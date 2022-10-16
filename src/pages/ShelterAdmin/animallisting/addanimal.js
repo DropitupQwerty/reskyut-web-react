@@ -256,7 +256,12 @@ export default function AddAnimal() {
                 />
               </Grid>
               <Grid item sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button sx={{ ...global.button3 }}>CANCEL</Button>
+                <Button
+                  sx={{ ...global.button3 }}
+                  onClick={() => navigate('/animallisting')}
+                >
+                  CANCEL
+                </Button>
                 <Button
                   sx={{ ...global.button2Small, marginLeft: '20px' }}
                   onClick={handleSubmit}
