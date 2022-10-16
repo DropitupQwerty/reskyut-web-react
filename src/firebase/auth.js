@@ -61,49 +61,75 @@ export const register = async (inputs, image) => {
     inputs.email,
     inputs.password
   ).then(() => {
-    console.log(image);
-    image.map((file) => {
-      const profileRef = ref(storage, `profiles/${auth2.currentUser.uid}.jpg`);
-      const uploadTask = uploadBytesResumable(profileRef, file);
+    console.log('img', image);
 
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-        },
-        (error) => {
-          alert('image error', error.message);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            const user = auth2.currentUser;
-            updateProfile(user, {
-              displayName: inputs.display_name,
-              photoURL: downloadURL,
-            })
-              .then(async () => {
-                await setDoc(doc(db, `ngoshelters/${auth2.currentUser?.uid}`), {
-                  id: user?.uid,
-                  ...inputs,
-                  photoURL: downloadURL,
-                }).then(() => {
-                  console.log('dpName', user.displayName);
-                  console.log('imgUrl', user.photoURL);
-                  alert('NGO USER CREATED');
-                  signOut(auth2);
-                });
+    if (image.length !== 0) {
+      image.map((file) => {
+        const profileRef = ref(
+          storage,
+          `profiles/${auth2.currentUser.uid}.jpg`
+        );
+        const uploadTask = uploadBytesResumable(profileRef, file);
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+          },
+          (error) => {
+            alert('image error', error.message);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              const user = auth2.currentUser;
+              updateProfile(user, {
+                displayName: inputs.display_name,
+                photoURL: downloadURL,
               })
-              .catch((error) => {
-                // An error occurred
-                // ...
-                console.log(error);
-              });
+                .then(async () => {
+                  await setDoc(
+                    doc(db, `ngoshelters/${auth2.currentUser?.uid}`),
+                    {
+                      id: user?.uid,
+                      ...inputs,
+                      photoURL: downloadURL,
+                    }
+                  ).then(() => {
+                    console.log('dpName', user.displayName);
+                    console.log('imgUrl', user.photoURL);
+                    alert('NGO USER CREATED');
+                    signOut(auth2);
+                  });
+                })
+                .catch((error) => {
+                  // An error occurred
+                  // ...
+                  console.log(error);
+                });
+            });
+          }
+        );
+      });
+    } else {
+      const user = auth2.currentUser;
+      updateProfile(user, {
+        displayName: inputs.display_name,
+      })
+        .then(async () => {
+          await setDoc(doc(db, `ngoshelters/${auth2.currentUser?.uid}`), {
+            id: user?.uid,
+            ...inputs,
+          }).then(() => {
+            console.log('dpName', user.displayName);
+            alert('NGO USER CREATED');
+            signOut(auth2);
           });
-        }
-      );
-    });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   });
   return;
 };
