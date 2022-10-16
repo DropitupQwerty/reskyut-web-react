@@ -30,7 +30,7 @@ export default function NgoTrash() {
     setAnimalData(deletedAnimal);
 
     await setDoc(doc(db, `pets/${rows.id}`), {
-      ...animal.row,
+      ...rows.row,
     }).then(async () => {
       await deleteDoc(
         doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${rows.id}`)

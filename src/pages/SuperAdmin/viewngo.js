@@ -54,8 +54,8 @@ export default function ViewNgo() {
     setOpen(false);
   };
   const handleConfirm = () => {
-    const acc = account;
-    acc.isDisable = !account.isDisable;
+    const acc = !account.isDisable;
+
     setAccount(acc);
     setOpen(false);
     disbleAccount(account.id);
