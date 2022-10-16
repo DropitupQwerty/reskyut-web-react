@@ -61,6 +61,7 @@ export const register = async (inputs, image) => {
     inputs.email,
     inputs.password
   ).then(() => {
+    console.log(image);
     image.map((file) => {
       const profileRef = ref(storage, `profiles/${auth2.currentUser.uid}.jpg`);
       const uploadTask = uploadBytesResumable(profileRef, file);
@@ -87,16 +88,17 @@ export const register = async (inputs, image) => {
                   id: user?.uid,
                   ...inputs,
                   photoURL: downloadURL,
+                }).then(() => {
+                  console.log('dpName', user.displayName);
+                  console.log('imgUrl', user.photoURL);
+                  alert('NGO USER CREATED');
+                  signOut(auth2);
                 });
-
-                console.log('dpName', user.displayName);
-                console.log('imgUrl', user.photoURL);
-                alert('NGO USER CREATED');
-                signOut(auth2);
               })
               .catch((error) => {
                 // An error occurred
                 // ...
+                console.log(error);
               });
           });
         }
