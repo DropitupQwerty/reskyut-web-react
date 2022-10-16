@@ -31,6 +31,7 @@ export default function NgoTrash() {
 
     await setDoc(doc(db, `pets/${rows.id}`), {
       ...rows.row,
+      adminDelete: false,
     }).then(async () => {
       await deleteDoc(
         doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${rows.id}`)
@@ -53,7 +54,7 @@ export default function NgoTrash() {
       field: 'Delete',
       sortable: false,
       renderCell: (rows) => {
-        return (
+        return !rows.row?.adminDelete ? (
           <Button
             sx={{ ...global.button2xs }}
             onClick={(event) => {
@@ -62,6 +63,10 @@ export default function NgoTrash() {
           >
             Delete
           </Button>
+        ) : (
+          <Typography color="primary" variant="caption">
+            Admin Deletion
+          </Typography>
         );
       },
       width: 150,
@@ -106,6 +111,8 @@ export default function NgoTrash() {
     };
     getpCollection();
   }, []);
+
+  console.log(animalData);
 
   return (
     <ShelterAdminLayout>

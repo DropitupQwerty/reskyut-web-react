@@ -104,8 +104,6 @@ export default function AdminTrash() {
         alert('Animal Deleted');
       });
     });
-
-    console.log('delete', animal);
   };
   useEffect(() => {
     const getpCollection = async () => {
@@ -113,6 +111,7 @@ export default function AdminTrash() {
     };
     getpCollection();
   }, []);
+  console.log('delete', animalData);
 
   return (
     <SuperAdminLayout>

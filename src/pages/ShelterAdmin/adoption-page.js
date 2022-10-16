@@ -95,9 +95,6 @@ export default function AdoptionPage() {
       minWidth: 150,
     },
   ];
-  const getAcc = async () => {
-    await getUsersInfo();
-  };
 
   useEffect(() => {
     const getRow = async () => {

@@ -487,8 +487,8 @@ export const listAdoptor = async (userAccount) => {
   await getDoc(doc(db, `matches/${id}${auth.currentUser?.uid}`)).then(
     async (res) => {
       console.log(res.data().petToAdopt);
-      await getDoc(doc(db, `pets/${res.data()?.petToAdopt}`)).then(
-        async (petSnap) => {
+      await getDoc(doc(db, `pets/${res.data()?.petToAdopt}`))
+        .then(async (petSnap) => {
           console.log(petSnap.data());
           await setDoc(
             doc(db, `ngoshelters/${auth.currentUser?.uid}/adoptionlist/${id}`),
@@ -500,8 +500,10 @@ export const listAdoptor = async (userAccount) => {
               score: userSnap.data()?.score,
             }
           );
-        }
-      );
+        })
+        .catch((error) => {
+          console.log('petDelete By ADmin', error);
+        });
     }
   );
 };
@@ -543,6 +545,7 @@ export const moveToTrash = async (rows) => {
     doc(db, `ngoshelters/${auth.currentUser.uid}/trash/${rows.id}`),
     {
       ...rows.row,
+      adminDelete: true,
     }
   )
     .then(() => {
@@ -562,6 +565,7 @@ export const moveToTrash = async (rows) => {
 export const restoreAnimal = async (rows) => {
   await setDoc(doc(db, `pets`, `${rows.id}`), {
     ...rows.row,
+    adminDelete: false,
   })
     .then(async () => {
       await getDoc(

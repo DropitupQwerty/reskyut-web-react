@@ -53,7 +53,7 @@ export default function AnimalListing() {
   const handleDialog = (event, rows) => {
     setOpen(true);
     setAnimal(rows);
-    setMessage(`Delete this pet permanently?`);
+    setMessage(`Move to trash?`);
   };
   const handleConfirm = async () => {
     console.log('Animal', animal);
@@ -127,6 +127,7 @@ export default function AnimalListing() {
       minWidth: 150,
     },
   ];
+  console.log(animalData);
 
   return (
     <ShelterAdminLayout>
