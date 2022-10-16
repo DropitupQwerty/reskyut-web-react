@@ -31,6 +31,7 @@ export default function AddNgo() {
     display_name: '',
     desc: '',
     isAdmin: false,
+    isDisable: false,
   });
   const [image, setImage] = useState([]);
   const [previewImage, setPreviewImage] = useState();
@@ -71,11 +72,15 @@ export default function AddNgo() {
           sx={{ marginTop: '20px' }}
         >
           <Box sx={{ position: 'relative' }}>
-            <Avatar
-              src={previewImage}
-              alt={previewImage}
-              sx={{ height: '200px', width: '200px' }}
-            />
+            {image.length === 0 ? (
+              <Avatar sx={{ height: '200px', width: '200px' }} />
+            ) : (
+              <Avatar
+                src={previewImage}
+                alt={previewImage}
+                sx={{ height: '200px', width: '200px' }}
+              />
+            )}
 
             <IconButton
               color="primary"

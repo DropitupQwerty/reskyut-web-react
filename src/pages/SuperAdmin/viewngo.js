@@ -17,10 +17,14 @@ import { Link, useParams } from 'react-router-dom';
 import Input from '../../components/common/input';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase-config';
+import DeleteDialog from '../../components/common/deleteDialog';
+import { disbleAccount, enableAccount } from './../../firebase/auth';
 
 export default function ViewNgo() {
   const { id } = useParams();
   const [account, setAccount] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState();
 
   useEffect(() => {
     const getUsers = async () => {
@@ -42,14 +46,35 @@ export default function ViewNgo() {
     desc,
   } = account || {};
 
-  const style = {
-    textfield: {
-      height: '49px',
-    },
+  const handleDialog = () => {
+    setOpen(true);
+    setMessage('Disable Account?');
   };
+  const handleCancel = () => {
+    setOpen(false);
+  };
+  const handleConfirm = () => {
+    const acc = account;
+    acc.isDisable = !account.isDisable;
+    setAccount(acc);
+    setOpen(false);
+    disbleAccount(account.id);
+  };
+  const handleEnable = () => {
+    const disAcc = !account.isDisable;
+    setAccount(disAcc);
+    enableAccount(account.id);
+  };
+
   return (
     <div>
       <AppBarAdminLayout>
+        <DeleteDialog
+          open={open}
+          message={message}
+          cancel={handleCancel}
+          confirm={handleConfirm}
+        />
         <Box>
           <Button
             elevation={3}
@@ -144,7 +169,13 @@ export default function ViewNgo() {
                 <Typography sx={{ fontWeight: 'bold' }}>
                   Description of Shelter
                 </Typography>
-                <TextField multiline value={desc} rows={5} fullWidth />
+                <TextField
+                  multiline
+                  value={desc}
+                  rows={5}
+                  fullWidth
+                  inputProps={{ readOnly: true }}
+                />
               </Grid>
               <Grid
                 item
@@ -155,14 +186,27 @@ export default function ViewNgo() {
                   justifyContent: 'center',
                 }}
               >
-                <Button
-                  sx={{
-                    ...global.button2Small,
-                    fontWeight: 'bold',
-                  }}
-                >
-                  Disable
-                </Button>
+                {!account.isDisable ? (
+                  <Button
+                    sx={{
+                      ...global.button2,
+                      fontWeight: 'bold',
+                    }}
+                    onClick={handleDialog}
+                  >
+                    Disable
+                  </Button>
+                ) : (
+                  <Button
+                    sx={{
+                      ...global.button1,
+                      fontWeight: 'bold',
+                    }}
+                    onClick={handleEnable}
+                  >
+                    Enable
+                  </Button>
+                )}
               </Grid>
             </Grid>
           </Box>
@@ -171,3 +215,9 @@ export default function ViewNgo() {
     </div>
   );
 }
+
+const style = {
+  textfield: {
+    height: '49px',
+  },
+};

@@ -18,6 +18,7 @@ export default function AppBarLayout({ children }) {
         sx={{
           p: 3,
           marginTop: '100px',
+          padding: ' 0 100px',
         }}
       >
         {children}

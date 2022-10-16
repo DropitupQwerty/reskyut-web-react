@@ -1,18 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Paper,
-  Typography,
-  Grid,
-  Button,
-  Checkbox,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Box,
-} from '@mui/material';
+import { Typography, Grid, Button, Link } from '@mui/material';
 import global from '../../styles/global';
 
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
@@ -41,13 +28,23 @@ export default function AdoptionPage() {
 
   const columns = [
     { field: 'name', headerName: 'Display Name', minWidth: 150 },
-    { field: 'facebookURL', headerName: 'facebook', minWidth: 150 },
+    {
+      field: 'facebookURL',
+      headerName: 'Contacts',
+      flex: 1,
+      renderCell: (params) => (
+        <Link href={params.row.facebookURL} target="_blank">
+          {params.row.facebookURL}
+        </Link>
+      ),
+    },
     { field: 'petToAdopt', headerName: 'Wants To adopt', minWidth: 150 },
     { field: 'score', headerName: 'Score', minWidth: 50 },
 
     {
       field: 'Delete',
       headerName: 'Delete',
+      sortable: false,
       renderCell: (rows) => {
         return (
           <Button
@@ -61,9 +58,11 @@ export default function AdoptionPage() {
         );
       },
       minWidth: 150,
+      flex: 1,
     },
     {
       field: 'Approve',
+      sortable: false,
       renderCell: (rows) => {
         return (
           <Button
@@ -76,10 +75,11 @@ export default function AdoptionPage() {
           </Button>
         );
       },
-      minWidth: 150,
+      flex: 1,
     },
     {
       field: 'View',
+      sortable: false,
       renderCell: (rows) => {
         return (
           <Button
@@ -133,44 +133,6 @@ export default function AdoptionPage() {
       </Grid>
 
       <DataTable rows={adoptionRow} columns={columns} />
-
-      {/* <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <Checkbox />
-              </TableCell>
-              <TableCell>
-                <b>Name</b>
-              </TableCell>
-              <TableCell sx={{ marginLeft: '10vw' }}>
-                <b>Facebook</b>
-              </TableCell>
-              <TableCell>
-                <b>Want to Adopt</b>
-              </TableCell>
-              <TableCell>
-                <b>Score</b>
-              </TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell>
-                  <Loader isLoading={isLoading} height={30} width={30} />
-                </TableCell>
-              </TableRow>
-            ) : (
-              showDataTable()
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer> */}
     </ShelterAdminLayout>
   );
 }

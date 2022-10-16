@@ -21,9 +21,59 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import LayersIcon from '@mui/icons-material/Layers';
 import ListOfNGO from './listofngo';
 import { getPetsCollection } from './../../firebase/auth';
+import DataTable from '../../components/tableWithSort';
+import { Link } from 'react-router-dom';
 
 export default function PostOfNgo() {
   const [animalData, setAnimalData] = useState([]);
+
+  const handleDelete = (rows) => {};
+
+  const columns = [
+    { field: 'shelterName', headerName: 'NGO', minWidth: 150 },
+    { field: 'name', headerName: 'Name', minWidth: 150 },
+    {
+      field: 'age',
+      headerName: 'Age',
+      minWidth: 150,
+    },
+    { field: 'gender', headerName: 'gender', minWidth: 150 },
+    { field: 'pet_category', headerName: 'Pet Category', minWidth: 150 },
+    {
+      field: 'Delete',
+      sortable: false,
+      renderCell: (rows) => {
+        return (
+          <Button
+            sx={{ ...global.button2xs }}
+            onClick={(event) => {
+              handleDelete(event, rows);
+            }}
+          >
+            Delete
+          </Button>
+        );
+      },
+      width: 150,
+    },
+    {
+      field: 'View',
+      sortable: false,
+      renderCell: (rows) => {
+        return (
+          <Button
+            sx={{ ...global.button1xs }}
+            component={Link}
+            to={`/admin/postofngo/viewanimal/${rows.id}`}
+          >
+            View
+          </Button>
+        );
+      },
+      width: 150,
+    },
+  ];
+
   useEffect(() => {
     const getpCollection = async () => {
       setAnimalData(await getPetsCollection());
@@ -78,7 +128,10 @@ export default function PostOfNgo() {
           <DeleteIcon color="primary" />
         </Button>
       </Grid>
-      <TableContainer component={Paper}>
+
+      <DataTable rows={animalData} columns={columns} />
+
+      {/* <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -106,7 +159,7 @@ export default function PostOfNgo() {
           </TableHead>
           <TableBody>{showDataTable()}</TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> */}
     </SuperAdminLayout>
   );
 }

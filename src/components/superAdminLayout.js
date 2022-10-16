@@ -267,8 +267,8 @@ export default function SuperAdminLayout({ children }) {
               px: 3,
             }}
             component={Link}
-            to=""
-            selected={window.location.pathname.includes('')}
+            to="/admin/profile"
+            selected={window.location.pathname.includes('/admin/profile')}
           >
             <ListItemIcon
               sx={{
@@ -279,7 +279,7 @@ export default function SuperAdminLayout({ children }) {
             >
               <AccountCircleIcon color="primary" />
             </ListItemIcon>
-            <ListItemText primary="Profile  " sx={{ opacity: open ? 1 : 0 }} />
+            <ListItemText primary="Profile" sx={{ opacity: open ? 1 : 0 }} />
           </ListItem>
           <ListItem
             button

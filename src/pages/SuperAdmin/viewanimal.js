@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import global from '../../styles/global';
 import AppBarAdminLayout from '../../components/appBarAdminLayout';
 
@@ -19,32 +19,56 @@ import {
 import ImageIcon from '@mui/icons-material/Image';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { getAnimalProfile } from './../../firebase/auth';
 
 export default function ViewAnimal() {
-  const [gender, setGender] = React.useState('');
-  const [status, setStatus] = React.useState('');
-  const [category, setCategory] = React.useState('');
+  const { id } = useParams();
 
-  const style = {
-    button: {
-      width: '52px',
-      height: '52px',
-      borderRadius: '10px',
-      border: '1px solid #E8E6EA',
-      m: 1,
+  const [inputs, setInputs] = useState({
+    name: '',
+    age: 'Puppy',
+    gender: '',
+    status: 'listed',
+    pet_category: 'Custom',
+    desc: '',
+  });
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    const getAnimalPro = async () => {
+      const animalProfile = await getAnimalProfile(id);
+      setInputs({ ...animalProfile });
+      setImages([...animalProfile.imageURL]);
+      //Check the Images if a Valid URL
+    };
+    getAnimalPro();
+  }, []);
+
+  console.log(inputs);
+
+  const inputsCom = [
+    {
+      value: inputs.name,
+      label: 'Name',
     },
-  };
-
-  const genderHandleChange = (event) => {
-    setGender(event.target.value);
-  };
-  const statusHandleChange = (event) => {
-    setStatus(event.target.value);
-  };
-  const categoryHandleChange = (event) => {
-    setCategory(event.target.value);
-  };
+    {
+      value: inputs.age,
+      label: 'Age',
+    },
+    {
+      value: inputs.gender,
+      label: 'Gender',
+    },
+    {
+      value: inputs.status,
+      label: 'Status',
+    },
+    {
+      value: inputs.pet_category,
+      label: 'Pet Category',
+    },
+  ];
 
   return (
     <AppBarAdminLayout>
@@ -79,111 +103,46 @@ export default function ViewAnimal() {
         >
           <Grid container>
             <Grid item container spacing={2} direction="column">
-              <Grid
-                item
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
-                  NAME:
-                </Typography>
-                <FormControl fullWidth>
-                  <OutlinedInput sx={{ borderRadius: '20px' }} />
-                </FormControl>
-              </Grid>
-              <Grid
-                item
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
-                  AGE:
-                </Typography>
-                <FormControl fullWidth>
-                  <OutlinedInput sx={{ borderRadius: '20px' }} />
-                </FormControl>
-              </Grid>
-              <Grid
-                item
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
-                  GENDER:
-                </Typography>
-                <FormControl fullWidth>
-                  <Select
-                    value={gender}
-                    onChange={genderHandleChange}
-                    sx={{ borderRadius: '20px' }}
+              {inputsCom.map((i) => {
+                return (
+                  <Grid
+                    item
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
                   >
-                    <MenuItem value={'Male'}>Male</MenuItem>
-                    <MenuItem value={'Female'}>Female</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid
-                item
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
-                  STATUS:
-                </Typography>
-                <FormControl fullWidth>
-                  <Select
-                    value={status}
-                    onChange={statusHandleChange}
-                    sx={{ borderRadius: '20px' }}
-                  >
-                    <MenuItem value={'unlisted'}>Unlisted</MenuItem>
-                    <MenuItem value={'listed'}>Listed</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid
-                item
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
-                  PET CATEGORY:
-                </Typography>
-                <FormControl fullWidth>
-                  <Select
-                    value={category}
-                    onChange={categoryHandleChange}
-                    sx={{ borderRadius: '20px' }}
-                  >
-                    <MenuItem value={'Dog'}>Dog</MenuItem>
-                    <MenuItem value={'Cat'}>Cat</MenuItem>
-                    <MenuItem value={'Dinosaur'}>Dinosaur</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
+                    <Typography sx={{ ...global.addAnimalLabels }}>
+                      {i.label}
+                    </Typography>
+                    <FormControl fullWidth>
+                      <OutlinedInput
+                        sx={{ borderRadius: '20px' }}
+                        value={i.value}
+                        readOnly="true"
+                      />
+                    </FormControl>
+                  </Grid>
+                );
+              })}
+
               <Grid item>
                 <Typography sx={{ marginRight: '12px', fontWeight: 'bold' }}>
                   DESCRIPTION:
                 </Typography>
-                <TextField multiline rows={3} fullWidth />
+                <TextField
+                  multiline
+                  rows={3}
+                  fullWidth
+                  defaultValue={inputs.desc}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
               </Grid>
-              <Grid item sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button sx={{ ...global.button2Small, marginLeft: '20px' }}>
+              <Grid item sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Button sx={{ ...global.button2, marginLeft: '20px' }}>
                   DELETE
                 </Button>
               </Grid>
@@ -196,45 +155,41 @@ export default function ViewAnimal() {
                 variant="h6"
                 sx={{ marginLeft: '10px', fontWeight: 'bold' }}
               >
-                {' '}
                 Image
               </Typography>
             </Box>
 
             <Box marginTop={2}>
               <Grid container>
-                <Grid item>
-                  <IconButton>
-                    <Paper
-                      elavation={3}
-                      sx={{ height: '98px', width: '93px' }}
-                    ></Paper>
-                  </IconButton>
-                </Grid>
-                <Grid item>
-                  <IconButton>
-                    <Paper
-                      elavation={3}
-                      sx={{ height: '98px', width: '93px' }}
-                    ></Paper>
-                  </IconButton>
-                </Grid>
-                <Grid item>
-                  <IconButton>
-                    <Paper
-                      elavation={3}
-                      sx={{ height: '98px', width: '93px' }}
-                    ></Paper>
-                  </IconButton>
-                </Grid>
-                <Grid item>
-                  <IconButton>
-                    <Paper
-                      elavation={3}
-                      sx={{ height: '98px', width: '93px' }}
-                    ></Paper>
-                  </IconButton>
-                </Grid>
+                {images.map((imageURI) => {
+                  console.log(imageURI);
+                  return (
+                    <Grid item>
+                      {console.log(imageURI.index)}
+
+                      <Paper
+                        elavation={3}
+                        sx={{
+                          height: '130px',
+                          width: '100px',
+                          margin: '10px',
+                          position: 'relative',
+                        }}
+                      >
+                        <img
+                          style={{
+                            height: '100%',
+                            width: '100%',
+                            objectFit: 'cover',
+                            borderRadius: '10px',
+                          }}
+                          src={imageURI}
+                          alt={imageURI}
+                        />
+                      </Paper>
+                    </Grid>
+                  );
+                })}
               </Grid>
             </Box>
           </Box>
@@ -243,3 +198,13 @@ export default function ViewAnimal() {
     </AppBarAdminLayout>
   );
 }
+
+const style = {
+  button: {
+    width: '52px',
+    height: '52px',
+    borderRadius: '10px',
+    border: '1px solid #E8E6EA',
+    m: 1,
+  },
+};

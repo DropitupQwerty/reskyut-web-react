@@ -24,6 +24,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import Loader from './../../../components/common/loader';
 import { Box } from '@mui/material';
+import DataTable from '../../../components/tableWithSort';
 
 export default function AnimalListing() {
   const [animalData, setAnimalData] = useState([]);
@@ -40,52 +41,41 @@ export default function AnimalListing() {
   }, []);
   console.log(animalData);
 
-  const showDataTable = () => {
-    if (animalData.length === 0) {
-      return (
-        <TableRow>
-          <TableCell> No data </TableCell>
-        </TableRow>
-      );
-    }
-    return animalData.map((animal) => (
-      <TableRow key={animal.id}>
-        <TableCell>{animal.name}</TableCell>
-        <TableCell>{animal.age}</TableCell>
-        <TableCell>{animal.gender}</TableCell>
-        <TableCell>{animal.pet_category}</TableCell>
-        <TableCell>
-          <Typography
-            sx={{
-              ...global.noWrapEllip,
-              width: 200,
-            }}
-          >
-            {animal.desc}
-          </Typography>
-        </TableCell>
+  const columns = [
+    { field: 'name', headerName: 'Display Name', minWidth: 150 },
+    { field: 'age', sortable: false, headerName: 'Age', width: 150 },
+    { field: 'gender', sortable: false, headerName: 'Gender', minWidth: 150 },
+    {
+      field: 'pet_category',
+      sortable: false,
+      headerName: 'Pet Category',
+      minWidth: 50,
+    },
+    { field: 'status', sortable: false, headerName: 'Status', minWidth: 50 },
+    {
+      field: 'desc',
+      sortable: false,
+      headerName: 'Description',
+      flex: 1,
+      minWidth: 50,
+    },
 
-        <TableCell align="right">
-          <Button
-            variant="contained"
-            color={animal.status}
-            sx={{ ...global.badgeStatus }}
-          >
-            {animal.status}
-          </Button>
-        </TableCell>
-        <TableCell align="right">
+    {
+      sortable: false,
+      renderCell: (rows) => {
+        return (
           <Button
             sx={{ ...global.button2xs }}
             component={Link}
-            to={`/animallisting/editanimal/${animal.id}`}
+            to={`/animallisting/editanimal/${rows.id}`}
           >
             Edit
           </Button>
-        </TableCell>
-      </TableRow>
-    ));
-  };
+        );
+      },
+      minWidth: 150,
+    },
+  ];
 
   return (
     <ShelterAdminLayout>
@@ -118,7 +108,9 @@ export default function AnimalListing() {
           <DeleteIcon color="primary" />
         </Button>
       </Grid>
-      <TableContainer component={Paper}>
+
+      <DataTable rows={animalData} columns={columns} />
+      {/* <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -158,7 +150,7 @@ export default function AnimalListing() {
             )}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> */}
     </ShelterAdminLayout>
   );
 }

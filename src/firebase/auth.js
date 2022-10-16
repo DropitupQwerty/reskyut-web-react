@@ -91,6 +91,7 @@ export const register = async (inputs, image) => {
 
                 console.log('dpName', user.displayName);
                 console.log('imgUrl', user.photoURL);
+                alert('NGO USER CREATED');
                 signOut(auth2);
               })
               .catch((error) => {
@@ -182,12 +183,14 @@ export default function IsLoggedIn() {
 
 //Get All pets Collection
 export const getPetsCollection = async () => {
-  const petCollection = await axios
-    .get(`${backendURL}/animals`)
-    .catch((error) => {
-      console.log(error);
+  const petColl = [];
+  const q = query(collection(db, 'pets'));
+  await getDocs(q).then((res) => {
+    res.docs.map((r) => {
+      petColl.push(r.data());
     });
-  return petCollection.data;
+  });
+  return petColl;
 };
 
 //Adding Pet document to pet Collection
@@ -372,7 +375,7 @@ export const updateNgoAccount = async (inputs, image) => {
   console.log('update Account', inputs);
   const user = auth.currentUser;
 
-  await updateDoc(doc(db, `ngoshelters/${inputs.id}`), {
+  await updateDoc(doc(db, `ngoshelters/${auth.currentUser.uid}`), {
     ...inputs,
   }).then(() => {
     updateProfile(user, {
@@ -470,4 +473,25 @@ export const listAdoptor = async (userAccount) => {
       );
     }
   );
+};
+
+export const disbleAccount = async (rows) => {
+  const q = query(collection(db, 'pets'));
+
+  await updateDoc(doc(db, `ngoshelters/${rows}`), {
+    isDisable: true,
+  }).then(async () => {
+    await getDocs(q, where('shelterID', '==', rows)).then((res) => {
+      res.docs.map(async (r) => {
+        await updateDoc(doc(db, `pets/${r.data().id}`), {
+          status: 'unlisted',
+        });
+      });
+    });
+  });
+};
+export const enableAccount = async (rows) => {
+  await updateDoc(doc(db, `ngoshelters/${rows}`), {
+    isDisable: false,
+  });
 };
