@@ -67,6 +67,16 @@ const global = {
     height: '40px',
     fontWeight: 'bold',
   },
+  button2xsyellow: {
+    margin: '0 5px',
+    background: '#F2F200',
+    color: '#333',
+    padding: '5px',
+    borderRadius: '20px',
+    width: '120px',
+    height: '40px',
+    fontWeight: 'bold',
+  },
   paperDashboard: {
     height: '196px',
     padding: ' 20px',

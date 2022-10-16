@@ -367,44 +367,6 @@ export const getUsersInfo = async () => {
   return users;
 };
 
-export const Adoption = (userAccount) => {
-  const [rowData, setRowData] = useState({
-    facebookURL: '',
-    petToAdopt: '',
-    score: '',
-  });
-
-  const { id } = userAccount;
-
-  useEffect(() => {
-    const getInfo = async () => {
-      //Getting the value for table
-      const docRef = doc(db, `users/${id}`);
-      const userSnap = await getDoc(docRef);
-      const formSnap = await getDoc(doc(docRef, '/form/form'));
-      await getDoc(doc(db, `matches/${id}${auth.currentUser?.uid}`)).then(
-        (res) => {
-          const getPet = async () => {
-            const petSnap = await getDoc(
-              doc(db, `pets/${res.data()?.petToAdopt}`)
-            );
-            setRowData({
-              ...rowData,
-              name: userAccount?.name,
-              facebookURL: formSnap.data()?.BestWayToContact,
-              petToAdopt: petSnap.data()?.name,
-              score: userSnap.data()?.score,
-            });
-          };
-          getPet();
-        }
-      );
-    };
-    getInfo();
-  }, [userAccount.id]);
-  return rowData;
-};
-
 export const updateNgoAccount = async (inputs, image) => {
   console.log('update Account', inputs);
   const user = auth.currentUser;
@@ -508,7 +470,7 @@ export const listAdoptor = async (userAccount) => {
           );
         })
         .catch((error) => {
-          console.log('petDelete By ADmin', error);
+          console.log('Pet Delete By Admin', error);
         });
     }
   );

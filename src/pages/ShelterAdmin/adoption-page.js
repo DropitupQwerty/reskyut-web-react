@@ -6,15 +6,18 @@ import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import PetsIcon from '@mui/icons-material/Pets';
-import { getUsersInfo } from './../../firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import DataTable from '../../components/tableWithSort';
-import { getDocs, collection, query } from 'firebase/firestore';
+import { getDocs, collection, query, doc, getDoc } from 'firebase/firestore';
 import { auth, db } from './../../firebase/firebase-config';
+import { async } from '@firebase/util';
+import InfoDialog from '../../components/common/infoDialog';
 
 export default function AdoptionPage() {
   const navigate = useNavigate();
   const [adoptionRow, setAdoptionRow] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [moreInfo, setMoreInfo] = useState();
 
   const handleClick = (event, rows) => {
     navigate(`/message/${rows.id}/${auth.currentUser?.uid}`);
@@ -24,7 +27,17 @@ export default function AdoptionPage() {
     const deleteAccount = adoptionRow.filter((a) => a.id !== rows.id);
     setAdoptionRow(deleteAccount);
   };
-  const handleApprove = (userAccountsId) => {};
+  const handleInfoDialog = async (event, rows) => {
+    setOpen(true);
+
+    await getDoc(doc(db, `users/${rows.id}/form/form`)).then((res) => {
+      setMoreInfo(res.data());
+    });
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const columns = [
     { field: 'name', headerName: 'Display Name', minWidth: 150 },
@@ -39,7 +52,24 @@ export default function AdoptionPage() {
       ),
     },
     { field: 'petToAdopt', headerName: 'Wants To adopt', minWidth: 150 },
-    { field: 'score', headerName: 'Score', minWidth: 50 },
+    {
+      field: 'score',
+      headerName: 'Score',
+      sortable: false,
+      renderCell: (rows) => {
+        return (
+          <Button
+            sx={{ ...global.button2xsyellow }}
+            onClick={(event) => {
+              handleInfoDialog(event, rows);
+            }}
+          >
+            {rows.row.score}
+          </Button>
+        );
+      },
+      minWidth: 150,
+    },
 
     {
       field: 'Delete',
@@ -53,12 +83,11 @@ export default function AdoptionPage() {
               handleDecline(event, rows);
             }}
           >
-            DELETE
+            DECLINE
           </Button>
         );
       },
-      minWidth: 150,
-      flex: 1,
+      width: 150,
     },
     {
       field: 'Approve',
@@ -75,8 +104,9 @@ export default function AdoptionPage() {
           </Button>
         );
       },
-      flex: 1,
+      width: 150,
     },
+
     {
       field: 'View',
       sortable: false,
@@ -92,7 +122,7 @@ export default function AdoptionPage() {
           </Button>
         );
       },
-      minWidth: 150,
+      width: 150,
     },
   ];
 
@@ -108,13 +138,13 @@ export default function AdoptionPage() {
       });
       setAdoptionRow(acc);
     };
-
     getRow();
     console.log(adoptionRow);
   }, []);
 
   return (
     <ShelterAdminLayout>
+      <InfoDialog moreInfo={moreInfo} open={open} cancel={handleClose} />
       <Grid item xs>
         <Typography variant="h4" align="center">
           <PetsIcon color="primary" /> <b>Adoption Page</b>
