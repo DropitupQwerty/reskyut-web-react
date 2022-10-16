@@ -453,22 +453,25 @@ export const updateNgoPassword = async (values, email) => {
 
 export const listAdoptor = async (userAccount) => {
   const { id } = userAccount;
-
-  //Getting the value for table
   const docRef = doc(db, `users/${id}`);
   const userSnap = await getDoc(docRef);
   const formSnap = await getDoc(doc(docRef, '/form/form'));
   await getDoc(doc(db, `matches/${id}${auth.currentUser?.uid}`)).then(
     async (res) => {
-      const petSnap = await getDoc(doc(db, `pets/${res.data()?.petToAdopt}`));
-      await setDoc(
-        doc(db, `ngoshelters/${auth.currentUser?.uid}/adoptionlist/${id}`),
-        {
-          id: userAccount?.id,
-          name: userAccount?.displayName,
-          facebookURL: formSnap.data()?.BestWayToContact,
-          petToAdopt: petSnap.data()?.name,
-          score: userSnap.data()?.score,
+      console.log(res.data().petToAdopt);
+      await getDoc(doc(db, `pets/${res.data()?.petToAdopt}`)).then(
+        async (petSnap) => {
+          console.log(petSnap.data());
+          await setDoc(
+            doc(db, `ngoshelters/${auth.currentUser?.uid}/adoptionlist/${id}`),
+            {
+              id: id,
+              name: userAccount?.displayName,
+              facebookURL: formSnap.data()?.BestWayToContact,
+              petToAdopt: petSnap.data()?.name,
+              score: userSnap.data()?.score,
+            }
+          );
         }
       );
     }
@@ -494,4 +497,67 @@ export const enableAccount = async (rows) => {
   await updateDoc(doc(db, `ngoshelters/${rows}`), {
     isDisable: false,
   });
+};
+
+export const getTrashCollection = async () => {
+  const petColl = [];
+  const q = query(collection(db, `ngoshelters/${auth.currentUser?.uid}/trash`));
+  await getDocs(q).then((res) => {
+    res.docs.map((r) => {
+      petColl.push(r.data());
+    });
+  });
+  return petColl;
+};
+
+export const moveToTrash = async (rows) => {
+  await setDoc(
+    doc(db, `ngoshelters/${auth.currentUser.uid}/trash/${rows.id}`),
+    {
+      ...rows.row,
+    }
+  )
+    .then(() => {
+      setDoc(doc(db, `ngoshelters/${rows.row.shelterID}/trash/${rows.id}`), {
+        ...rows.row,
+        adminDelete: true,
+      });
+    })
+    .then(async () => {
+      await deleteDoc(doc(db, `pets/${rows.row.id}`), {
+        ...rows.row,
+      });
+    })
+    .catch((error) => console.log(error));
+};
+
+export const restoreAnimal = async (rows) => {
+  await setDoc(doc(db, `pets`, `${rows.id}`), {
+    ...rows.row,
+  })
+    .then(async () => {
+      await getDoc(
+        doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${rows.id}`)
+      ).then(async (res) => {
+        console.log(res.data().id);
+        await deleteDoc(
+          doc(db, `ngoshelters/${auth.currentUser.uid}/trash/${res.data().id}`)
+        )
+          .then(async () => {
+            console.log(res.data());
+            await deleteDoc(
+              doc(
+                db,
+                `ngoshelters/${rows.row.shelterID}/trash/${res.data().id}`
+              )
+            );
+          })
+          .then(() => {
+            alert('Animal Restored');
+          });
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };

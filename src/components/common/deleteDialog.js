@@ -43,7 +43,7 @@ const DeleteDialog = ({ open, cancel, confirm, message }) => {
           Cancel
         </Button>
         <Button autoFocus sx={{ ...global.button1xs }} onClick={confirm}>
-          Save
+          Confirm
         </Button>
       </DialogActions>
     </Dialog>

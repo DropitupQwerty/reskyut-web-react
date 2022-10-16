@@ -25,10 +25,20 @@ import { useEffect } from 'react';
 import Loader from './../../../components/common/loader';
 import { Box } from '@mui/material';
 import DataTable from '../../../components/tableWithSort';
+import DeleteDialog from '../../../components/common/deleteDialog';
+import { addDoc } from 'firebase/firestore';
+import { doc } from 'firebase/firestore';
+import { async } from '@firebase/util';
+import { setDoc } from 'firebase/firestore';
+import { auth, db } from '../../../firebase/firebase-config';
+import { deleteDoc } from 'firebase/firestore';
 
 export default function AnimalListing() {
   const [animalData, setAnimalData] = useState([]);
   const [isLoading, setIsloading] = useState();
+  const [open, setOpen] = useState();
+  const [animal, setAnimal] = useState();
+  const [message, setMessage] = useState();
 
   useEffect(() => {
     const getPostList = async () => {
@@ -39,10 +49,40 @@ export default function AnimalListing() {
     };
     getPostList();
   }, []);
-  console.log(animalData);
+
+  const handleDialog = (event, rows) => {
+    setOpen(true);
+    setAnimal(rows);
+    setMessage(`Delete this pet permanently?`);
+  };
+  const handleConfirm = async () => {
+    console.log('Animal', animal);
+    const deletedAnimal = animalData.filter((a) => a.id !== animal.id);
+    setAnimalData(deletedAnimal);
+
+    await setDoc(
+      doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${animal.id}`),
+      {
+        ...animal.row,
+      }
+    ).then(async () => {
+      await deleteDoc(doc(db, `pets/${animal.id}`));
+    });
+    setOpen(false);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const columns = [
     { field: 'name', headerName: 'Display Name', minWidth: 150 },
+    {
+      field: 'desc',
+      sortable: false,
+      headerName: 'Description',
+      flex: 1,
+      minWidth: 50,
+    },
     { field: 'age', sortable: false, headerName: 'Age', width: 150 },
     { field: 'gender', sortable: false, headerName: 'Gender', minWidth: 150 },
     {
@@ -52,20 +92,31 @@ export default function AnimalListing() {
       minWidth: 50,
     },
     { field: 'status', sortable: false, headerName: 'Status', minWidth: 50 },
-    {
-      field: 'desc',
-      sortable: false,
-      headerName: 'Description',
-      flex: 1,
-      minWidth: 50,
-    },
 
     {
+      field: 'Delete Animal',
+      headerName: 'Delete Animal',
       sortable: false,
       renderCell: (rows) => {
         return (
           <Button
             sx={{ ...global.button2xs }}
+            onClick={(event) => handleDialog(event, rows)}
+          >
+            Delete
+          </Button>
+        );
+      },
+      minWidth: 150,
+    },
+    {
+      field: 'Edit Animal',
+      headerName: 'Edit Animal',
+      sortable: false,
+      renderCell: (rows) => {
+        return (
+          <Button
+            sx={{ ...global.button3xs }}
             component={Link}
             to={`/animallisting/editanimal/${rows.id}`}
           >
@@ -79,6 +130,12 @@ export default function AnimalListing() {
 
   return (
     <ShelterAdminLayout>
+      <DeleteDialog
+        open={open}
+        confirm={handleConfirm}
+        cancel={handleClose}
+        message={message}
+      />
       <Grid item xs>
         <Typography variant="h4" align="center">
           <ReceiptLongIcon color="primary" /> <b>Animal Listing</b>
@@ -110,47 +167,6 @@ export default function AnimalListing() {
       </Grid>
 
       <DataTable rows={animalData} columns={columns} />
-      {/* <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <b>Name</b>
-              </TableCell>
-              <TableCell sx={{ marginLeft: '10vw' }}>
-                <b>Age</b>
-              </TableCell>
-              <TableCell>
-                <b>Gender</b>
-              </TableCell>
-              <TableCell>
-                <b>Pet Category</b>
-              </TableCell>
-              <TableCell>
-                <b>Description</b>
-              </TableCell>
-              <TableCell align="center">
-                <b>Status</b>
-              </TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {isLoading ? (
-              <Box>
-                <TableRow>
-                  <TableCell>
-                    <Loader isLoading={isLoading} height={30} width={30} />
-                  </TableCell>
-                </TableRow>
-              </Box>
-            ) : (
-              showDataTable()
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer> */}
     </ShelterAdminLayout>
   );
 }

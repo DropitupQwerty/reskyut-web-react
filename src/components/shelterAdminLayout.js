@@ -32,6 +32,7 @@ import { async } from '@firebase/util';
 import { addDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import HistoryIcon from '@mui/icons-material/History';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const drawerWidth = 240;
 
@@ -153,6 +154,11 @@ export default function ShelterAdminLayout({ children }) {
       label: 'Adoption History',
       link: 'adoptionhistory',
       icon: <HistoryIcon color="primary" />,
+    },
+    {
+      label: 'Trash',
+      link: 'trash',
+      icon: <DeleteIcon color="primary" />,
     },
   ];
 

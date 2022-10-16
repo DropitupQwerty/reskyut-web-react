@@ -28,6 +28,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 import Logout from '@mui/icons-material/Logout';
 import LogoutUser, { logout } from './../firebase/auth';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const drawerWidth = 240;
 
@@ -108,6 +109,34 @@ export default function SuperAdminLayout({ children }) {
     setOpen(false);
   };
 
+  const adminDraweMenu = [
+    {
+      label: 'Dashboard',
+      link: '/admin/dashboard',
+      icon: <DashboardIcon color="primary" />,
+    },
+    {
+      label: 'List of NGO',
+      link: '/admin/listofngo',
+      icon: <ViewListIcon color="primary" />,
+    },
+    {
+      label: 'Add NGO',
+      link: '/admin/addngo',
+      icon: <GroupAddIcon color="primary" />,
+    },
+    {
+      label: 'Post of NGO',
+      link: '/admin/postofngo',
+      icon: <DynamicFeedIcon color="primary" />,
+    },
+    {
+      label: 'Trash',
+      link: '/admin/trash',
+      icon: <DeleteIcon color="primary" />,
+    },
+  ];
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -145,115 +174,36 @@ export default function SuperAdminLayout({ children }) {
         <Divider />
 
         <List sx={{ flexGrow: 1 }}>
-          {/* Dashboard */}
-          <ListItem
-            button
-            sx={{
-              color: '#5f7161',
-              minHeight: 48,
-              justifyContent: open ? 'initial' : 'center',
-              px: 3,
-            }}
-            component={Link}
-            to="/admin/dashboard"
-            selected={window.location.pathname.includes('/admin/dashboard')}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: open ? 3 : 'auto',
-                justifyContent: 'center',
-              }}
-            >
-              <DashboardIcon color="primary" />
-            </ListItemIcon>
-            <ListItemText
-              primary="Dashboard  "
-              sx={{ opacity: open ? 1 : 0 }}
-            />
-          </ListItem>
-          {/* Dashboard */}
-          {/* NGO list*/}
-          <ListItem
-            button
-            sx={{
-              color: '#5f7161',
-              minHeight: 48,
-              justifyContent: open ? 'initial' : 'center',
-              px: 3,
-            }}
-            component={Link}
-            to="/admin/listofngo"
-            selected={window.location.pathname.includes('/admin/listofngo')}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: open ? 3 : 'auto',
-                justifyContent: 'center',
-              }}
-            >
-              <ViewListIcon color="primary" />
-            </ListItemIcon>
-            <ListItemText
-              primary="List of NGO  "
-              sx={{ opacity: open ? 1 : 0 }}
-            />
-          </ListItem>
-          {/* Ngo list */}
-          {/* Add Ngo*/}
-          <ListItem
-            button
-            sx={{
-              color: '#5f7161',
-              minHeight: 48,
-              justifyContent: open ? 'initial' : 'center',
-              px: 3,
-            }}
-            component={Link}
-            to="/admin/addngo"
-            selected={window.location.pathname.includes('/admin/addngo')}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: open ? 3 : 'auto',
-                justifyContent: 'center',
-              }}
-            >
-              <GroupAddIcon color="primary" />
-            </ListItemIcon>
-            <ListItemText primary="Add NGO  " sx={{ opacity: open ? 1 : 0 }} />
-          </ListItem>
-          {/* Add Ngo */}
-          {/* Post of Ngo*/}
-          <ListItem
-            button
-            sx={{
-              color: '#5f7161',
-              minHeight: 48,
-              justifyContent: open ? 'initial' : 'center',
-              px: 3,
-            }}
-            component={Link}
-            to="/admin/postofngo"
-            selected={window.location.pathname.includes('/admin/postofngo')}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: open ? 3 : 'auto',
-                justifyContent: 'center',
-              }}
-            >
-              <DynamicFeedIcon color="primary" />
-            </ListItemIcon>
-            <ListItemText
-              primary="Post Of NGO  "
-              sx={{ opacity: open ? 1 : 0 }}
-            />
-          </ListItem>
-          {/* Post of Ngo */}
+          {adminDraweMenu.map((drawermenu) => {
+            return (
+              <ListItem
+                button
+                sx={{
+                  color: '#5f7161',
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 3,
+                }}
+                component={Link}
+                to={`${drawermenu.link}`}
+                selected={window.location.pathname.includes(drawermenu.link)}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {drawermenu.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={drawermenu.label}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItem>
+            );
+          })}
         </List>
         <List>
           <Divider />

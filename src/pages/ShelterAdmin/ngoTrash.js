@@ -1,50 +1,41 @@
 import SuperAdminLayout from '../../components/superAdminLayout';
 import global from '../../styles/global';
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import {
-  Paper,
-  Typography,
-  Grid,
-  Button,
-  Checkbox,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material';
+import { Typography, Grid, Button } from '@mui/material';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import LayersIcon from '@mui/icons-material/Layers';
-import ListOfNGO from './listofngo';
-import { getPetsCollection, moveToTrash } from './../../firebase/auth';
+import { getTrashCollection, restoreAnimal } from './../../firebase/auth';
 import DataTable from '../../components/tableWithSort';
-import { Link } from 'react-router-dom';
-
 import DeleteDialog from '../../components/common/deleteDialog';
+import { deleteDoc, doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../../firebase/firebase-config';
+import ShelterAdminLayout from './../../components/shelterAdminLayout';
 
-export default function PostOfNgo() {
+export default function NgoTrash() {
   const [animalData, setAnimalData] = useState([]);
-  const [trash, setTrash] = useState();
-  const [message, setMessage] = useState(false);
   const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState();
+  const [animal, setAnimal] = useState();
 
-  const handleDelete = async (event, rows) => {
-    console.log(rows.id);
-    setTrash(rows);
+  const handleDelete = (event, rows) => {
     setOpen(true);
-    setMessage('Confirm Deletion');
+    setMessage(`Delete ${rows.row.name} Permanently?`);
+    setAnimal(rows);
   };
-  const handeleConfirm = () => {
-    const deletedAnimal = animalData.filter((a) => a.id !== trash.id);
+  const handleRestore = async (event, rows) => {
+    const deletedAnimal = animalData.filter((a) => a.id !== rows.id);
     setAnimalData(deletedAnimal);
-    moveToTrash(trash);
-    setOpen(false);
-  };
-  const handleClose = () => {
+
+    await setDoc(doc(db, `pets/${rows.id}`), {
+      ...animal.row,
+    }).then(async () => {
+      await deleteDoc(
+        doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${rows.id}`)
+      );
+    });
     setOpen(false);
   };
 
@@ -76,16 +67,17 @@ export default function PostOfNgo() {
       width: 150,
     },
     {
-      field: 'View',
+      field: 'Restore',
       sortable: false,
       renderCell: (rows) => {
         return (
           <Button
             sx={{ ...global.button1xs }}
-            component={Link}
-            to={`/admin/postofngo/viewanimal/${rows.id}`}
+            onClick={(event) => {
+              handleRestore(event, rows);
+            }}
           >
-            View
+            Restore
           </Button>
         );
       },
@@ -93,21 +85,35 @@ export default function PostOfNgo() {
     },
   ];
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleConfirmDelete = async () => {
+    const deletedAnimal = animalData.filter((a) => a.id !== animal.id);
+    setAnimalData(deletedAnimal);
+    console.log(animal.id);
+    await deleteDoc(
+      doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${animal.id}`)
+    ).then(() => {
+      alert('Pet Deleted');
+      setOpen(false);
+    });
+    console.log('delete', animal);
+  };
   useEffect(() => {
     const getpCollection = async () => {
-      setAnimalData(await getPetsCollection());
+      setAnimalData(await getTrashCollection());
     };
     getpCollection();
   }, []);
-  console.log(animalData);
 
   return (
-    <SuperAdminLayout>
+    <ShelterAdminLayout>
       <DeleteDialog
         open={open}
-        message={message}
-        confirm={handeleConfirm}
         cancel={handleClose}
+        message={message}
+        confirm={handleConfirmDelete}
       />
       <Grid item xs>
         <Typography variant="h4" align="center">
@@ -115,7 +121,6 @@ export default function PostOfNgo() {
         </Typography>
       </Grid>
       <Grid item xs>
-        <Checkbox {...ListOfNGO} />
         <Button>
           <RefreshIcon color="primary" />
         </Button>
@@ -125,36 +130,6 @@ export default function PostOfNgo() {
       </Grid>
 
       <DataTable rows={animalData} columns={columns} />
-
-      {/* <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <Checkbox />
-              </TableCell>
-              <TableCell>
-                <b>NGO Name</b>
-              </TableCell>
-              <TableCell sx={{ marginLeft: '10vw' }}>
-                <b>Pet Name</b>
-              </TableCell>
-              <TableCell>
-                <b>Age</b>
-              </TableCell>
-              <TableCell>
-                <b>Gender</b>
-              </TableCell>
-              <TableCell>
-                <b>Description</b>
-              </TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{showDataTable()}</TableBody>
-        </Table>
-      </TableContainer> */}
-    </SuperAdminLayout>
+    </ShelterAdminLayout>
   );
 }
