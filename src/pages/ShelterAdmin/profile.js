@@ -177,13 +177,13 @@ export default function Profile() {
             {image.length === 0 ? (
               <Avatar
                 src={inputs?.photoURL}
-                alt={inputs?.photoURL}
+                alt={'Profile'}
                 sx={{ height: '200px', width: '200px' }}
               ></Avatar>
             ) : (
               <Avatar
                 src={previewImage}
-                alt={previewImage}
+                alt={'Profile'}
                 sx={{ height: '200px', width: '200px' }}
               ></Avatar>
             )}

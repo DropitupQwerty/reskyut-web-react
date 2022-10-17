@@ -8,6 +8,8 @@ import {
   TextField,
   Button,
   FormGroup,
+  FormControl,
+  OutlinedInput,
 } from '@mui/material';
 
 import SenderMessage from './common/senderMessage';
@@ -44,7 +46,8 @@ export default function MessageArea() {
     setValue(event.target.value);
   };
 
-  const handleSend = async () => {
+  const handleSend = async (e) => {
+    e.preventDefault();
     if (value !== null) {
       await addDoc(docRef, {
         message: value,
@@ -93,38 +96,34 @@ export default function MessageArea() {
         <Box ref={messagesEndRef} />
       </Box>
 
-      {/* TextField for message Sending */}
-      <Paper
-        elevation={3}
-        sx={{
-          position: 'fixed',
-          bottom: '0',
-          p: 2,
-          right: '400px',
-          left: drawerWidth,
-        }}
-      >
-        <Box
+      <form onSubmit={handleSend}>
+        {/* TextField for message Sending */}
+        <Paper
+          elevation={3}
           sx={{
-            height: '6vh',
+            position: 'fixed',
+            bottom: '0',
+            p: 2,
+            right: '400px',
+            left: drawerWidth,
             display: 'flex',
-            alignItems: 'center',
           }}
         >
-          <TextField
-            fullWidth
-            placeholder="Send Message"
-            multiline
-            maxRows={2}
-            onChange={handleChange}
-          />
+          <FormControl fullWidth sx={{ display: 'flex' }}>
+            <OutlinedInput
+              fullWidth
+              placeholder="Send Message"
+              maxRows={7}
+              onChange={handleChange}
+            />
+          </FormControl>
           <Box>
-            <Button type="submit" onClick={handleSend}>
+            <Button type="submit" sx={{ alignSelf: 'center' }}>
               Send
             </Button>
           </Box>
-        </Box>
-      </Paper>
+        </Paper>
+      </form>
     </Box>
   );
 }

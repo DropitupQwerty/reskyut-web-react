@@ -461,7 +461,6 @@ export const updateAccountPassword = async (values, email) => {
 export const listAdoptor = async (userAccount) => {
   const { id } = userAccount;
   const docRef = doc(db, `users/${id}`);
-  const userSnap = await getDoc(docRef);
   const formSnap = await getDoc(doc(docRef, '/form/form'));
   await getDoc(doc(db, `matches/${id}${auth.currentUser?.uid}`)).then(
     async (res) => {

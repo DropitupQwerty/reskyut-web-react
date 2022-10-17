@@ -10,6 +10,7 @@ export default function DataTable({ rows, columns, checkboxSelected }) {
         columns={columns}
         rowsPerPageOptions={[5]}
         checkboxSelection
+        pageSize={8}
         onSelectionModelChange={(ids) => checkboxSelected(ids)}
         disableSelectionOnClick
         components={{ Toolbar: GridToolbar }}
