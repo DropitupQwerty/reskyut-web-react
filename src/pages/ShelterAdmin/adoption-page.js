@@ -17,15 +17,18 @@ export default function AdoptionPage() {
   const navigate = useNavigate();
   const [adoptionRow, setAdoptionRow] = useState([]);
   const [open, setOpen] = useState(false);
+  const [decline, seDecline] = useState(false);
   const [moreInfo, setMoreInfo] = useState();
 
   const handleClick = (event, rows) => {
     navigate(`/message/${rows.id}/${auth.currentUser?.uid}`);
   };
-  const handleDecline = (event, rows) => {
+
+  const handleDeclineDialog = (event, rows) => {
     console.log(rows.id);
-    const deleteAccount = adoptionRow.filter((a) => a.id !== rows.id);
-    setAdoptionRow(deleteAccount);
+
+    // const deleteAccount = adoptionRow.filter((a) => a.id !== rows.id);
+    // setAdoptionRow(deleteAccount);
   };
   const handleInfoDialog = async (event, rows) => {
     setOpen(true);
@@ -80,7 +83,7 @@ export default function AdoptionPage() {
           <Button
             sx={{ ...global.button2xs }}
             onClick={(event) => {
-              handleDecline(event, rows);
+              handleDeclineDialog(event, rows);
             }}
           >
             DECLINE
@@ -142,6 +145,14 @@ export default function AdoptionPage() {
     console.log(adoptionRow);
   }, []);
 
+  ///Get all selected in checkbox
+  const onRowsSelectionHandler = (ids) => {
+    const selectedRowsData = ids.map((id) =>
+      adoptionRow.find((row) => row.id === id)
+    );
+    console.log(selectedRowsData);
+  };
+
   return (
     <ShelterAdminLayout>
       <InfoDialog moreInfo={moreInfo} open={open} cancel={handleClose} />
@@ -159,7 +170,11 @@ export default function AdoptionPage() {
         </Button>
       </Grid>
 
-      <DataTable rows={adoptionRow} columns={columns} />
+      <DataTable
+        rows={adoptionRow}
+        checkboxSelected={onRowsSelectionHandler}
+        columns={columns}
+      />
     </ShelterAdminLayout>
   );
 }

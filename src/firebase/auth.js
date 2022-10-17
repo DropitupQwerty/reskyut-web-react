@@ -476,7 +476,7 @@ export const listAdoptor = async (userAccount) => {
               name: userAccount?.displayName,
               facebookURL: formSnap.data()?.BestWayToContact,
               petToAdopt: petSnap.data()?.name,
-              score: userSnap.data()?.score,
+              score: formSnap.data()?.score,
             }
           );
         })

@@ -130,16 +130,14 @@ export default function NgoTrash() {
       />
       <Grid item xs>
         <Typography variant="h4" align="center">
-          <LayersIcon color="primary" /> <b>Post of NGO</b>
+          <DeleteIcon color="primary" /> <b>Animal Trash</b>
         </Typography>
       </Grid>
       <Grid item xs>
         <Button>
           <RefreshIcon color="primary" />
         </Button>
-        <Button>
-          <DeleteIcon color="primary" />
-        </Button>
+        <Button></Button>
       </Grid>
 
       <DataTable rows={animalData} columns={columns} />
