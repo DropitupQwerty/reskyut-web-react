@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Drawer,
   Toolbar,
@@ -10,13 +10,13 @@ import {
   Card,
   CardMedia,
   Link,
-} from '@mui/material';
-import { useParams } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase/firebase-config';
-import Loader from '../components/common/loader';
-import Box from '@mui/material/Box';
-import global from '../styles/global';
+} from "@mui/material";
+import { useParams } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase-config";
+import Loader from "../components/common/loader";
+import Box from "@mui/material/Box";
+import global from "../styles/global";
 
 export default function SenderInfo() {
   const [form, setForm] = useState();
@@ -38,7 +38,7 @@ export default function SenderInfo() {
       const docSnap = await getDoc(docRef);
       setInfo(docSnap.data());
       //Get Fulladdress and Fb URL
-      const formSnap = await getDoc(doc(docRef, '/form/form'));
+      const formSnap = await getDoc(doc(docRef, "/form/form"));
       setForm(formSnap.data());
 
       //Get pet Info
@@ -63,9 +63,9 @@ export default function SenderInfo() {
         sx={{
           width: 400,
           flexShrink: 0,
-          '& .MuiDrawer-paper': {
+          "& .MuiDrawer-paper": {
             width: 400,
-            boxSizing: 'border-box',
+            boxSizing: "border-box",
             p: 2,
           },
         }}
@@ -74,11 +74,11 @@ export default function SenderInfo() {
       >
         <Toolbar />
 
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <Box sx={{ p: 2 }}>
             <Avatar
-              sx={{ height: '150px', width: '150px' }}
-              src={photoURL || 'No Phot Uploaded'}
+              sx={{ height: "120px", width: "120px" }}
+              src={photoURL || "No Phot Uploaded"}
             />
           </Box>
           <Box noWrap sx={{ p: 1 }}>
@@ -87,115 +87,148 @@ export default function SenderInfo() {
               <Typography
                 sx={
                   (text3,
-                  { ...global.noWrapEllip, width: 150, display: 'block' })
+                  { ...global.noWrapEllip, width: 150, display: "block" })
                 }
               >
-                {BestWayToContact || ''}
+                {BestWayToContact || ""}
               </Typography>
             </Link>
             <Box>
-              <Typography sx={({ paddingTop: '20px' }, text2)}>
+              <Typography sx={({ paddingTop: "20px" }, text2)}>
                 Location
               </Typography>
               <Typography variant="caption">
-                {FullAddress || 'Unknown Location'}
+                {FullAddress || "Unknown Location"}
               </Typography>
             </Box>
           </Box>
         </Box>
         <Box>
           <Typography sx={text2}>About</Typography>
-          <Typography variant="caption">{About || 'No Information'}</Typography>
+          <Typography variant="caption">{About || "No Information"}</Typography>
         </Box>
-        <Box sx={{ paddingTop: '20px' }}>
+        <Box sx={{ paddingTop: "20px" }}>
           <Typography
             color="primary"
             variant="h6"
             fontWeight="bold"
-            sx={{ textAlign: 'center' }}
+            sx={{ textAlign: "center" }}
           >
             Wants to adopt
           </Typography>
           {isLoading ? (
             <Loader isLoading={isLoading} height={50} width={50} />
           ) : (
-            <Box sx={{ paddingTop: '20px', display: 'flex' }}>
+            <Box
+              sx={{
+                paddingTop: "20px",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <Box>
-                <Card sx={{ width: '194px', height: '252px' }}>
+                <Card sx={{ width: "250px", height: "252px" }}>
                   <CardMedia
-                    sx={{ height: 550, width: '100%', objectFit: 'cover' }}
+                    sx={{ height: 550, width: "100%", objectFit: "cover" }}
                   >
                     <img
                       src={imageURL?.[0]}
                       alt={imageURL?.[0]}
-                      style={{ height: '252px', width: '100%' }}
+                      style={{ height: "252px", width: "100%" }}
                     ></img>
                   </CardMedia>
                 </Card>
               </Box>
-              <Box sx={{ p: 2 }}>
-                <List>
-                  <ListItemText
-                    sx={{ display: 'flex', alignItems: 'center' }}
-                    primary={
-                      <Typography sx={text2} paddingRight={1}>
-                        Name:
-                      </Typography>
-                    }
-                    secondary={<Typography sx={text3}>{name} </Typography>}
-                  />
-                  <ListItemText
-                    sx={{ display: 'flex', alignItems: 'center' }}
-                    primary={
-                      <Typography sx={text2} paddingRight={1}>
-                        Age:
-                      </Typography>
-                    }
-                    secondary={<Typography sx={text3}>{age} </Typography>}
-                  />
-                  <ListItemText
-                    sx={{ display: 'flex', alignItems: 'center' }}
-                    primary={
-                      <Typography sx={text2} paddingRight={1}>
-                        Gender:
-                      </Typography>
-                    }
-                    secondary={<Typography sx={text3}>{gender} </Typography>}
-                  />
-                  <ListItemText
-                    sx={{ display: 'flex', alignItems: 'center' }}
-                    primary={<Typography sx={text2}>Pet Category:</Typography>}
-                    secondary={
-                      <Typography sx={text3}>{pet_category} </Typography>
-                    }
-                  />
-                  <Typography sx={(desc, text2)} paddingRight={1}>
-                    Description:
-                  </Typography>
-
-                  <Box
-                    sx={{
-                      width: '100%',
-                      height: '60px',
-                    }}
-                  >
-                    <Typography sx={text3}>{desc}</Typography>
-                  </Box>
-                </List>
-              </Box>
             </Box>
           )}
+          <Box sx={{ p: 2 }}>
+            <List
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+              }}
+            >
+              <ListItemText
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "50%",
+                }}
+                primary={
+                  <Typography sx={text2} paddingRight={1}>
+                    Name:
+                  </Typography>
+                }
+                secondary={<Typography sx={text3}>{name} </Typography>}
+              />
+              <ListItemText
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "30%",
+                }}
+                primary={
+                  <Typography sx={text2} paddingRight={1}>
+                    Age:
+                  </Typography>
+                }
+                secondary={<Typography sx={text3}>{age} </Typography>}
+              />
 
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: '20px',
-            }}
-          >
-            <Button sx={{ ...global.button2xs }}>Decline</Button>
-            <Button sx={{ ...global.button1xs }}>Approve</Button>
+              <ListItemText
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "50%",
+                }}
+                primary={<Typography sx={text2}>Pet Category:</Typography>}
+                secondary={<Typography sx={text3}>{pet_category} </Typography>}
+              />
+              <ListItemText
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "30%",
+                }}
+                primary={
+                  <Typography sx={text2} paddingRight={1}>
+                    Gender:
+                  </Typography>
+                }
+                secondary={<Typography sx={text3}>{gender} </Typography>}
+              />
+              <Typography sx={(desc, text2)} paddingRight={1}>
+                Description:
+              </Typography>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  width: "100%",
+                  height: "50%",
+                }}
+              >
+                <Typography
+                  sx={{
+                    text3,
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  {desc}
+                </Typography>
+              </Box>
+            </List>
           </Box>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Button sx={{ ...global.button2xs }}>Decline</Button>
+          <Button sx={{ ...global.button1xs }}>Approve</Button>
         </Box>
       </Drawer>
     </div>
@@ -204,23 +237,23 @@ export default function SenderInfo() {
 
 const style = {
   text1: {
-    fontSize: '20px',
-    fontWeight: 'bold',
+    fontSize: "20px",
+    fontWeight: "bold",
   },
 
   text2: {
-    fontSize: '16px',
-    fontWeight: 'bold',
+    fontSize: "16px",
+    fontWeight: "bold",
   },
   text3: {
-    fontSize: '14px',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: '-webkit-box',
-    WebkitLineClamp: '4',
-    WebkitBoxOrient: 'vertical',
+    fontSize: "14px",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    display: "-webkit-box",
+    WebkitLineClamp: "4",
+    WebkitBoxOrient: "vertical",
   },
   desc: {
-    height: '25px',
+    height: "25px",
   },
 };
