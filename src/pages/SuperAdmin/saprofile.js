@@ -4,18 +4,12 @@ import {
   Button,
   Grid,
   Stack,
-  TextField,
   Typography,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  Paper,
   FormControl,
-  Input,
-  InputLabel,
-  FormHelperText,
   OutlinedInput,
   InputAdornment,
   FormGroup,
@@ -27,26 +21,11 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useEffect, useState } from 'react';
 import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
-import IsLoggedIn, {
-  updateAccountInfo,
-  updateAccountPassword,
-  updateNgoAccount,
-  updateNgoPassword,
-} from '../../firebase/auth';
+import { updateAccountInfo, updateAccountPassword } from '../../firebase/auth';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { auth, db } from '../../firebase/firebase-config';
 import { doc, getDoc } from 'firebase/firestore';
-import Loader from '../../components/common/loader';
-import {
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-  updatePassword,
-} from 'firebase/auth';
 import LoaderDialog from '../../components/common/loaderDialog';
-import { async } from '@firebase/util';
-import { logout } from './../../firebase/auth';
-import { push } from 'joi-browser';
-import { toast, ToastContainer } from 'react-toastify';
 
 export default function SaProfile() {
   const [open, setOpen] = useState(false);
@@ -127,13 +106,19 @@ export default function SaProfile() {
     setOpen(false);
   };
 
-  const handleUpdatePassword = async () => {
+  const handleUpdatePassword = async (e) => {
+    e.preventDefault();
     setIsLoading(true);
-    await updateAccountPassword({ ...values }, inputs.email);
+
+    await updateAccountPassword({ ...values }, inputs.email).catch((error) => {
+      console.log(error.code);
+    });
+
     setOpen(false);
-    setLoaderMessage('Logging Out');
-    setIsLoading(false);
-    logout();
+    setLoaderMessage('Updating');
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
   };
 
   const handleUpdate = async () => {
@@ -279,121 +264,132 @@ export default function SaProfile() {
                       },
                     }}
                   >
-                    <DialogTitle sx={{ fontWeight: 'bold', color: '#E94057' }}>
-                      {'CHANGE PASSWORD'}
-                    </DialogTitle>
-                    <DialogContent>
-                      {/* password Old Password */}
-                      <Typography sx={{ fontWeight: 'bold' }}>
-                        Current Password
-                      </Typography>
-                      <FormControl sx={{ m: 1 }} variant="outlined" fullWidth>
-                        <OutlinedInput
-                          type={values.showPassword ? 'text' : 'password'}
-                          value={values.currentPassword}
-                          name="currentPassword"
-                          onChange={handlePasswordChange}
-                          endAdornment={
-                            <InputAdornment position="end">
-                              <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={handleClickShowPassword}
-                                onMouseDown={handleMouseDownPassword}
-                                edge="end"
-                              >
-                                {values.showPassword ? (
-                                  <VisibilityOff />
-                                ) : (
-                                  <Visibility />
-                                )}
-                              </IconButton>
-                            </InputAdornment>
-                          }
-                        />
-                      </FormControl>
-                      {/* password Old Password */}
-
-                      {/* New Password */}
-                      <Typography sx={{ fontWeight: 'bold' }}>
-                        New Password
-                      </Typography>
-                      <FormControl sx={{ m: 1 }} variant="outlined" fullWidth>
-                        <OutlinedInput
-                          type={values.showPassword ? 'text' : 'password'}
-                          value={values.newPassword}
-                          name="newPassword"
-                          onChange={handlePasswordChange}
-                          endAdornment={
-                            <InputAdornment position="end">
-                              <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={handleClickShowPassword}
-                                onMouseDown={handleMouseDownPassword}
-                                edge="end"
-                              >
-                                {values.showPassword ? (
-                                  <VisibilityOff />
-                                ) : (
-                                  <Visibility />
-                                )}
-                              </IconButton>
-                            </InputAdornment>
-                          }
-                        />
-                      </FormControl>
-                      {/* password Old Password */}
-                      {/* password Old Password */}
-                      <Typography sx={{ fontWeight: 'bold' }}>
-                        Confirm Password
-                      </Typography>
-                      <FormControl sx={{ m: 1 }} fullWidth variant="outlined">
-                        <OutlinedInput
-                          type={values.showPassword ? 'text' : 'password'}
-                          value={values.confirmPassword}
-                          name="confirmPassword"
-                          onChange={handlePasswordChange}
-                          endAdornment={
-                            <InputAdornment position="end">
-                              <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={handleClickShowPassword}
-                                onMouseDown={handleMouseDownPassword}
-                                edge="end"
-                              >
-                                {values.showPassword ? (
-                                  <VisibilityOff />
-                                ) : (
-                                  <Visibility />
-                                )}
-                              </IconButton>
-                            </InputAdornment>
-                          }
-                        />
-                      </FormControl>
-                      {/* password Old Password */}
-                    </DialogContent>
-
-                    <DialogActions
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-evenly',
-                        marginBottom: '12px',
-                      }}
+                    <form
+                      style={{ width: '100%' }}
+                      onSubmit={handleUpdatePassword}
                     >
-                      <Button onClick={handleClose} sx={{ ...global.button3 }}>
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={handleUpdatePassword}
-                        autoFocus
-                        sx={{ ...global.button2Small }}
+                      <DialogTitle
+                        sx={{ fontWeight: 'bold', color: '#E94057' }}
                       >
-                        Save
-                      </Button>
-                    </DialogActions>
+                        {'CHANGE PASSWORD'}
+                      </DialogTitle>
+                      <DialogContent>
+                        {/* password Old Password */}
+                        <Typography sx={{ fontWeight: 'bold' }}>
+                          Current Password
+                        </Typography>
+                        <FormControl sx={{ m: 1 }} variant="outlined" fullWidth>
+                          <OutlinedInput
+                            type={values.showPassword ? 'text' : 'password'}
+                            value={values.currentPassword}
+                            name="currentPassword"
+                            onChange={handlePasswordChange}
+                            endAdornment={
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="toggle password visibility"
+                                  onClick={handleClickShowPassword}
+                                  onMouseDown={handleMouseDownPassword}
+                                  edge="end"
+                                >
+                                  {values.showPassword ? (
+                                    <VisibilityOff />
+                                  ) : (
+                                    <Visibility />
+                                  )}
+                                </IconButton>
+                              </InputAdornment>
+                            }
+                          />
+                        </FormControl>
+                        {/* password Old Password */}
+
+                        {/* New Password */}
+                        <Typography sx={{ fontWeight: 'bold' }}>
+                          New Password
+                        </Typography>
+                        <FormControl sx={{ m: 1 }} variant="outlined" fullWidth>
+                          <OutlinedInput
+                            type={values.showPassword ? 'text' : 'password'}
+                            value={values.newPassword}
+                            name="newPassword"
+                            onChange={handlePasswordChange}
+                            endAdornment={
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="toggle password visibility"
+                                  onClick={handleClickShowPassword}
+                                  onMouseDown={handleMouseDownPassword}
+                                  edge="end"
+                                >
+                                  {values.showPassword ? (
+                                    <VisibilityOff />
+                                  ) : (
+                                    <Visibility />
+                                  )}
+                                </IconButton>
+                              </InputAdornment>
+                            }
+                          />
+                        </FormControl>
+                        {/* password Old Password */}
+                        {/* password Old Password */}
+                        <Typography sx={{ fontWeight: 'bold' }}>
+                          Confirm Password
+                        </Typography>
+                        <FormControl sx={{ m: 1 }} fullWidth variant="outlined">
+                          <OutlinedInput
+                            type={values.showPassword ? 'text' : 'password'}
+                            value={values.confirmPassword}
+                            name="confirmPassword"
+                            onChange={handlePasswordChange}
+                            endAdornment={
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="toggle password visibility"
+                                  onClick={handleClickShowPassword}
+                                  onMouseDown={handleMouseDownPassword}
+                                  edge="end"
+                                >
+                                  {values.showPassword ? (
+                                    <VisibilityOff />
+                                  ) : (
+                                    <Visibility />
+                                  )}
+                                </IconButton>
+                              </InputAdornment>
+                            }
+                          />
+                        </FormControl>
+                        {/* password Old Password */}
+                      </DialogContent>
+
+                      <DialogActions
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-evenly',
+                          marginBottom: '12px',
+                        }}
+                      >
+                        <Button
+                          onClick={handleClose}
+                          sx={{ ...global.button3 }}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          type="submit"
+                          autoFocus
+                          sx={{ ...global.button2Small }}
+                        >
+                          Save
+                        </Button>
+                      </DialogActions>
+                    </form>
                   </Dialog>
                 </Box>
               </Grid>
+
               <Grid item>
                 <Button
                   sx={{ ...global.button2, fontWeight: 'bold' }}

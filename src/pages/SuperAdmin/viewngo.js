@@ -18,7 +18,7 @@ import Input from '../../components/common/input';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase-config';
 import DeleteDialog from '../../components/common/deleteDialog';
-import { disbleAccount, enableAccount } from './../../firebase/auth';
+import { disableAccount, enableAccount } from './../../firebase/auth';
 
 export default function ViewNgo() {
   const { id } = useParams();
@@ -54,11 +54,12 @@ export default function ViewNgo() {
     setOpen(false);
   };
   const handleConfirm = () => {
-    const acc = !account.isDisable;
-
+    const acc = account;
+    acc.isDisable = !account.isDisable;
     setAccount(acc);
+
     setOpen(false);
-    disbleAccount(account.id);
+    disableAccount(account.id);
   };
   const handleEnable = () => {
     const disAcc = !account.isDisable;

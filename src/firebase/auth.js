@@ -27,18 +27,12 @@ import {
   reauthenticateWithCredential,
 } from 'firebase/auth';
 import axios from 'axios';
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-} from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { arrayUnion } from 'firebase/firestore';
 import config from '../services/config.json';
 import getMatchedUserInfo from './../lib/getMatchedUserInfo';
-import { Alert } from '@mui/material';
-import LoaderDialog from '../components/common/loaderDialog';
+
+import { toast } from 'react-toastify';
 
 const { backendURL } = config;
 
@@ -46,10 +40,16 @@ const { backendURL } = config;
 export async function login(loginEmail, loginPassword) {
   await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
     .then((res) => {
-      console.log('login', res);
+      toast.success('Logged In', {
+        position: 'bottom-right',
+        autoClose: 2000,
+      });
     })
     .catch((err) => {
-      alert(err.message);
+      toast.warn(err.code, {
+        position: 'bottom-right',
+        autoClose: 2000,
+      });
     });
   return false;
 }
@@ -98,13 +98,11 @@ export const register = async (inputs, image) => {
                   ).then(() => {
                     console.log('dpName', user.displayName);
                     console.log('imgUrl', user.photoURL);
-                    alert('NGO USER CREATED');
+                    toast.success('Ngo Account Created');
                     signOut(auth2);
                   });
                 })
                 .catch((error) => {
-                  // An error occurred
-                  // ...
                   console.log(error);
                 });
             });
@@ -143,12 +141,23 @@ export const logout = async () => {
 
 //Get ngo Accounts
 export const GetAccounts = async () => {
-  const q = query(collection(db, `ngoshelters`), where('isAdmin', '==', false));
+  const q = query(
+    collection(db, `ngoshelters`),
+    where('isDelete', '==', false)
+  );
   const querySnapshot = await getDocs(q);
   const queryData = querySnapshot.docs.map((detail) => ({
     ...detail.data(),
   }));
   return queryData;
+};
+export const getNgoCount = async () => {
+  const q = query(collection(db, `ngoshelters`), where('isAdmin', '==', false));
+  const querySnapshot = await getDocs(q);
+  const queryData = querySnapshot.docs.map((detail) => ({
+    ...detail.data(),
+  }));
+  return queryData.length;
 };
 
 //Delete ngo Accounts
@@ -436,15 +445,17 @@ export const updateAccountPassword = async (values, email) => {
         values.currentPassword
       );
       reauthenticateWithCredential(user, credential)
-        .then(async () => {
-          await updatePassword(user, values.newPassword);
+        .then(() => {
+          updatePassword(user, values.newPassword);
+          toast.success('Password Updated');
         })
         .catch((error) => {
-          alert(error);
+          toast.warn(error.code);
         });
     }
-  } catch (error) {}
-  return;
+  } catch (error) {
+    toast.error(error.code);
+  }
 };
 
 export const listAdoptor = async (userAccount) => {
@@ -476,7 +487,7 @@ export const listAdoptor = async (userAccount) => {
   );
 };
 
-export const disbleAccount = async (rows) => {
+export const disableAccount = async (rows) => {
   const q = query(collection(db, 'pets'));
 
   await updateDoc(doc(db, `ngoshelters/${rows}`), {

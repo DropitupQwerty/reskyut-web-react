@@ -131,7 +131,13 @@ export default function SuperAdminLayout({ children }) {
       icon: <DynamicFeedIcon color="primary" />,
     },
     {
-      label: 'Trash',
+      divider: <Divider />,
+      label: 'NGO Account Trash',
+      link: '/admin/ngotrash',
+      icon: <DeleteIcon color="primary" />,
+    },
+    {
+      label: 'Animal Trash',
       link: '/admin/trash',
       icon: <DeleteIcon color="primary" />,
     },
@@ -176,32 +182,35 @@ export default function SuperAdminLayout({ children }) {
         <List sx={{ flexGrow: 1 }}>
           {adminDraweMenu.map((drawermenu) => {
             return (
-              <ListItem
-                button
-                sx={{
-                  color: '#5f7161',
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 3,
-                }}
-                component={Link}
-                to={`${drawermenu.link}`}
-                selected={window.location.pathname.includes(drawermenu.link)}
-              >
-                <ListItemIcon
+              <Box>
+                {drawermenu?.divider}
+                <ListItem
+                  button
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
+                    color: '#5f7161',
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 3,
                   }}
+                  component={Link}
+                  to={`${drawermenu.link}`}
+                  selected={window.location.pathname.includes(drawermenu.link)}
                 >
-                  {drawermenu.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={drawermenu.label}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItem>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {drawermenu.icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={drawermenu.label}
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItem>
+              </Box>
             );
           })}
         </List>

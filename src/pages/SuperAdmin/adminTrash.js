@@ -123,16 +123,12 @@ export default function AdminTrash() {
       />
       <Grid item xs>
         <Typography variant="h4" align="center">
-          <LayersIcon color="primary" /> <b>Post of NGO</b>
+          <DeleteIcon color="primary" /> <b>Deleted Animals</b>
         </Typography>
       </Grid>
       <Grid item xs>
-        <Checkbox {...ListOfNGO} />
         <Button>
           <RefreshIcon color="primary" />
-        </Button>
-        <Button>
-          <DeleteIcon color="primary" />
         </Button>
       </Grid>
 

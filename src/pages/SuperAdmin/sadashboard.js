@@ -6,15 +6,15 @@ import React, { useState, useEffect } from 'react';
 import { Paper, Typography, Box } from '@mui/material';
 import global from '../../styles/global';
 import { Oval } from 'react-loader-spinner';
-import { GetAccounts } from './../../firebase/auth';
+import { GetAccounts, getNgoCount } from './../../firebase/auth';
 
 export default function SaDashboard() {
   const [isLoading, setIsLoading] = useState(true);
-  const [accounts, setAccounts] = useState([]);
+  const [accounts, setAccounts] = useState();
 
   useEffect(() => {
     const allAccounts = async () => {
-      const acc = await GetAccounts();
+      const acc = await getNgoCount();
       setAccounts(acc);
       setIsLoading(false);
     };
@@ -23,7 +23,7 @@ export default function SaDashboard() {
 
   const dataLoad = () => {
     if (isLoading === false) {
-      return accounts.length;
+      return accounts;
     }
 
     return (

@@ -35,6 +35,8 @@ import ViewAnimal from './pages/SuperAdmin/viewanimal';
 import SaProfile from './pages/SuperAdmin/saprofile';
 import AdminTrash from './pages/SuperAdmin/adminTrash';
 import NgoTrash from './pages/ShelterAdmin/ngoTrash';
+import { ToastContainer } from 'react-toastify';
+import AdminNgoTrash from './pages/SuperAdmin/adminNgoTrash';
 
 export default function App() {
   const user = IsLoggedIn();
@@ -59,6 +61,7 @@ export default function App() {
             <Route path="/admin/listofngo/viewngo/:id" element={<ViewNgo />} />
             <Route path="/admin/profile" element={<SaProfile />} />
             <Route path="/admin/trash" element={<AdminTrash />} />
+            <Route path="/admin/ngotrash" element={<AdminNgoTrash />} />
             <Route
               path="/admin/postofngo/viewanimal/:id"
               element={<ViewAnimal />}
@@ -103,6 +106,7 @@ export default function App() {
           <Route path="/Page-Not-Found" element={<PagenotFound />} />
         </Routes>
       </Router>
+      <ToastContainer />
     </ThemeProvider>
   );
 }

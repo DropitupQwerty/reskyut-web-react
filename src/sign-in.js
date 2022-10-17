@@ -16,15 +16,13 @@ import {
 } from '@mui/material';
 
 //firebase
-import IsLoggedIn, { getUser, login, logout } from './firebase/auth';
-import { auth, db } from './firebase/firebase-config';
+import { getUser, login, logout } from './firebase/auth';
+import { auth } from './firebase/firebase-config';
 import Loader from './components/common/loader';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export default function SignIn() {
   const navigate = useNavigate();
-  const [user, setUser] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState();
 
@@ -38,7 +36,8 @@ export default function SignIn() {
     setInputs({ ...input, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     setIsLoading(true);
     await login(input.loginEmail, input.loginPassword);
     setIsLoading(false);
@@ -53,8 +52,10 @@ export default function SignIn() {
               navigate('/admin/dashboard');
             } else if (!userDoc.isAdmin && !userDoc.isDisable) {
               navigate('/dashboard');
-            } else if (userDoc.isDisable) {
-              setStatus('Disabled Account Please Contact the Admin');
+            } else if (userDoc.isDisable || userDoc.isDelete) {
+              setStatus(
+                'This Account was Disabled or Deleted, Please Contact the Admin'
+              );
               logout();
             }
           });
@@ -62,7 +63,7 @@ export default function SignIn() {
       };
       log();
     });
-  }, [isLoading]);
+  }, []);
 
   const showLoad = () => {
     if (isLoading) {
@@ -73,40 +74,48 @@ export default function SignIn() {
       );
     } else {
       return (
-        <FormGroup>
-          {status && (
-            <FormHelperText
-              id="component-error-text"
-              sx={{ color: 'red', textAlign: 'center', fontSize: '10px' }}
-            >
-              {status}
-            </FormHelperText>
-          )}
-          <FormControl fullWidth>
-            <OutlinedInput
-              sx={{ margin: '10px 20px' }}
-              placeholder="Email"
-              name="loginEmail"
-              value={input.loginEmail}
-              onChange={handleChange}
-            />
-          </FormControl>
+        <Box component="form" onSubmit={handleLogin} validate>
+          <FormGroup>
+            {status && (
+              <FormHelperText
+                id="component-error-text"
+                sx={{ color: 'red', textAlign: 'center', fontSize: '10px' }}
+              >
+                {status}
+              </FormHelperText>
+            )}
+            <FormControl fullWidth>
+              <OutlinedInput
+                sx={{ margin: '10px 20px' }}
+                placeholder="Email"
+                name="loginEmail"
+                value={input.loginEmail}
+                onChange={handleChange}
+              />
+            </FormControl>
 
-          <FormControl fullWidth>
-            <OutlinedInput
-              sx={{ margin: '10px 20px' }}
-              placeholder="Password"
-              name="loginPassword"
-              type="password"
-              vlaue={input.loginPassword}
-              onChange={handleChange}
-            />
-          </FormControl>
-
-          <Button onClick={handleLogin} sx={{ margin: '10px 20px' }}>
-            Login
-          </Button>
-        </FormGroup>
+            <FormControl fullWidth>
+              <OutlinedInput
+                sx={{ margin: '10px 20px' }}
+                placeholder="Password"
+                name="loginPassword"
+                type="password"
+                vlaue={input.loginPassword}
+                onChange={handleChange}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <Button
+                type="submit"
+                sx={{
+                  margin: '10px 20px',
+                }}
+              >
+                Login
+              </Button>
+            </FormControl>
+          </FormGroup>
+        </Box>
       );
     }
   };

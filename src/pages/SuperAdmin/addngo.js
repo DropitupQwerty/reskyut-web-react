@@ -32,6 +32,7 @@ export default function AddNgo() {
     desc: '',
     isAdmin: false,
     isDisable: false,
+    isDelete: false,
   });
   const [image, setImage] = useState([]);
   const [previewImage, setPreviewImage] = useState();
