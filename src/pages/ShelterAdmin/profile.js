@@ -28,6 +28,8 @@ import React, { useEffect, useState } from 'react';
 import global from '../../styles/global';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import IsLoggedIn, {
+  updateAccountInfo,
+  updateAccountPassword,
   updateNgoAccount,
   updateNgoPassword,
 } from './../../firebase/auth';
@@ -120,11 +122,11 @@ export default function Profile() {
   };
 
   const handleUpdatePassword = async () => {
-    updateNgoPassword({ ...values }, inputs.email);
+    updateAccountPassword({ ...values }, inputs.email);
   };
 
   const handleUpdate = () => {
-    updateNgoAccount({ ...inputs }, image);
+    updateAccountInfo({ ...inputs }, image);
   };
 
   const inputsComp = [

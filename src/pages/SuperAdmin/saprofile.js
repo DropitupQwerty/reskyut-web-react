@@ -28,6 +28,8 @@ import React, { useEffect, useState } from 'react';
 import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
 import IsLoggedIn, {
+  updateAccountInfo,
+  updateAccountPassword,
   updateNgoAccount,
   updateNgoPassword,
 } from '../../firebase/auth';
@@ -40,9 +42,16 @@ import {
   reauthenticateWithCredential,
   updatePassword,
 } from 'firebase/auth';
+import LoaderDialog from '../../components/common/loaderDialog';
+import { async } from '@firebase/util';
+import { logout } from './../../firebase/auth';
+import { push } from 'joi-browser';
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function SaProfile() {
   const [open, setOpen] = useState(false);
+  const [loaderMessage, setLoaderMessage] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState([]);
   const [previewImage, setPreviewImage] = useState([]);
   const [inputs, setInputs] = useState({
@@ -87,7 +96,7 @@ export default function SaProfile() {
       setInputs({ ...docSnap.data() });
     };
     getUsers();
-  }, [auth.currentUser]);
+  }, [isLoading]);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -119,11 +128,20 @@ export default function SaProfile() {
   };
 
   const handleUpdatePassword = async () => {
-    updateNgoPassword({ ...values }, inputs.email);
+    setIsLoading(true);
+    await updateAccountPassword({ ...values }, inputs.email);
+    setOpen(false);
+    setLoaderMessage('Logging Out');
+    setIsLoading(false);
+    logout();
   };
 
-  const handleUpdate = () => {
-    updateNgoAccount({ ...inputs }, image);
+  const handleUpdate = async () => {
+    setIsLoading(true);
+    setLoaderMessage('Updating');
+    await updateAccountInfo({ ...inputs }, image);
+    setLoaderMessage('Done');
+    setIsLoading(false);
   };
 
   const inputsComp = [
@@ -164,6 +182,8 @@ export default function SaProfile() {
 
   return (
     <SuperAdminLayout>
+      {/* Same as */}
+      <LoaderDialog open={isLoading} message={loaderMessage} />
       <Box>
         <Stack
           direction="row"

@@ -43,7 +43,7 @@ const global = {
     color: '#333',
     padding: '10px',
     borderRadius: '20px',
-    width: '120px',
+    width: '100%',
     height: '40px',
     fontWeight: 'bold',
   },

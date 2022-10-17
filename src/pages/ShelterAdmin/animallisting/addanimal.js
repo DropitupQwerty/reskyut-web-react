@@ -13,6 +13,7 @@ import {
   MenuItem,
   TextField,
   Paper,
+  InputAdornment,
 } from '@mui/material';
 
 import ImageIcon from '@mui/icons-material/Image';
@@ -42,6 +43,8 @@ export default function AddAnimal() {
     shelterName: auth.currentUser?.displayName,
   });
 
+  console.log(inputs.desc.length);
+
   const handleChange = (e) => {
     e.preventDefault();
     setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -68,7 +71,8 @@ export default function AddAnimal() {
   }, [images]);
 
   //Do Submit
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     AddSubData(inputs, images);
   };
 
@@ -113,163 +117,184 @@ export default function AddAnimal() {
           }}
         >
           <Grid container>
-            <Grid item container spacing={2} direction="column">
-              <Grid
-                item
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography
+            <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+              <Grid item container spacing={2} direction="column">
+                <Grid
+                  item
                   sx={{
-                    ...global.addAnimalLabels,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
                 >
-                  NAME:
-                </Typography>
-                <FormControl fullWidth>
-                  <OutlinedInput
-                    sx={{ ...global.borderRadius20 }}
-                    name="name"
-                    autoComplete="off"
-                    value={inputs.name}
-                    onChange={handleChange}
-                  />
-                </FormControl>
-              </Grid>
-              <Grid
-                item
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography sx={{ ...global.addAnimalLabels }}>AGE:</Typography>
-                <FormControl fullWidth>
-                  <Select
-                    sx={{ ...global.borderRadius20 }}
-                    name="age"
-                    value={inputs.age}
-                    onChange={handleChange}
+                  <Typography
+                    sx={{
+                      ...global.addAnimalLabels,
+                    }}
                   >
-                    <MenuItem value={'Kitten'}>Kitten</MenuItem>
-                    <MenuItem value={'Puppy'}>Puppy</MenuItem>
-                    <MenuItem value={'Adult'}>Adult</MenuItem>
-                    <MenuItem value={'Senior'}>Senior</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid
-                item
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography sx={{ ...global.addAnimalLabels }}>
-                  GENDER:
-                </Typography>
-                <FormControl fullWidth>
-                  <Select
-                    sx={{ ...global.borderRadius20 }}
-                    name="gender"
-                    value={inputs.gender}
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={'Male'}>Male</MenuItem>
-                    <MenuItem value={'Female'}>Female</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid
-                item
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography sx={{ ...global.addAnimalLabels }}>
-                  STATUS:
-                </Typography>
-                <FormControl fullWidth>
-                  <Select
-                    sx={{ ...global.borderRadius20 }}
-                    name="status"
-                    value={inputs.status}
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={'unlisted'}>Unlisted</MenuItem>
-                    <MenuItem value={'listed'}>Listed</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid
-                item
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography sx={{ ...global.addAnimalLabels }}>
-                  PET CATEGORY:
-                </Typography>
-                <FormControl fullWidth>
-                  {textField ? (
+                    NAME:
+                  </Typography>
+                  <FormControl fullWidth>
                     <OutlinedInput
+                      required
                       sx={{ ...global.borderRadius20 }}
-                      name="pet_category"
-                      value={inputs.pet_category}
+                      name="name"
+                      autoComplete="off"
+                      value={inputs.name}
                       onChange={handleChange}
                     />
-                  ) : (
+                  </FormControl>
+                </Grid>
+                <Grid
+                  item
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Typography sx={{ ...global.addAnimalLabels }}>
+                    AGE:
+                  </Typography>
+                  <FormControl fullWidth>
                     <Select
+                      required
                       sx={{ ...global.borderRadius20 }}
-                      name="pet_category"
-                      value={inputs.pet_category}
+                      name="age"
+                      value={inputs.age}
                       onChange={handleChange}
                     >
-                      <MenuItem value={'Dog'}>Dog</MenuItem>
-                      <MenuItem value={'Cat'}>Cat</MenuItem>
-                      <MenuItem onClick={() => Custom()}>Custom</MenuItem>
+                      <MenuItem value={'Kitten'}>Kitten</MenuItem>
+                      <MenuItem value={'Puppy'}>Puppy</MenuItem>
+                      <MenuItem value={'Adult'}>Adult</MenuItem>
+                      <MenuItem value={'Senior'}>Senior</MenuItem>
                     </Select>
-                  )}
-                </FormControl>
-              </Grid>
-              <Grid item>
-                <Typography sx={{ ...global.addAnimalLabels }}>
-                  DESCRIPTION:
-                </Typography>
-                <TextField
-                  multiline
-                  rows={3}
-                  fullWidth
-                  sx={{ ...global.borderRadius20 }}
-                  name="desc"
-                  value={inputs.desc}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button
-                  sx={{ ...global.button3 }}
-                  onClick={() => navigate('/animallisting')}
+                  </FormControl>
+                </Grid>
+                <Grid
+                  item
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
                 >
-                  CANCEL
-                </Button>
-                <Button
-                  sx={{ ...global.button2Small, marginLeft: '20px' }}
-                  onClick={handleSubmit}
+                  <Typography sx={{ ...global.addAnimalLabels }}>
+                    GENDER:
+                  </Typography>
+                  <FormControl fullWidth>
+                    <Select
+                      required
+                      sx={{ ...global.borderRadius20 }}
+                      name="gender"
+                      value={inputs.gender}
+                      onChange={handleChange}
+                    >
+                      <MenuItem value={'Male'}>Male</MenuItem>
+                      <MenuItem value={'Female'}>Female</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid
+                  item
+                  required
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
                 >
-                  SAVE
-                </Button>
+                  <Typography sx={{ ...global.addAnimalLabels }}>
+                    STATUS:
+                  </Typography>
+                  <FormControl fullWidth>
+                    <Select
+                      required
+                      sx={{ ...global.borderRadius20 }}
+                      name="status"
+                      value={inputs.status}
+                      onChange={handleChange}
+                    >
+                      <MenuItem value={'unlisted'}>Unlisted</MenuItem>
+                      <MenuItem value={'listed'}>Listed</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid
+                  item
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Typography sx={{ ...global.addAnimalLabels }}>
+                    PET CATEGORY:
+                  </Typography>
+                  <FormControl fullWidth>
+                    {textField ? (
+                      <OutlinedInput
+                        sx={{ ...global.borderRadius20 }}
+                        name="pet_category"
+                        value={inputs.pet_category}
+                        onChange={handleChange}
+                      />
+                    ) : (
+                      <Select
+                        sx={{ ...global.borderRadius20 }}
+                        name="pet_category"
+                        value={inputs.pet_category}
+                        onChange={handleChange}
+                      >
+                        <MenuItem value={'Dog'}>Dog</MenuItem>
+                        <MenuItem value={'Cat'}>Cat</MenuItem>
+                        <MenuItem onClick={() => Custom()}>Custom</MenuItem>
+                      </Select>
+                    )}
+                  </FormControl>
+                </Grid>
+                <Grid item>
+                  <Typography sx={{ ...global.addAnimalLabels }}>
+                    DESCRIPTION:
+                  </Typography>
+                  <TextField
+                    required
+                    multiline
+                    rows={3}
+                    fullWidth
+                    sx={{ ...global.borderRadius20 }}
+                    name="desc"
+                    value={inputs.desc}
+                    onChange={handleChange}
+                    inputProps={{
+                      maxLength: 70,
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment sx={{ marginTop: '50px' }}>
+                          <Typography>{`${inputs.desc.length}`}/70</Typography>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <Button
+                    sx={{ ...global.button3 }}
+                    onClick={() => navigate('/animallisting')}
+                  >
+                    CANCEL
+                  </Button>
+                  <Button
+                    type="submit"
+                    sx={{ ...global.button2Small, marginLeft: '20px' }}
+                    // onClick={handleSubmit}
+                  >
+                    SAVE
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
+            </form>
           </Grid>
 
           {/* upload image */}

@@ -38,6 +38,7 @@ import { arrayUnion } from 'firebase/firestore';
 import config from '../services/config.json';
 import getMatchedUserInfo from './../lib/getMatchedUserInfo';
 import { Alert } from '@mui/material';
+import LoaderDialog from '../components/common/loaderDialog';
 
 const { backendURL } = config;
 
@@ -367,7 +368,7 @@ export const getUsersInfo = async () => {
   return users;
 };
 
-export const updateNgoAccount = async (inputs, image) => {
+export const updateAccountInfo = async (inputs, image) => {
   console.log('update Account', inputs);
   const user = auth.currentUser;
 
@@ -376,8 +377,8 @@ export const updateNgoAccount = async (inputs, image) => {
   }).then(() => {
     updateProfile(user, {
       displayName: inputs.display_name,
-    }).then(() => {
-      alert('Profile Updated');
+    }).catch((error) => {
+      alert(error);
     });
   });
 
@@ -409,7 +410,7 @@ export const updateNgoAccount = async (inputs, image) => {
                   ...inputs,
                   photoURL: downloadURL,
                 });
-                alert('photoupdated');
+
                 signOut(auth2);
               })
               .catch((error) => {
@@ -424,7 +425,7 @@ export const updateNgoAccount = async (inputs, image) => {
   return;
 };
 
-export const updateNgoPassword = async (values, email) => {
+export const updateAccountPassword = async (values, email) => {
   console.log(values);
   try {
     if (values.confirmPassword === values.newPassword) {
@@ -435,16 +436,15 @@ export const updateNgoPassword = async (values, email) => {
         values.currentPassword
       );
       reauthenticateWithCredential(user, credential)
-        .then(() => {
-          updatePassword(user, values.newPassword).then(() => {
-            alert('password Updated');
-          });
+        .then(async () => {
+          await updatePassword(user, values.newPassword);
         })
         .catch((error) => {
-          Alert(error);
+          alert(error);
         });
     }
   } catch (error) {}
+  return;
 };
 
 export const listAdoptor = async (userAccount) => {

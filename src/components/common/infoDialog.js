@@ -63,7 +63,7 @@ const InfoDialog = ({ open, moreInfo, cancel }) => {
           marginTop: '20px',
         }}
       >
-        <Typography sx={{ textAlign: 'center' }}>
+        <Typography sx={{ textAlign: 'center' }} variant="h4">
           Additional Information
         </Typography>
       </DialogTitle>
