@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box, Avatar, Typography, Paper } from '@mui/material';
+import { Avatar, Typography, Paper } from '@mui/material';
 import global from '../../styles/global';
+import { Box } from '@mui/system';
 
 const SenderMessage = ({ message }) => {
   const time = message?.timestamp?.toDate().toLocaleTimeString('en-US');
@@ -13,8 +14,22 @@ const SenderMessage = ({ message }) => {
           flexDirection: 'column',
         }}
       >
-        <Paper sx={{ ...global.paperMsg }}>
-          <Typography sx={{ ...global.msgStyle }}>{message.message}</Typography>
+        <Paper
+          sx={{
+            maxWidth: '600px',
+            whiteSpace: 'normal',
+            overflow: 'hidden',
+          }}
+        >
+          <Typography
+            sx={{
+              ...global.msgStyle,
+              bgcolor: '#FDF1F3',
+              overflowWrap: 'break-word',
+            }}
+          >
+            {message.message}
+          </Typography>
         </Paper>
         <Typography variant={'caption'} sx={{ textAlign: 'right' }}>
           {time}
@@ -25,7 +40,7 @@ const SenderMessage = ({ message }) => {
         src={message.photoURL}
         alt={message.photoURL}
         sx={{ margin: '10px' }}
-      ></Avatar>
+      />
     </Box>
   );
 };

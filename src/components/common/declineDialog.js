@@ -7,16 +7,22 @@ import {
   Button,
   Typography,
   TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
 } from '@mui/material';
+import global from '../../styles/global';
 
-const DeclineDialog = ({ open, cancel, message, confirm }) => {
+const DeclineDialog = ({ open, cancel, confirm, onChange, value, user }) => {
   return (
     <Dialog
       open={open}
       PaperProps={{
         style: {
           borderRadius: 30,
-          width: '300px',
+          width: '600px',
+          height: '480px',
           padding: '10px',
         },
       }}
@@ -28,29 +34,52 @@ const DeclineDialog = ({ open, cancel, message, confirm }) => {
           marginTop: '20px',
         }}
       >
-        <Typography sx={{ textAlign: 'center' }}>{message}</Typography>
+        <Typography sx={{ textAlign: 'center', marginTop: '20px' }}>
+          Send Message
+        </Typography>
       </DialogTitle>
       <DialogContent>
         <TextField
           fullWidth
-          defaultValue={'Sorry you got decline by the ngo'}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
           multiline
-          maxRows={5}
+          rows={6}
+          sx={{ margin: '10px 0 20px 0' }}
         ></TextField>
+        <FormControl variant="standard" sx={{ minWidth: 120 }} fullWidth>
+          <InputLabel>Send Default Message</InputLabel>
+          <Select onChange={(e) => onChange(e.target.value)}>
+            <MenuItem
+              value={
+                'The prospective adopter does not believe that pet ownership should be a life-long commitment'
+              }
+            >
+              The prospective adopter does not believe that pet ownership should
+              be a life-long commitment
+            </MenuItem>
+            <MenuItem value={'Bawal lang hehe'}>Bawal Lang Hehe</MenuItem>
+            <MenuItem value={`Abuso Ka ${user?.name}`}>
+              Abuso Ka ${user?.name}
+            </MenuItem>
+          </Select>
+        </FormControl>
       </DialogContent>
 
-      <DialogActions
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-evenly',
-          marginBottom: '12px',
-        }}
-      >
-        <Button sx={{ ...global.button2xs }} onClick={cancel}>
+      <DialogActions>
+        <Button
+          sx={{
+            ...global.button3,
+            padding: '20px',
+            width: '348px',
+            height: '79px',
+          }}
+          onClick={cancel}
+        >
           Cancel
         </Button>
-        <Button sx={{ ...global.button1xs }} onClick={confirm}>
-          Send
+        <Button sx={{ ...global.button2 }} onClick={confirm}>
+          Send Declined Message
         </Button>
       </DialogActions>
     </Dialog>

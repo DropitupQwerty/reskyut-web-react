@@ -141,7 +141,6 @@ const global = {
     padding: '20px',
     fontSize: '14px',
     lineHeight: '150%',
-    bgcolor: '#FDF1F3',
   },
   noWrapEllip: {
     overflow: 'hidden',

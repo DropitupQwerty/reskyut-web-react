@@ -18,8 +18,10 @@ const ReceiveMessage = ({ message }) => {
           flexDirection: 'column',
         }}
       >
-        <Paper sx={{ ...global.paperMsg }}>
-          <Typography sx={{ ...global.msgStyle }}>{message.message}</Typography>
+        <Paper sx={{ maxWidth: '600px' }}>
+          <Typography sx={{ ...global.msgStyle, overflowWrap: 'break-word' }}>
+            {message.message}
+          </Typography>
         </Paper>
         <Typography variant="caption">{time}</Typography>
       </Box>

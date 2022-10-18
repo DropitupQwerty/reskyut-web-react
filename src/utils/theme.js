@@ -20,6 +20,9 @@ const theme = createTheme({
       dark: 'rgba(64, 83, 67, 1)',
       contrastText: '#fff',
     },
+    success: {
+      main: '#7CFC00',
+    },
     unlisted: {
       main: '#FFE500',
     },

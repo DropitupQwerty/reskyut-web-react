@@ -37,6 +37,7 @@ import AdminTrash from './pages/SuperAdmin/adminTrash';
 import NgoTrash from './pages/ShelterAdmin/ngoTrash';
 import { ToastContainer } from 'react-toastify';
 import AdminNgoTrash from './pages/SuperAdmin/adminNgoTrash';
+import AdoptionHistory from './pages/ShelterAdmin/adoptionHistory';
 
 export default function App() {
   const user = IsLoggedIn();
@@ -76,6 +77,11 @@ export default function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" exact element={<Profile />} />
             <Route path="/adoptionpage" exact element={<AdopptionPage />} />
+            <Route
+              path="/adoptionhistory"
+              exact
+              element={<AdoptionHistory />}
+            />
             <Route path="/animallisting" exact element={<AnimalListing />} />
             <Route path="/message/:id/:rid" element={<Message />} />
             {/* Animal Listing */}

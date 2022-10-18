@@ -27,6 +27,7 @@ import {
   addDoc,
   serverTimestamp,
   onSnapshot,
+  updateDoc,
 } from 'firebase/firestore';
 import { async } from '@firebase/util';
 import { auth, db } from '../firebase/firebase-config';
@@ -39,16 +40,18 @@ const drawerWidth = 260;
 export default function MessageArea() {
   const { id, rid } = useParams();
   const [messages, setMessages] = useState([]);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState();
   const docRef = collection(db, `matches/${id}${rid}/messages`);
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
+  const [lastMessages, setlastMessages] = useState();
+  const lastMessRef = collection(
+    db,
+    `matches/${id}${auth.currentUser?.uid}/messages`
+  );
 
   const handleSend = async (e) => {
     e.preventDefault();
-    if (value !== null) {
+    setValue('');
+    if (value !== '') {
       await addDoc(docRef, {
         message: value,
         displayName: auth.currentUser?.displayName,
@@ -56,19 +59,40 @@ export default function MessageArea() {
         timestamp: serverTimestamp(),
         userID: auth.currentUser.uid,
       });
-    } else {
-      return;
     }
+
+    console.log('Last Message', lastMessages);
+  };
+
+  const handleChange = (event) => {
+    setValue(event.target.value);
   };
 
   useEffect(() => {
     const q = query(docRef, orderBy('timestamp'));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    onSnapshot(q, (querySnapshot) => {
       const message = querySnapshot.docs.map((detail) => ({
         ...detail.data(),
         uid: detail.id,
       }));
       setMessages(message);
+    });
+
+    const mq = query(lastMessRef, orderBy('timestamp', 'desc'));
+    onSnapshot(mq, async (querySnapshot) => {
+      const message = querySnapshot.docs.map((detail) => ({
+        ...detail.data(),
+        uid: detail.id,
+      }));
+      setlastMessages(message[0]);
+
+      await updateDoc(
+        doc(db, `ngoshelters/${auth.currentUser.uid}/adoptionlist/${id}`),
+        {
+          lastMessagePreview: message[0].message,
+          lastMessageTime: message[0].timestamp,
+        }
+      );
     });
   }, [id]);
 
@@ -83,9 +107,16 @@ export default function MessageArea() {
   }, [messages]);
 
   return (
-    <Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <Toolbar />
-      <Box>
+      <Box
+        sx={{
+          flexGrow: '2',
+
+          overflow: 'scroll',
+          overflowX: 'hidden',
+        }}
+      >
         {messages.map((message) => {
           return message.userID === auth.currentUser.uid ? (
             <SenderMessage key={message.id} message={message} />
@@ -96,34 +127,33 @@ export default function MessageArea() {
         <Box ref={messagesEndRef} />
       </Box>
 
-      <form onSubmit={handleSend}>
-        {/* TextField for message Sending */}
-        <Paper
-          elevation={3}
-          sx={{
-            position: 'fixed',
-            bottom: '0',
-            p: 2,
-            right: '400px',
-            left: drawerWidth,
-            display: 'flex',
-          }}
+      {/* TextField for message Sending */}
+      <Paper
+        elevation={3}
+        sx={{
+          p: 2,
+          right: '400px',
+          left: drawerWidth,
+          display: 'fixed',
+        }}
+      >
+        <form
+          onSubmit={handleSend}
+          style={{ width: '100%', display: 'flex', alignItems: 'center' }}
         >
-          <FormControl fullWidth sx={{ display: 'flex' }}>
+          <FormControl fullWidth>
             <OutlinedInput
               fullWidth
               placeholder="Send Message"
-              maxRows={7}
+              value={value}
               onChange={handleChange}
             />
           </FormControl>
           <Box>
-            <Button type="submit" sx={{ alignSelf: 'center' }}>
-              Send
-            </Button>
+            <Button type="submit">Send</Button>
           </Box>
-        </Paper>
-      </form>
+        </form>
+      </Paper>
     </Box>
   );
 }

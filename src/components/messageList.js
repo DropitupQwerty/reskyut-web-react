@@ -61,7 +61,7 @@ export default function MessageList({ acc }) {
         <Divider />
         <List>
           {acc.map((a) => {
-            return <MessageListRow lastMessage={a} />;
+            return <MessageListRow key={a.lastTimeMessage} lastMessage={a} />;
           })}
         </List>
       </Drawer>

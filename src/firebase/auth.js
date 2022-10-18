@@ -28,7 +28,7 @@ import {
 } from 'firebase/auth';
 import axios from 'axios';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { arrayUnion } from 'firebase/firestore';
+import { arrayUnion, orderBy, onSnapshot } from 'firebase/firestore';
 import config from '../services/config.json';
 import getMatchedUserInfo from './../lib/getMatchedUserInfo';
 
@@ -41,13 +41,11 @@ export async function login(loginEmail, loginPassword) {
   await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
     .then((res) => {
       toast.success('Logged In', {
-        position: 'bottom-right',
         autoClose: 2000,
       });
     })
     .catch((err) => {
       toast.warn(err.code, {
-        position: 'bottom-right',
         autoClose: 2000,
       });
     });
@@ -61,8 +59,6 @@ export const register = async (inputs, image) => {
     inputs.email,
     inputs.password
   ).then(() => {
-    console.log('img', image);
-
     if (image.length !== 0) {
       image.map((file) => {
         const profileRef = ref(
@@ -354,26 +350,33 @@ export const updateAnimalProfile = async (id, inputs, images) => {
 };
 
 /**This Will manage the application users Request */
-
 //Getting the users information
 export const getUsersInfo = async () => {
   const users = [];
+
   const docRef = collection(db, 'matches');
   const q = query(
     docRef,
     where('usersMatched', 'array-contains', auth.currentUser?.uid)
   );
-  const querySnapshot = await getDocs(q);
-  const userInfos = querySnapshot.docs.map((detail) => ({
-    ...detail.data(),
-    uid: detail.id,
-  }));
-  if (userInfos) {
-    for (let i = 0; i < userInfos.length; i++) {
-      users.push(getMatchedUserInfo(userInfos[i].users, auth.currentUser?.uid));
+  onSnapshot(q, (querySnapshot) => {
+    const userInfos = querySnapshot.docs.map((detail) => ({
+      ...detail.data(),
+      uid: detail.id,
+    }));
+    if (userInfos) {
+      for (let i = 0; i < userInfos.length; i++) {
+        users.push(
+          getMatchedUserInfo(userInfos[i].users, auth.currentUser?.uid)
+        );
+      }
     }
-  }
-  users.map((userAccount) => listAdoptor(userAccount));
+    users.map(
+      (userAccount) => listAdoptor(userAccount)
+      //
+    );
+  });
+
   return users;
 };
 
@@ -464,19 +467,21 @@ export const listAdoptor = async (userAccount) => {
   const formSnap = await getDoc(doc(docRef, '/form/form'));
   await getDoc(doc(db, `matches/${id}${auth.currentUser?.uid}`)).then(
     async (res) => {
-      console.log(res.data().petToAdopt);
       await getDoc(doc(db, `pets/${res.data()?.petToAdopt}`))
         .then(async (petSnap) => {
-          console.log(petSnap.data());
           await setDoc(
-            doc(db, `ngoshelters/${auth.currentUser?.uid}/adoptionlist/${id}`),
+            doc(db, `ngoshelters/${auth.currentUser.uid}/adoptionlist/${id}`),
             {
+              photoURL: userAccount.photoURL,
+              isDeclined: res.data()?.isDeclined,
               id: id,
               name: userAccount?.displayName,
               facebookURL: formSnap.data()?.BestWayToContact,
               petToAdopt: petSnap.data()?.name,
+              petToAdoptId: petSnap.data()?.id,
               score: formSnap.data()?.score,
-            }
+            },
+            { merge: true }
           );
         })
         .catch((error) => {
@@ -549,12 +554,10 @@ export const restoreAnimal = async (rows) => {
       await getDoc(
         doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${rows.id}`)
       ).then(async (res) => {
-        console.log(res.data().id);
         await deleteDoc(
           doc(db, `ngoshelters/${auth.currentUser.uid}/trash/${res.data().id}`)
         )
           .then(async () => {
-            console.log(res.data());
             await deleteDoc(
               doc(
                 db,

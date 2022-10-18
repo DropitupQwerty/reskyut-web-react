@@ -8,7 +8,7 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebase-config';
 import { query, collection, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase/firebase-config';
@@ -16,22 +16,8 @@ import global from '../styles/global';
 
 const MessagesLists = ({ lastMessage }) => {
   const navigate = useNavigate();
-  const [lastMessages, setlastMessages] = useState();
-  const docRef = collection(
-    db,
-    `matches/${lastMessage.id}${auth.currentUser?.uid}/messages`
-  );
 
-  useEffect(() => {
-    const q = query(docRef, orderBy('timestamp', 'desc'));
-    onSnapshot(q, (querySnapshot) => {
-      const message = querySnapshot.docs.map((detail) => ({
-        ...detail.data(),
-        uid: detail.id,
-      }));
-      setlastMessages(message[0]);
-    });
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <Box>
@@ -42,6 +28,10 @@ const MessagesLists = ({ lastMessage }) => {
         onClick={() =>
           navigate(`/message/${lastMessage.id}/${auth.currentUser?.uid}`)
         }
+        to={`/message/${lastMessage.id}/${auth.currentUser?.uid}`}
+        selected={window.location.pathname.includes(
+          `/message/${lastMessage.id}/${auth.currentUser?.uid}`
+        )}
       >
         <ListItemButton>
           <ListItemAvatar>
@@ -54,7 +44,7 @@ const MessagesLists = ({ lastMessage }) => {
               textOverflow: 'ellipsis',
               width: '300px',
             }}
-            primary={lastMessage?.displayName}
+            primary={lastMessage?.name}
             secondary={
               <React.Fragment>
                 <Typography
@@ -62,7 +52,7 @@ const MessagesLists = ({ lastMessage }) => {
                   variant="caption"
                   noWrap
                 >
-                  {lastMessages?.message}
+                  {lastMessage?.lastMessagePreview}
                 </Typography>
               </React.Fragment>
             }

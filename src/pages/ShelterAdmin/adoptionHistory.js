@@ -1,0 +1,162 @@
+import React, { useEffect, useState } from 'react';
+import { Typography, Grid, Button, Link } from '@mui/material';
+import global from '../../styles/global';
+
+import ShelterAdminLayout from '../../components/shelterAdminLayout';
+import DeleteIcon from '@mui/icons-material/Delete';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import PetsIcon from '@mui/icons-material/Pets';
+import { useNavigate } from 'react-router-dom';
+import DataTable from '../../components/tableWithSort';
+import { getDocs, collection, query } from 'firebase/firestore';
+import { auth, db } from './../../firebase/firebase-config';
+import HistoryIcon from '@mui/icons-material/History';
+
+export default function AdoptionHistory() {
+  const navigate = useNavigate();
+  const [adoptionRow, setAdoptionRow] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [decline, setDecline] = useState(false);
+  const [declineUser, setDeclineUser] = useState();
+  const [moreInfo, setMoreInfo] = useState();
+  const [declinedMessage, setDeclinedMessage] = useState();
+
+  const handleClick = (event, rows) => {};
+
+  const handleDeclineDialog = (event, rows) => {};
+
+  const handleInfoDialog = async (event, rows) => {};
+
+  const columns = [
+    { field: 'name', headerName: 'Display Name', minWidth: 150 },
+    {
+      field: 'facebookURL',
+      headerName: 'Contacts',
+      flex: 1,
+      renderCell: (params) => (
+        <Link href={params.row.facebookURL} target="_blank">
+          {params.row.facebookURL}
+        </Link>
+      ),
+    },
+    { field: 'petToAdopt', headerName: 'Wants To adopt', minWidth: 150 },
+    {
+      field: 'isDecline',
+      headerName: 'Adoption Status',
+      minWidth: 150,
+      renderCell: (rows) => {
+        return rows.row.isDecline ? (
+          <Typography color="primary" variant="caption">
+            Declined Adoptor
+          </Typography>
+        ) : (
+          <Typography color="#749F82" variant="caption">
+            Accepted Adoptor
+          </Typography>
+        );
+      },
+    },
+    {
+      field: 'score',
+      headerName: 'Score',
+      sortable: false,
+      renderCell: (rows) => {
+        return (
+          <Button
+            sx={{ ...global.button2xsyellow }}
+            onClick={(event) => {
+              handleInfoDialog(event, rows);
+            }}
+          >
+            {rows.row.score}
+          </Button>
+        );
+      },
+      minWidth: 150,
+    },
+
+    {
+      field: 'Delete',
+      headerName: 'Delete',
+      sortable: false,
+      renderCell: (rows) => {
+        return (
+          <Button
+            sx={{ ...global.button2xs }}
+            onClick={(event) => {
+              handleDeclineDialog(event, rows);
+            }}
+          >
+            Delete
+          </Button>
+        );
+      },
+      width: 150,
+    },
+
+    {
+      field: 'View',
+      sortable: false,
+      renderCell: (rows) => {
+        return (
+          <Button
+            sx={{ ...global.button3xs }}
+            onClick={(event) => {
+              navigate(`/message/${rows.id}/${auth.currentUser.uid}`);
+            }}
+          >
+            VIEW
+          </Button>
+        );
+      },
+      width: 150,
+    },
+  ];
+
+  useEffect(() => {
+    const getRow = async () => {
+      const q = query(
+        collection(db, `ngoshelters/${auth.currentUser?.uid}/adoptionhistory`)
+      );
+      const acc = [];
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        acc.push(doc.data());
+      });
+      setAdoptionRow(acc);
+    };
+    getRow();
+  }, []);
+
+  ///Get all selected in checkbox
+  const onRowsSelectionHandler = (ids) => {
+    const selectedRowsData = ids.map((id) =>
+      adoptionRow.find((row) => row.id === id)
+    );
+    console.log(selectedRowsData);
+  };
+
+  return (
+    <ShelterAdminLayout>
+      <Grid item xs>
+        <Typography variant="h4" align="center">
+          <HistoryIcon color="primary" /> <b>Adoption History</b>
+        </Typography>
+      </Grid>
+      <Grid item xs>
+        <Button onClick={() => navigate('/adoptionpage')}>
+          <RefreshIcon color="primary" />
+        </Button>
+        <Button>
+          <DeleteIcon color="primary" />
+        </Button>
+      </Grid>
+
+      <DataTable
+        rows={adoptionRow}
+        checkboxSelected={onRowsSelectionHandler}
+        columns={columns}
+      />
+    </ShelterAdminLayout>
+  );
+}
