@@ -8,16 +8,32 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebase-config';
-import { query, collection, orderBy, onSnapshot } from 'firebase/firestore';
-import { db } from '../firebase/firebase-config';
 import global from '../styles/global';
+import { db } from './../firebase/firebase-config';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 
 const MessagesLists = ({ lastMessage }) => {
   const navigate = useNavigate();
 
-  useEffect(() => {}, []);
+  const [lastMessages, setLastMessages] = useState();
+
+  const docRef = collection(
+    db,
+    `matches/${lastMessage.id}${auth.currentUser.uid}/messages`
+  );
+  useEffect(() => {
+    const mq = query(docRef, orderBy('timestamp', 'desc'));
+    onSnapshot(mq, async (querySnapshot) => {
+      const message = querySnapshot.docs.map((detail) => ({
+        ...detail.data(),
+        uid: detail.id,
+      }));
+      setLastMessages(message[0]);
+      console.log(message[0].message);
+    });
+  }, []);
 
   return (
     <Box>
@@ -28,7 +44,6 @@ const MessagesLists = ({ lastMessage }) => {
         onClick={() =>
           navigate(`/message/${lastMessage.id}/${auth.currentUser?.uid}`)
         }
-        to={`/message/${lastMessage.id}/${auth.currentUser?.uid}`}
         selected={window.location.pathname.includes(
           `/message/${lastMessage.id}/${auth.currentUser?.uid}`
         )}
@@ -52,7 +67,7 @@ const MessagesLists = ({ lastMessage }) => {
                   variant="caption"
                   noWrap
                 >
-                  {lastMessage?.lastMessagePreview}
+                  {lastMessages?.message}
                 </Typography>
               </React.Fragment>
             }

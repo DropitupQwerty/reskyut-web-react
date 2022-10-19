@@ -42,11 +42,8 @@ export default function MessageArea() {
   const [messages, setMessages] = useState([]);
   const [value, setValue] = useState();
   const docRef = collection(db, `matches/${id}${rid}/messages`);
-  const [lastMessages, setlastMessages] = useState();
-  const lastMessRef = collection(
-    db,
-    `matches/${id}${auth.currentUser?.uid}/messages`
-  );
+  const messagesEndRef = useRef(null);
+  const [isDeclined, setIsDeclined] = useState();
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -60,8 +57,6 @@ export default function MessageArea() {
         userID: auth.currentUser.uid,
       });
     }
-
-    console.log('Last Message', lastMessages);
   };
 
   const handleChange = (event) => {
@@ -78,25 +73,26 @@ export default function MessageArea() {
       setMessages(message);
     });
 
-    const mq = query(lastMessRef, orderBy('timestamp', 'desc'));
-    onSnapshot(mq, async (querySnapshot) => {
-      const message = querySnapshot.docs.map((detail) => ({
-        ...detail.data(),
-        uid: detail.id,
-      }));
-      setlastMessages(message[0]);
-
-      await updateDoc(
-        doc(db, `ngoshelters/${auth.currentUser.uid}/adoptionlist/${id}`),
-        {
-          lastMessagePreview: message[0].message,
-          lastMessageTime: message[0].timestamp,
-        }
-      );
-    });
+    const getIfDisable = async () => {
+      await getDoc(doc(db, `matches/${id}${rid}`)).then((res) => {
+        setIsDeclined(res.data().isDeclined);
+      });
+    };
+    getIfDisable();
   }, [id]);
 
-  const messagesEndRef = useRef(null);
+  // useEffect(() => {
+  //   const get = async () => {
+  //     await updateDoc(
+  //       doc(db, `ngoshelters/${auth.currentUser.uid}/adoptionlist/${id}`),
+  //       {
+  //         lastMessagePreview: lastMessage[0].message,
+  //         lastMessageTime: lastMessage[0].timestamp,
+  //       }
+  //     );
+  //   };
+  //   get();
+  // }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -137,22 +133,33 @@ export default function MessageArea() {
           display: 'fixed',
         }}
       >
-        <form
-          onSubmit={handleSend}
-          style={{ width: '100%', display: 'flex', alignItems: 'center' }}
-        >
-          <FormControl fullWidth>
-            <OutlinedInput
-              fullWidth
-              placeholder="Send Message"
-              value={value}
-              onChange={handleChange}
-            />
-          </FormControl>
-          <Box>
-            <Button type="submit">Send</Button>
+        {!isDeclined ? (
+          <form
+            onSubmit={handleSend}
+            style={{ width: '100%', display: 'flex', alignItems: 'center' }}
+          >
+            <FormControl fullWidth>
+              <OutlinedInput
+                autoFocus
+                fullWidth
+                placeholder="Send Message"
+                value={value}
+                onChange={handleChange}
+              />
+            </FormControl>
+            <Box>
+              <Button type="submit">Send</Button>
+            </Box>
+          </form>
+        ) : (
+          <Box sx={{ textAlign: 'center', width: '100%' }}>
+            <Typography color="primary">Declined Adoptor</Typography>
+            <Typography color="">
+              You cannot message the adoptor you can delete this message in
+              history tab from the dashboard
+            </Typography>
           </Box>
-        </form>
+        )}
       </Paper>
     </Box>
   );

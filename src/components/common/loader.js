@@ -3,7 +3,6 @@ import { Oval } from 'react-loader-spinner';
 import { Box } from '@mui/material';
 
 const Loader = ({ isLoading, height, width }) => {
-  console.log(isLoading);
   return (
     <Box
       sx={{

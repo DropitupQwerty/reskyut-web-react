@@ -9,15 +9,12 @@ import PetsIcon from '@mui/icons-material/Pets';
 import { useNavigate } from 'react-router-dom';
 import DataTable from '../../components/tableWithSort';
 import {
-  getDocs,
   collection,
   query,
   doc,
   getDoc,
   addDoc,
   serverTimestamp,
-  deleteDoc,
-  setDoc,
   where,
   updateDoc,
   onSnapshot,
@@ -27,16 +24,20 @@ import { async } from '@firebase/util';
 import InfoDialog from '../../components/common/infoDialog';
 import DeclineDialog from '../../components/common/declineDialog';
 import { toast } from 'react-toastify';
-import { getUsersInfo } from '../../firebase/auth';
+import { getUsersInfo, listAdoptor } from '../../firebase/auth';
+import getMatchedUserInfo from '../../lib/getMatchedUserInfo';
+import ApproveDialog from '../../components/common/approveDialog';
 
 export default function AdoptionPage() {
   const navigate = useNavigate();
   const [adoptionRow, setAdoptionRow] = useState([]);
   const [open, setOpen] = useState(false);
   const [decline, setDecline] = useState(false);
-  const [declineUser, setDeclineUser] = useState();
+  const [user, setUser] = useState();
   const [moreInfo, setMoreInfo] = useState();
   const [declinedMessage, setDeclinedMessage] = useState();
+  const [a, setA] = useState([]);
+  const [openApproveDialog, setOpenApproveDialog] = useState(false);
 
   const handleClick = (event, rows) => {
     navigate(`/message/${rows.id}/${auth.currentUser?.uid}`);
@@ -44,7 +45,7 @@ export default function AdoptionPage() {
 
   const handleDeclineDialog = (event, rows) => {
     console.log(rows.id);
-    setDeclineUser(rows.row);
+    setUser(rows.row);
     setDeclinedMessage(
       'Than you for adopting ngunit hindi iaw ang napili . pagpasend syahan mo na ha salamat'
     );
@@ -59,10 +60,97 @@ export default function AdoptionPage() {
     });
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleApproveDialog = async (event, rows) => {
+    setOpenApproveDialog(true);
+    setUser(rows.row);
+    console.log('approve', user);
   };
 
+  const handleClose = () => {
+    setOpen(false);
+    setOpenApproveDialog(false);
+  };
+
+  const handleSendDecline = async (e) => {
+    e.preventDefault();
+    await addDoc(collection(db, `users/${user.id}/notifications`), {
+      preview: declinedMessage,
+      time: serverTimestamp(),
+      name: auth.currentUser.displayName,
+      photoURL: auth.currentUser.photoURL,
+    })
+      .then(async (r) => {
+        await addDoc(
+          collection(db, `ngoshelters/${auth.currentUser.uid}/adoptionhistory`),
+          {
+            ...user,
+            id: r.id,
+            cid: user.id,
+            isDecline: true,
+            preview: declinedMessage,
+            time: serverTimestamp(),
+            photoURL: auth.currentUser.photoURL,
+          },
+          { merge: true }
+        );
+      })
+      .then(async () => {
+        await updateDoc(
+          doc(db, `matches/${user.id}${auth.currentUser.uid}`),
+          {
+            isDeclined: true,
+          },
+          { merge: true }
+        );
+      });
+
+    const deleteAccount = adoptionRow.filter((a) => a.id !== user.id);
+    setAdoptionRow(deleteAccount);
+
+    setDecline(false);
+    setDeclinedMessage('');
+  };
+
+  const handleChange = (e) => {
+    setDeclinedMessage(e);
+  };
+
+  useEffect(() => {
+    const users = [];
+    const docRef = collection(db, 'matches');
+    const q = query(
+      docRef,
+      where('usersMatched', 'array-contains', auth.currentUser?.uid),
+      where('isDeclined', '==', false)
+    );
+
+    onSnapshot(q, (querySnapshot) => {
+      const userInfos = querySnapshot.docs.map((detail) => ({
+        ...detail.data(),
+        id: detail.id,
+      }));
+
+      userInfos.map(async (a) => {
+        users.push(
+          await listAdoptor(getMatchedUserInfo(a.users, auth.currentUser?.uid))
+        );
+        setAdoptionRow(users);
+      });
+    });
+  }, []);
+
+  const onRowsSelectionHandler = (ids) => {
+    const selectedRowsData = ids.map((id) =>
+      adoptionRow.find((row) => row.id === id)
+    );
+    console.log(selectedRowsData);
+  };
+
+  const handleCancelDecline = (e) => {
+    e.preventDefault();
+    setDeclinedMessage('');
+    setDecline(false);
+  };
   const columns = [
     { field: 'name', headerName: 'Display Name', minWidth: 150 },
     {
@@ -121,7 +209,7 @@ export default function AdoptionPage() {
           <Button
             sx={{ ...global.button1xs }}
             onClick={(event) => {
-              handleClick(event, rows);
+              handleApproveDialog(event, rows);
             }}
           >
             APPROVE
@@ -150,117 +238,9 @@ export default function AdoptionPage() {
     },
   ];
 
-  const handleSendDecline = async (e) => {
-    e.preventDefault();
-    await addDoc(collection(db, `users/${declineUser.id}/notifications`), {
-      preview: declinedMessage,
-      time: serverTimestamp(),
-      name: auth.currentUser.displayName,
-      photoURL: auth.currentUser.photoURL,
-    })
-      .then(async () => {
-        await addDoc(
-          collection(db, `ngoshelters/${auth.currentUser.uid}/adoptionhistory`),
-          {
-            ...declineUser,
-            isDecline: true,
-            preview: declinedMessage,
-            time: serverTimestamp(),
-            photoURL: auth.currentUser.photoURL,
-          }
-        );
-      })
-      .then(async () => {
-        await updateDoc(
-          doc(db, `matches/${declineUser.id}${auth.currentUser.uid}`),
-          {
-            isDeclined: true,
-          },
-          { merge: true }
-        );
-      })
-      .then(async () => {
-        // await deleteDoc(
-        //   doc(
-        //     db,
-        //     `ngoshelters/${auth.currentUser.uid}/adoptionlist/${declineUser.id}`
-        //   )
-        // );
-      })
-      .catch((error) => {
-        toast.warn(error.code);
-      });
-
-    // .then(async () => {
-    //   await getDoc(doc(db, `pets/${declineUser.petToAdopt.id}`)).then(
-    //     async (res) => {
-    //       await setDoc(
-    //         doc(db, `ngoshelters/${auth.currentUser.uid}/adoptedanimals/${declineUser.petToAdopt.id}`),{
-    //           ...res.data()
-    //         }
-    //       );
-    //     }
-    //   );
-    // })
-
-    const deleteAccount = adoptionRow.filter((a) => a.id !== declineUser.id);
-    setAdoptionRow(deleteAccount);
-
-    setDecline(false);
-    setDeclinedMessage('');
-  };
-
-  const handleChange = (e) => {
-    setDeclinedMessage(e);
-  };
-
-  // useEffect(() => {
-  //   const getRow = async () => {
-  //     await getUsersInfo();
-  //     const q = query(
-  //       collection(db, `ngoshelters/${auth.currentUser?.uid}/adoptionlist`),
-  //       where('isDeclined', '==', false)
-  //     );
-  //     const acc = [];
-  //     const querySnapshot = await getDocs(q);
-  //     querySnapshot.forEach((doc) => {
-  //       acc.push(doc.data());
-  //     });
-  //     setAdoptionRow(acc);
-  //   };
-  //   getRow();
-  // }, []);
-
-  useEffect(() => {
-    const q = query(
-      collection(db, `ngoshelters/${auth.currentUser?.uid}/adoptionlist`),
-      where('isDeclined', '==', false)
-    );
-    onSnapshot(q, (querySnapshot) => {
-      const acc = querySnapshot.docs.map((detail) => ({
-        ...detail.data(),
-        uid: detail.id,
-      }));
-      setAdoptionRow(acc);
-    });
-  }, []);
-
-  ///Get all selected in checkbox
-  const onRowsSelectionHandler = (ids) => {
-    const selectedRowsData = ids.map((id) =>
-      adoptionRow.find((row) => row.id === id)
-    );
-    console.log(selectedRowsData);
-  };
-
-  const handleCancelDecline = (e) => {
-    e.preventDefault();
-    setDeclinedMessage('');
-    setDecline(false);
-  };
-
   return (
     <ShelterAdminLayout>
+      <ApproveDialog open={openApproveDialog} cancel={handleClose} />
       <InfoDialog moreInfo={moreInfo} open={open} cancel={handleClose} />
       <DeclineDialog
         open={decline}
@@ -268,7 +248,7 @@ export default function AdoptionPage() {
         onChange={handleChange}
         value={declinedMessage}
         cancel={handleCancelDecline}
-        user={declineUser}
+        user={user}
       />
       <Grid item xs>
         <Typography variant="h4" align="center">

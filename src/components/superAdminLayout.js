@@ -29,6 +29,8 @@ import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 import Logout from '@mui/icons-material/Logout';
 import LogoutUser, { logout } from './../firebase/auth';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebase/firebase-config';
 
 const drawerWidth = 240;
 
@@ -249,7 +251,7 @@ export default function SuperAdminLayout({ children }) {
               px: 3,
               flexGrow: '1',
             }}
-            onClick={() => logout()}
+            onClick={() => signOut(auth)}
           >
             <ListItemIcon
               sx={{

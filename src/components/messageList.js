@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -13,13 +13,28 @@ import {
   Typography,
 } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import MessageListRow from './messageListRow';
+import { getDoc, doc } from 'firebase/firestore';
+import { db } from './../firebase/firebase-config';
 
 const drawerWidth = 260;
 
 export default function MessageList({ acc }) {
   const navigate = useNavigate();
+  const { id, rid } = useParams();
+  const [decline, setDecline] = useState();
+
+  useEffect(() => {
+    const getDecline = async () => {
+      await getDoc(doc(db, `matches/${id}${rid}`)).then((res) => {
+        setDecline(res.data().isDeclined);
+      });
+    };
+    getDecline();
+  }, []);
+
+  console.log(decline);
 
   return (
     <div>
@@ -59,10 +74,15 @@ export default function MessageList({ acc }) {
           </ListItem>
         </List>
         <Divider />
+
         <List>
-          {acc.map((a) => {
-            return <MessageListRow key={a.lastTimeMessage} lastMessage={a} />;
-          })}
+          {!decline
+            ? acc.map((a) => {
+                return (
+                  <MessageListRow key={a.lastTimeMessage} lastMessage={a} />
+                );
+              })
+            : null}
         </List>
       </Drawer>
     </div>

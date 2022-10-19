@@ -28,9 +28,8 @@ import {
 } from 'firebase/auth';
 import axios from 'axios';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { arrayUnion, orderBy, onSnapshot } from 'firebase/firestore';
+import { arrayUnion } from 'firebase/firestore';
 import config from '../services/config.json';
-import getMatchedUserInfo from './../lib/getMatchedUserInfo';
 
 import { toast } from 'react-toastify';
 
@@ -38,18 +37,25 @@ const { backendURL } = config;
 
 // Login Account
 export async function login(loginEmail, loginPassword) {
-  await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
-    .then((res) => {
-      toast.success('Logged In', {
-        autoClose: 2000,
-      });
-    })
-    .catch((err) => {
-      toast.warn(err.code, {
-        autoClose: 2000,
-      });
-    });
-  return false;
+  const loggingIn = await signInWithEmailAndPassword(
+    auth,
+    loginEmail,
+    loginPassword
+  );
+  // await getDoc(doc(db, `ngoshelter/${user.uid}`)).then((doc) => {
+  //   console.log(doc.data());
+  // });
+
+  // // .then((res) => {
+  // //   toast.success('Logged In', {
+  // //     autoClose: 2000,
+  // //   });
+  // // })
+  // // .catch((err) => {
+  // //   toast.warn(err.code, {
+  // //     autoClose: 2000,
+  // //   });
+  // // });
 }
 
 //Create account in asecondary authentication
@@ -134,7 +140,6 @@ export const logout = async () => {
 };
 
 //* This will manage the ngo accounts * */
-
 //Get ngo Accounts
 export const GetAccounts = async () => {
   const q = query(
@@ -354,29 +359,6 @@ export const updateAnimalProfile = async (id, inputs, images) => {
 export const getUsersInfo = async () => {
   const users = [];
 
-  const docRef = collection(db, 'matches');
-  const q = query(
-    docRef,
-    where('usersMatched', 'array-contains', auth.currentUser?.uid)
-  );
-  onSnapshot(q, (querySnapshot) => {
-    const userInfos = querySnapshot.docs.map((detail) => ({
-      ...detail.data(),
-      uid: detail.id,
-    }));
-    if (userInfos) {
-      for (let i = 0; i < userInfos.length; i++) {
-        users.push(
-          getMatchedUserInfo(userInfos[i].users, auth.currentUser?.uid)
-        );
-      }
-    }
-    users.map(
-      (userAccount) => listAdoptor(userAccount)
-      //
-    );
-  });
-
   return users;
 };
 
@@ -455,6 +437,7 @@ export const updateAccountPassword = async (values, email) => {
         .catch((error) => {
           toast.warn(error.code);
         });
+      console.log('Readd');
     }
   } catch (error) {
     toast.error(error.code);
@@ -462,33 +445,29 @@ export const updateAccountPassword = async (values, email) => {
 };
 
 export const listAdoptor = async (userAccount) => {
-  const { id } = userAccount;
+  const { id, photoURL, displayName } = userAccount || {};
   const docRef = doc(db, `users/${id}`);
   const formSnap = await getDoc(doc(docRef, '/form/form'));
-  await getDoc(doc(db, `matches/${id}${auth.currentUser?.uid}`)).then(
-    async (res) => {
-      await getDoc(doc(db, `pets/${res.data()?.petToAdopt}`))
-        .then(async (petSnap) => {
-          await setDoc(
-            doc(db, `ngoshelters/${auth.currentUser.uid}/adoptionlist/${id}`),
-            {
-              photoURL: userAccount.photoURL,
-              isDeclined: res.data()?.isDeclined,
-              id: id,
-              name: userAccount?.displayName,
-              facebookURL: formSnap.data()?.BestWayToContact,
-              petToAdopt: petSnap.data()?.name,
-              petToAdoptId: petSnap.data()?.id,
-              score: formSnap.data()?.score,
-            },
-            { merge: true }
-          );
-        })
-        .catch((error) => {
-          console.log('Pet Delete By Admin', error);
-        });
-    }
+  const AdoptionInfo = await getDoc(
+    doc(db, `matches/${id}${auth.currentUser?.uid}`)
   );
+  const petInfo = await getDoc(
+    doc(db, `pets/${AdoptionInfo.data()?.petToAdopt}`)
+  );
+
+  console.log('Adoption INfo', id);
+  const dataNeed = {
+    photoURL: photoURL,
+    isDeclined: AdoptionInfo.data()?.isDeclined,
+    id: id,
+    name: displayName,
+    facebookURL: formSnap.data()?.BestWayToContact,
+    petToAdopt: petInfo.data()?.name,
+    petToAdoptId: petInfo.data()?.id,
+    score: formSnap.data()?.score,
+  };
+
+  return dataNeed;
 };
 
 export const disableAccount = async (rows) => {
@@ -510,6 +489,7 @@ export const enableAccount = async (rows) => {
   await updateDoc(doc(db, `ngoshelters/${rows}`), {
     isDisable: false,
   });
+  console.log('Update');
 };
 
 export const getTrashCollection = async () => {

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import SenderInfo from '../../components/senderInfo';
 import MessageArea from './../../components/messageArea';
 
-import { getUsersInfo } from './../../firebase/auth';
+import { getUsersInfo, listAdoptor } from './../../firebase/auth';
 import {
   orderBy,
   query,
@@ -16,42 +16,35 @@ import {
 } from 'firebase/firestore';
 import { auth } from '../../firebase/firebase-config';
 import { db } from './../../firebase/firebase-config';
+import getMatchedUserInfo from './../../lib/getMatchedUserInfo';
 
 export default function Message() {
   const [acc, setAcc] = useState([]);
 
-  // useEffect(() => {
-  //   const getRow = async () => {
-
-  //     const q = query(
-  //       docRef,
-  //       orderBy('lastMessageTime', 'desc')
-  //       // where('isDeclined', '==', false)
-  //     );
-
-  //     const querySnapshot = await getDocs(q);
-  //     querySnapshot.forEach((doc) => {
-
-  //     });
-  //     setAcc(acc);
-  //   };
-  //   getRow();
-  // }, []);
-
   useEffect(() => {
-    const docRef = collection(
-      db,
-      `ngoshelters/${auth.currentUser?.uid}/adoptionlist`
+    const users = [];
+    const docRef = collection(db, 'matches');
+    const q = query(
+      docRef,
+      where('usersMatched', 'array-contains', auth.currentUser?.uid),
+      where('isDeclined', '==', false)
     );
-    const q = query(docRef, orderBy('lastMessageTime', 'desc'));
+
     onSnapshot(q, (querySnapshot) => {
-      const message = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
+      const userInfos = querySnapshot.docs.map((detail) => ({
+        ...detail.data(),
+        id: detail.id,
       }));
-      setAcc(message);
+
+      userInfos.map(async (a) => {
+        users.push(
+          await listAdoptor(getMatchedUserInfo(a.users, auth.currentUser?.uid))
+        );
+        setAcc(users);
+      });
     });
   }, []);
-  console.log('Row', acc);
+
   return (
     <Box sx={{ display: 'flex' }}>
       <MessageList acc={acc} />

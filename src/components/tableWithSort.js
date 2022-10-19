@@ -5,7 +5,6 @@ export default function DataTable({ rows, columns, checkboxSelected }) {
   return (
     <div style={{ height: 600, width: '100%' }}>
       <DataGrid
-        key={rows.id}
         rows={rows}
         columns={columns}
         rowsPerPageOptions={[5]}

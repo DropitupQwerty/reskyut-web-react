@@ -85,7 +85,7 @@ export default function ListOfNgo() {
             Super Admin
           </Typography>
         ) : (
-          <Typography color="secondary" variant="caption">
+          <Typography color="#749F82" variant="caption">
             Ngo Admin
           </Typography>
         );

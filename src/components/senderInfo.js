@@ -24,6 +24,7 @@ export default function SenderInfo() {
   const [petInfo, setPetInfo] = useState();
   const [isLoading, setIsLoading] = useState();
   const { id, rid } = useParams();
+  const [isDeclined, setIsDeclined] = useState();
 
   const { text1, text2, text3 } = style;
   const { BestWayToContact, FullAddress } = form || {};
@@ -44,6 +45,7 @@ export default function SenderInfo() {
       //Get pet Info
       const petRef = doc(db, `matches/${id}${rid}`);
       await getDoc(petRef).then((petSnap) => {
+        setIsDeclined(petSnap.data().isDeclined);
         const getPetInfo = async () => {
           console.log(petSnap.data());
           const petInfo = doc(db, `pets/${petSnap.data().petToAdopt}`);
@@ -53,6 +55,7 @@ export default function SenderInfo() {
         };
         getPetInfo();
       });
+      console.log('Get Info Sender Info');
     };
     getInfo();
   }, [id]);
@@ -78,7 +81,7 @@ export default function SenderInfo() {
           <Box sx={{ p: 2 }}>
             <Avatar
               sx={{ height: '120px', width: '120px' }}
-              src={photoURL || 'No Phot Uploaded'}
+              src={photoURL || 'No Photo Uploaded'}
             />
           </Box>
           <Box noWrap sx={{ p: 1 }}>
@@ -201,27 +204,27 @@ export default function SenderInfo() {
                 Description:
               </Typography>
 
-              <Box
-                sx={{
-                  display: 'flex',
-                  height: '50%',
-                  whiteSpace: 'nowrap',
-                }}
-              >
+              <Box sx={text3}>
                 <Typography sx={text3}>{desc}</Typography>
               </Box>
             </List>
           </Box>
         </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <Button sx={{ ...global.button2xs }}>Decline</Button>
-          <Button sx={{ ...global.button1xs }}>Approve</Button>
-        </Box>
+        {!isDeclined ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <Button sx={{ ...global.button2xs }}>Decline</Button>
+            <Button sx={{ ...global.button1xs }}>Approve</Button>
+          </Box>
+        ) : (
+          <Typography color="primary" textAlign="center">
+            Declined
+          </Typography>
+        )}
       </Drawer>
     </div>
   );

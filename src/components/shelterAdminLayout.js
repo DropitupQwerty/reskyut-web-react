@@ -116,12 +116,6 @@ export default function ShelterAdminLayout({ children }) {
       setUser(currentUser);
     });
 
-    const notif = async () => {
-      await getUsersInfo().then((count) => {
-        setAdoptionCount(count.length);
-      });
-    };
-    notif();
     if (user?.notification === adoptionCount) {
       setInvisible(true);
     } else {
@@ -156,7 +150,7 @@ export default function ShelterAdminLayout({ children }) {
       icon: <HistoryIcon color="primary" />,
     },
     {
-      label: 'Trash',
+      label: 'Deleted Animals',
       link: 'trash',
       icon: <DeleteIcon color="primary" />,
     },

@@ -5,7 +5,6 @@ import global from '../../styles/global';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import PetsIcon from '@mui/icons-material/Pets';
 import { useNavigate } from 'react-router-dom';
 import DataTable from '../../components/tableWithSort';
 import { getDocs, collection, query } from 'firebase/firestore';
@@ -102,7 +101,7 @@ export default function AdoptionHistory() {
           <Button
             sx={{ ...global.button3xs }}
             onClick={(event) => {
-              navigate(`/message/${rows.id}/${auth.currentUser.uid}`);
+              navigate(`/message/${rows.row.cid}/${auth.currentUser.uid}`);
             }}
           >
             VIEW
@@ -144,7 +143,7 @@ export default function AdoptionHistory() {
         </Typography>
       </Grid>
       <Grid item xs>
-        <Button onClick={() => navigate('/adoptionpage')}>
+        <Button>
           <RefreshIcon color="primary" />
         </Button>
         <Button>
