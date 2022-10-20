@@ -19,6 +19,7 @@ import {
   where,
   updateDoc,
   setDoc,
+  deleteField,
 } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 import {
@@ -32,30 +33,20 @@ import { arrayUnion } from 'firebase/firestore';
 import config from '../services/config.json';
 
 import { toast } from 'react-toastify';
+import { async } from '@firebase/util';
+import getMatchedUserInfo from './../lib/getMatchedUserInfo';
 
 const { backendURL } = config;
 
 // Login Account
 export async function login(loginEmail, loginPassword) {
-  const loggingIn = await signInWithEmailAndPassword(
-    auth,
-    loginEmail,
-    loginPassword
-  );
-  // await getDoc(doc(db, `ngoshelter/${user.uid}`)).then((doc) => {
-  //   console.log(doc.data());
-  // });
-
-  // // .then((res) => {
-  // //   toast.success('Logged In', {
-  // //     autoClose: 2000,
-  // //   });
-  // // })
-  // // .catch((err) => {
-  // //   toast.warn(err.code, {
-  // //     autoClose: 2000,
-  // //   });
-  // // });
+  await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
+    .then((res) => {
+      toast.success('Account Login');
+    })
+    .catch((error) => {
+      toast.warn(error.code);
+    });
 }
 
 //Create account in asecondary authentication
@@ -233,51 +224,12 @@ export const getPetsCollection = async () => {
 
 //Adding Pet document to pet Collection
 export const AddSubData = async (inputs, images) => {
-  const promises = [];
-  const imageURL = [];
   if (images.length !== 0) {
     await addDoc(collection(db, `pets`), {
       ...inputs,
       timestamp: serverTimestamp(),
     }).then((docRef) => {
-      images.map((file) => {
-        console.log('loop');
-        const sotrageRef = ref(
-          storage,
-          `animals/${auth.currentUser.uid}/${docRef.id}/${file.name}`
-        );
-        const uploadTask = uploadBytesResumable(sotrageRef, file);
-        promises.push(uploadTask);
-        uploadTask.on(
-          'state_changed',
-          (snapshot) => {},
-          (error) => console.log(error),
-          async () => {
-            await getDownloadURL(uploadTask.snapshot.ref).then(
-              (downloadURLs) => {
-                imageURL.push();
-                console.log('File available at', downloadURLs);
-                async function updateDocs() {
-                  await updateDoc(
-                    doc(db, `pets`, docRef.id),
-                    {
-                      id: docRef.id,
-                      imageURL: arrayUnion(downloadURLs),
-                    },
-                    { merge: true }
-                  );
-                }
-                updateDocs();
-              }
-            );
-          }
-        );
-      });
-      Promise.all(promises)
-        .then(() => {
-          alert('Pet added to databse');
-        })
-        .then((err) => console.log(err));
+      uploadMultipleImage(images, docRef.id);
     });
   } else if (images.length > 9) {
     alert('Must upload 9 images or less');
@@ -290,7 +242,22 @@ export const AddSubData = async (inputs, images) => {
 export const ListUpdate = async () => {
   const q = query(
     collection(db, `pets`),
-    where('shelterID', '==', auth.currentUser?.uid)
+    where('shelterID', '==', auth.currentUser?.uid),
+    where('isAdopted', '==', false)
+  );
+  const querySnapshot = await getDocs(q);
+  const queryData = querySnapshot.docs.map((detail) => ({
+    ...detail.data(),
+  }));
+
+  return queryData;
+};
+
+export const ListAdoptedPet = async () => {
+  const q = query(
+    collection(db, `pets`),
+    where('shelterID', '==', auth.currentUser?.uid),
+    where('isAdopted', '==', true)
   );
   const querySnapshot = await getDocs(q);
   const queryData = querySnapshot.docs.map((detail) => ({
@@ -309,49 +276,23 @@ export const getAnimalProfile = async (id) => {
 
 //Update Animal Profile
 export const updateAnimalProfile = async (id, inputs, images) => {
-  const promises = [];
-  const docRef = doc(db, `pets/${id}`);
-  await updateDoc(docRef, {
-    ...inputs,
-    timestamp: serverTimestamp(),
-  }).then(() => {
-    images.map((file) => {
-      console.log('auth', file);
-      const sotrageRef = ref(storage, `${id}/${file.name}`);
-      const uploadTask = uploadBytesResumable(sotrageRef, file);
-      promises.push(uploadTask);
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const prog = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-        },
-        (error) => console.log(error),
-        async () => {
-          await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
-            console.log('File available at', downloadURLs);
-            async function updateDocs() {
-              await updateDoc(
-                docRef,
-                {
-                  id: docRef.id,
-                  imageURL: arrayUnion(downloadURLs),
-                },
-                { merge: true }
-              );
-            }
-            updateDocs();
-          });
-        }
-      );
+  if (images.length !== 0) {
+    await updateDoc(
+      doc(db, `pets/${id}`),
+      {
+        ...inputs,
+        imageURL: deleteField(),
+        timestamp: serverTimestamp(),
+      },
+      { merge: false }
+    ).then((docRef) => {
+      uploadMultipleImage(images, id);
     });
-    Promise.all(promises)
-      .then(() => {
-        alert('Pet added to databse');
-      })
-      .then((err) => console.log(err));
-  });
+  } else if (images.length > 9) {
+    alert('Must upload 9 images or less');
+  } else {
+    alert('Must add a photo');
+  }
 };
 
 /**This Will manage the application users Request */
@@ -445,6 +386,7 @@ export const updateAccountPassword = async (values, email) => {
 };
 
 export const listAdoptor = async (userAccount) => {
+  let dataNeed = {};
   const { id, photoURL, displayName } = userAccount || {};
   const docRef = doc(db, `users/${id}`);
   const formSnap = await getDoc(doc(docRef, '/form/form'));
@@ -455,17 +397,31 @@ export const listAdoptor = async (userAccount) => {
     doc(db, `pets/${AdoptionInfo.data()?.petToAdopt}`)
   );
 
-  console.log('Adoption INfo', id);
-  const dataNeed = {
-    photoURL: photoURL,
-    isDeclined: AdoptionInfo.data()?.isDeclined,
-    id: id,
-    name: displayName,
-    facebookURL: formSnap.data()?.BestWayToContact,
-    petToAdopt: petInfo.data()?.name,
-    petToAdoptId: petInfo.data()?.id,
-    score: formSnap.data()?.score,
-  };
+  if (!petInfo.exists()) {
+    dataNeed = {
+      photoURL: photoURL,
+      isApprovedAdoptor: false,
+      isDeclined: true,
+      id: id,
+      name: displayName,
+      facebookURL: formSnap.data()?.BestWayToContact,
+      petToAdopt: 'Deleted',
+      petToAdoptId: '',
+      score: formSnap.data()?.score,
+    };
+  } else {
+    dataNeed = {
+      photoURL: photoURL,
+      isApprovedAdoptor: AdoptionInfo.data()?.isApprovedAdoptor,
+      isDeclined: AdoptionInfo.data()?.isDeclined,
+      id: id,
+      name: displayName,
+      facebookURL: formSnap.data()?.BestWayToContact,
+      petToAdopt: petInfo.data()?.name,
+      petToAdoptId: petInfo.data()?.id,
+      score: formSnap.data()?.score,
+    };
+  }
 
   return dataNeed;
 };
@@ -485,6 +441,7 @@ export const disableAccount = async (rows) => {
     });
   });
 };
+
 export const enableAccount = async (rows) => {
   await updateDoc(doc(db, `ngoshelters/${rows}`), {
     isDisable: false,
@@ -553,4 +510,160 @@ export const restoreAnimal = async (rows) => {
     .catch((error) => {
       console.log(error);
     });
+};
+
+export const sendNotification = async (user, notifMessage) => {
+  const doc = await addDoc(collection(db, `users/${user.id}/notifications`), {
+    preview: notifMessage,
+    time: serverTimestamp(),
+    name: auth.currentUser.displayName,
+    petName: user?.petToAdopt,
+    photoURL: auth.currentUser.photoURL,
+  });
+  return doc;
+};
+
+export const moveToHistory = async (
+  user,
+  r,
+  isDecline,
+  isApprovedAdoptor,
+  notifMessage
+) => {
+  await addDoc(
+    collection(db, `ngoshelters/${auth.currentUser.uid}/adoptionhistory`),
+    {
+      ...user,
+      id: r.id,
+      cid: user.id,
+      isDecline: isDecline,
+      isApprovedAdoptor: isApprovedAdoptor,
+      preview: notifMessage,
+      time: serverTimestamp(),
+      photoURL: auth.currentUser.photoURL,
+    },
+    { merge: true }
+  );
+};
+
+export const updateMessageField = async (
+  user,
+  isDeclined,
+  isApprovedAdoptor
+) => {
+  await updateDoc(
+    doc(db, `matches/${user.id}${auth.currentUser.uid}`),
+    {
+      isDeclined: isDeclined,
+      isApprovedAdoptor: isApprovedAdoptor,
+    },
+    { merge: true }
+  );
+};
+
+export const approveAdoption = async (user, notifMessage) => {
+  await sendNotification(user, notifMessage)
+    .then(async (r) => {
+      moveToHistory(user, r, false, true, notifMessage);
+    })
+    .then(async () => {
+      updateMessageField(user, false, true);
+    });
+  await updateDoc(
+    doc(db, `pets/${user?.petToAdoptId}`),
+    { isAdopted: true, status: 'unlisted' },
+    { merge: true }
+  );
+  await deletePending(user);
+  const q = query(
+    collection(db, `matches`),
+    where('petToAdopt', '==', user?.petToAdoptId),
+    where('isApprovedAdoptor', '==', false)
+  );
+  await getDocs(q).then((r) => {
+    r.docs.map(async (e) => {
+      console.log(e.data());
+      const u = await listAdoptor(
+        getMatchedUserInfo(e.data()?.users, auth.currentUser?.uid)
+      );
+      console.log('ulist', u);
+      updateMessageField(u, true, false);
+      const notif = `Adoption is closed. We have already found ${user?.petToAdopt} 's New Parents`;
+      sendNotification(u, notif).then(async (r) => {
+        moveToHistory(u, r, true, false, notifMessage);
+      });
+    });
+  });
+  await movePending(user);
+};
+
+export const declineAdoption = async (user, notifMessage) => {
+  await sendNotification(user, notifMessage)
+    .then(async (r) => {
+      moveToHistory(user, r, true, false, notifMessage);
+    })
+    .then(async () => {
+      updateMessageField(user, true, false);
+    });
+
+  deletePending(user);
+};
+
+export const movePending = async (user) => {
+  const userRef = doc(db, `users/${user.id}`);
+  await getDoc(userRef, `pending/${user.petToAdoptId}`).then((res) => {
+    console.log(res.data());
+
+    addDoc(collection(db, `users/${user.id}/adopted`), {
+      ...res.data(),
+    });
+  });
+  await deletePending(user);
+};
+
+export const deletePending = async (user) => {
+  await deleteDoc(doc(db, `users/${user.id}/pending/${user.petToAdoptId}`));
+};
+
+export const uploadMultipleImage = async (images, id) => {
+  let i = 0;
+  const promises = [];
+  const imageURL = [];
+  images.map((file) => {
+    console.log('loop');
+    const sotrageRef = ref(
+      storage,
+      `animals/${auth.currentUser.uid}/${id}/${i}.jpg`
+    );
+    const uploadTask = uploadBytesResumable(sotrageRef, file);
+    promises.push(uploadTask);
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {},
+      (error) => console.log(error),
+      async () => {
+        await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
+          imageURL.push();
+          console.log('File available at', downloadURLs);
+          async function updateDocs() {
+            await updateDoc(
+              doc(db, `pets`, id),
+              {
+                id: id,
+                imageURL: arrayUnion(downloadURLs),
+              },
+              { merge: true }
+            );
+          }
+          updateDocs();
+        });
+      }
+    );
+    i++;
+  });
+  Promise.all(promises)
+    .then(() => {
+      alert('Pet added to databse');
+    })
+    .then((err) => console.log(err));
 };

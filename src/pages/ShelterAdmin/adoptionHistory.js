@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useNavigate } from 'react-router-dom';
 import DataTable from '../../components/tableWithSort';
-import { getDocs, collection, query } from 'firebase/firestore';
+import { getDocs, collection, query, doc, getDoc } from 'firebase/firestore';
 import { auth, db } from './../../firebase/firebase-config';
 import HistoryIcon from '@mui/icons-material/History';
 
@@ -15,16 +15,22 @@ export default function AdoptionHistory() {
   const navigate = useNavigate();
   const [adoptionRow, setAdoptionRow] = useState([]);
   const [open, setOpen] = useState(false);
-  const [decline, setDecline] = useState(false);
-  const [declineUser, setDeclineUser] = useState();
+  // const [decline, setDecline] = useState(false);
+  // const [declineUser, setDeclineUser] = useState();
   const [moreInfo, setMoreInfo] = useState();
-  const [declinedMessage, setDeclinedMessage] = useState();
+  // const [declinedMessage, setDeclinedMessage] = useState();
 
-  const handleClick = (event, rows) => {};
+  // const handleClick = (event, rows) =>
 
-  const handleDeclineDialog = (event, rows) => {};
-
-  const handleInfoDialog = async (event, rows) => {};
+  const handleInfoDialog = async (event, rows) => {
+    setOpen(true);
+    await getDoc(doc(db, `users/${rows.id}/form/form`)).then((res) => {
+      setMoreInfo(res.data());
+    });
+  };
+  const handleCloseInfoDialog = async (event, rows) => {
+    setOpen(false);
+  };
 
   const columns = [
     { field: 'name', headerName: 'Display Name', minWidth: 150 },
@@ -44,13 +50,13 @@ export default function AdoptionHistory() {
       headerName: 'Adoption Status',
       minWidth: 150,
       renderCell: (rows) => {
-        return rows.row.isDecline ? (
-          <Typography color="primary" variant="caption">
-            Declined Adoptor
-          </Typography>
-        ) : (
+        return !rows.row.isDecline && rows.row.isApprovedAdoptor ? (
           <Typography color="#749F82" variant="caption">
             Accepted Adoptor
+          </Typography>
+        ) : (
+          <Typography color="primary" variant="caption">
+            Declined Adoptor
           </Typography>
         );
       },
@@ -72,25 +78,6 @@ export default function AdoptionHistory() {
         );
       },
       minWidth: 150,
-    },
-
-    {
-      field: 'Delete',
-      headerName: 'Delete',
-      sortable: false,
-      renderCell: (rows) => {
-        return (
-          <Button
-            sx={{ ...global.button2xs }}
-            onClick={(event) => {
-              handleDeclineDialog(event, rows);
-            }}
-          >
-            Delete
-          </Button>
-        );
-      },
-      width: 150,
     },
 
     {

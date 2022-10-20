@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import {
   Box,
@@ -20,14 +20,11 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import PetsIcon from '@mui/icons-material/Pets';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
-import Logout from '@mui/icons-material/Logout';
-import LogoutUser, { logout } from './../firebase/auth';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase/firebase-config';

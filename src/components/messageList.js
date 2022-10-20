@@ -23,18 +23,16 @@ const drawerWidth = 260;
 export default function MessageList({ acc }) {
   const navigate = useNavigate();
   const { id, rid } = useParams();
-  const [decline, setDecline] = useState();
+  const [adoptionStatus, setAdoptionStatus] = useState();
 
   useEffect(() => {
     const getDecline = async () => {
       await getDoc(doc(db, `matches/${id}${rid}`)).then((res) => {
-        setDecline(res.data().isDeclined);
+        setAdoptionStatus(res.data());
       });
     };
     getDecline();
-  }, []);
-
-  console.log(decline);
+  }, [acc]);
 
   return (
     <div>
@@ -74,9 +72,10 @@ export default function MessageList({ acc }) {
           </ListItem>
         </List>
         <Divider />
+        {console.log(adoptionStatus)}
 
         <List>
-          {!decline
+          {!adoptionStatus?.isDeclined || adoptionStatus?.isApproveAdoptor
             ? acc.map((a) => {
                 return (
                   <MessageListRow key={a.lastTimeMessage} lastMessage={a} />

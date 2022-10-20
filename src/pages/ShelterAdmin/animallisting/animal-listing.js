@@ -22,13 +22,9 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { ListUpdate } from '../../../firebase/auth';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import Loader from './../../../components/common/loader';
-import { Box } from '@mui/material';
 import DataTable from '../../../components/tableWithSort';
 import DeleteDialog from '../../../components/common/deleteDialog';
-import { addDoc } from 'firebase/firestore';
 import { doc } from 'firebase/firestore';
-import { async } from '@firebase/util';
 import { setDoc } from 'firebase/firestore';
 import { auth, db } from '../../../firebase/firebase-config';
 import { deleteDoc } from 'firebase/firestore';
@@ -56,7 +52,6 @@ export default function AnimalListing() {
     setMessage(`Move to trash?`);
   };
   const handleConfirm = async () => {
-    console.log('Animal', animal);
     const deletedAnimal = animalData.filter((a) => a.id !== animal.id);
     setAnimalData(deletedAnimal);
 
@@ -127,7 +122,6 @@ export default function AnimalListing() {
       minWidth: 150,
     },
   ];
-  console.log(animalData);
 
   return (
     <ShelterAdminLayout>

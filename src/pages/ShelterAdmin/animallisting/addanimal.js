@@ -24,15 +24,18 @@ import { AddSubData } from './../../../firebase/auth';
 
 import CancelIcon from '@mui/icons-material/Cancel';
 import { auth } from '../../../firebase/firebase-config';
+import LoaderDialog from './../../../components/common/loaderDialog';
 
 export default function AddAnimal() {
   const [images, setImages] = useState([]);
   const [textField, setTextField] = useState(false);
   const [previewImage, setPreviewImage] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const [inputs, setInputs] = useState({
+    isAdopted: false,
     name: '',
     age: 'Puppy',
     gender: '',
@@ -42,8 +45,6 @@ export default function AddAnimal() {
     shelterID: auth.currentUser?.uid,
     shelterName: auth.currentUser?.displayName,
   });
-
-  console.log(inputs.desc.length);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -71,9 +72,11 @@ export default function AddAnimal() {
   }, [images]);
 
   //Do Submit
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    AddSubData(inputs, images);
+    setIsLoading(true);
+    await AddSubData(inputs, images);
+    setIsLoading(false);
   };
 
   //Remove Photo in UI
@@ -89,6 +92,7 @@ export default function AddAnimal() {
 
   return (
     <AppBarLayout>
+      <LoaderDialog isLoading={isLoading} />
       <Box>
         <Box>
           <Button

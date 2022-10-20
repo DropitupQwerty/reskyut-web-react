@@ -58,7 +58,12 @@ const DeclineDialog = ({ open, cancel, confirm, onChange, value, user }) => {
               The prospective adopter does not believe that pet ownership should
               be a life-long commitment
             </MenuItem>
-            <MenuItem value={'Bawal lang hehe'}>Bawal Lang Hehe</MenuItem>
+            <MenuItem
+              value={`Adoption is closed. We have already found ${user?.petToAdopt} 's New Parents`}
+            >
+              Adoption is closed. We have already found {user?.petToAdopt}'s New
+              Parents
+            </MenuItem>
             <MenuItem value={`Abuso Ka ${user?.name}`}>
               Abuso Ka ${user?.name}
             </MenuItem>

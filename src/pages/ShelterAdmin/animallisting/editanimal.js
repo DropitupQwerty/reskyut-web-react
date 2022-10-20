@@ -50,11 +50,7 @@ export default function AddAnimal() {
       const animalProfile = await getAnimalProfile(id);
 
       setInputs({ ...animalProfile });
-
-      //Check the Images if a Valid URL
-      animalProfile.imageURL.map((urlString) => {
-        const go = Boolean(new URL(urlString));
-      });
+      setPreviewImage([...animalProfile.imageURL]);
     };
     getAnimalPro();
   }, [id]);
@@ -73,19 +69,6 @@ export default function AddAnimal() {
     setImages(targetFilesObject);
   };
 
-  //Preview image into Object Url
-  // useEffect(() => {
-  //   const handlePreview = () => {
-  //     const selectedFIles = [];
-  //     images.map((file) => {
-  //       console.log('file', file);
-  //       return selectedFIles.push(URL.createObjectURL(file));
-  //     });
-  //     setPreviewImage(selectedFIles);
-  //   };
-  //   handlePreview();
-  // }, [handleImage]);
-
   //Do Submit
   const handleSubmit = () => {
     updateAnimalProfile(id, inputs, images);
@@ -96,8 +79,21 @@ export default function AddAnimal() {
     const image = [...images];
     const index = previewImage.indexOf(photo);
     image.splice(index, 1);
+
     setImages(image);
   };
+
+  useEffect(() => {
+    const handlePreview = () => {
+      const selectedFIles = [];
+      images.map((file) => {
+        console.log('file', file);
+        return selectedFIles.push(URL.createObjectURL(file));
+      });
+      setPreviewImage(selectedFIles);
+    };
+    handlePreview();
+  }, [images]);
 
   //Dropdown
   const Custom = () => setTextField(true);
@@ -321,7 +317,7 @@ export default function AddAnimal() {
 
             <Box>
               <Grid container>
-                {images.map((imageURI) => (
+                {previewImage.map((imageURI) => (
                   <Grid key={imageURI.id} item>
                     {console.log(imageURI.index)}
 

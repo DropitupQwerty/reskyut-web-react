@@ -18,15 +18,21 @@ import {
   where,
   updateDoc,
   onSnapshot,
+  getDocs,
 } from 'firebase/firestore';
 import { auth, db } from './../../firebase/firebase-config';
-import { async } from '@firebase/util';
 import InfoDialog from '../../components/common/infoDialog';
 import DeclineDialog from '../../components/common/declineDialog';
-import { toast } from 'react-toastify';
-import { getUsersInfo, listAdoptor } from '../../firebase/auth';
+import {
+  approveAdoption,
+  declineAdoption,
+  listAdoptor,
+  moveToHistory,
+} from '../../firebase/auth';
 import getMatchedUserInfo from '../../lib/getMatchedUserInfo';
 import ApproveDialog from '../../components/common/approveDialog';
+import { sendNotification, updateMessageField } from './../../firebase/auth';
+import { async } from '@firebase/util';
 
 export default function AdoptionPage() {
   const navigate = useNavigate();
@@ -35,8 +41,7 @@ export default function AdoptionPage() {
   const [decline, setDecline] = useState(false);
   const [user, setUser] = useState();
   const [moreInfo, setMoreInfo] = useState();
-  const [declinedMessage, setDeclinedMessage] = useState();
-  const [a, setA] = useState([]);
+  const [notifMessage, setNotifMessage] = useState();
   const [openApproveDialog, setOpenApproveDialog] = useState(false);
 
   const handleClick = (event, rows) => {
@@ -46,8 +51,8 @@ export default function AdoptionPage() {
   const handleDeclineDialog = (event, rows) => {
     console.log(rows.id);
     setUser(rows.row);
-    setDeclinedMessage(
-      'Than you for adopting ngunit hindi iaw ang napili . pagpasend syahan mo na ha salamat'
+    setNotifMessage(
+      `Adoption is closed. Sorry this pet is no longer available`
     );
     setDecline(true);
   };
@@ -61,9 +66,11 @@ export default function AdoptionPage() {
   };
 
   const handleApproveDialog = async (event, rows) => {
+    setNotifMessage(
+      `Congratulation you are the chosen adoptor for this pet ${rows.row.petToAdopt} please proceed to the ngo shelter `
+    );
     setOpenApproveDialog(true);
     setUser(rows.row);
-    console.log('approve', user);
   };
 
   const handleClose = () => {
@@ -73,71 +80,19 @@ export default function AdoptionPage() {
 
   const handleSendDecline = async (e) => {
     e.preventDefault();
-    await addDoc(collection(db, `users/${user.id}/notifications`), {
-      preview: declinedMessage,
-      time: serverTimestamp(),
-      name: auth.currentUser.displayName,
-      photoURL: auth.currentUser.photoURL,
-    })
-      .then(async (r) => {
-        await addDoc(
-          collection(db, `ngoshelters/${auth.currentUser.uid}/adoptionhistory`),
-          {
-            ...user,
-            id: r.id,
-            cid: user.id,
-            isDecline: true,
-            preview: declinedMessage,
-            time: serverTimestamp(),
-            photoURL: auth.currentUser.photoURL,
-          },
-          { merge: true }
-        );
-      })
-      .then(async () => {
-        await updateDoc(
-          doc(db, `matches/${user.id}${auth.currentUser.uid}`),
-          {
-            isDeclined: true,
-          },
-          { merge: true }
-        );
-      });
+
+    declineAdoption(user, notifMessage);
 
     const deleteAccount = adoptionRow.filter((a) => a.id !== user.id);
     setAdoptionRow(deleteAccount);
 
     setDecline(false);
-    setDeclinedMessage('');
+    setNotifMessage('');
   };
 
   const handleChange = (e) => {
-    setDeclinedMessage(e);
+    setNotifMessage(e);
   };
-
-  useEffect(() => {
-    const users = [];
-    const docRef = collection(db, 'matches');
-    const q = query(
-      docRef,
-      where('usersMatched', 'array-contains', auth.currentUser?.uid),
-      where('isDeclined', '==', false)
-    );
-
-    onSnapshot(q, (querySnapshot) => {
-      const userInfos = querySnapshot.docs.map((detail) => ({
-        ...detail.data(),
-        id: detail.id,
-      }));
-
-      userInfos.map(async (a) => {
-        users.push(
-          await listAdoptor(getMatchedUserInfo(a.users, auth.currentUser?.uid))
-        );
-        setAdoptionRow(users);
-      });
-    });
-  }, []);
 
   const onRowsSelectionHandler = (ids) => {
     const selectedRowsData = ids.map((id) =>
@@ -148,9 +103,10 @@ export default function AdoptionPage() {
 
   const handleCancelDecline = (e) => {
     e.preventDefault();
-    setDeclinedMessage('');
+    setNotifMessage('');
     setDecline(false);
   };
+
   const columns = [
     { field: 'name', headerName: 'Display Name', minWidth: 150 },
     {
@@ -167,7 +123,6 @@ export default function AdoptionPage() {
     {
       field: 'score',
       headerName: 'Score',
-      sortable: false,
       renderCell: (rows) => {
         return (
           <Button
@@ -238,15 +193,54 @@ export default function AdoptionPage() {
     },
   ];
 
+  useEffect(() => {
+    const docRef = collection(db, 'matches');
+    const q = query(
+      docRef,
+      where('usersMatched', 'array-contains', auth.currentUser?.uid),
+      where('isDeclined', '==', false),
+      where('isApprovedAdoptor', '==', false)
+    );
+
+    onSnapshot(q, (querySnapshot) => {
+      const userInfos = querySnapshot.docs.map((detail) => ({
+        ...detail.data(),
+        id: detail.id,
+      }));
+      let users = [];
+      userInfos.map(async (a) => {
+        const u = await listAdoptor(
+          getMatchedUserInfo(a?.users, auth.currentUser?.uid)
+        );
+        users.push(u);
+        const asd = [...users];
+        setAdoptionRow(asd);
+      });
+      // const n = [...users];
+    });
+  }, []);
+
+  const confirmApprove = async () => {
+    approveAdoption(user, notifMessage);
+    setOpenApproveDialog(false);
+    const approvedAccount = adoptionRow.filter((a) => a.id !== user.id);
+    setAdoptionRow(approvedAccount);
+  };
+
   return (
     <ShelterAdminLayout>
-      <ApproveDialog open={openApproveDialog} cancel={handleClose} />
+      <ApproveDialog
+        open={openApproveDialog}
+        cancel={handleClose}
+        user={user?.name}
+        confirm={confirmApprove}
+      />
       <InfoDialog moreInfo={moreInfo} open={open} cancel={handleClose} />
       <DeclineDialog
         open={decline}
         confirm={handleSendDecline}
         onChange={handleChange}
-        value={declinedMessage}
+        value={notifMessage}
         cancel={handleCancelDecline}
         user={user}
       />

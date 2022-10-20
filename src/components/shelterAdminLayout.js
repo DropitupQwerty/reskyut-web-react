@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import {
@@ -12,7 +12,6 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Badge,
 } from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
@@ -25,11 +24,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PetsIcon from '@mui/icons-material/Pets';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { getUser, getUsersInfo, logout } from '../firebase/auth';
-import { auth, db } from '../firebase/firebase-config';
-import IsLoggedIn from './../firebase/auth';
-import { async } from '@firebase/util';
-import { addDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { logout } from '../firebase/auth';
+import { auth } from '../firebase/firebase-config';
 import { onAuthStateChanged } from 'firebase/auth';
 import HistoryIcon from '@mui/icons-material/History';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -106,27 +102,17 @@ export default function ShelterAdminLayout({ children }) {
 
   const theme = useTheme();
   const [open, setOpen] = useState(true);
-  const [invisible, setInvisible] = useState();
-  const [adoptionCount, setAdoptionCount] = useState();
   const [user, setUser] = useState();
-  const [isAdmin, setIsAdmin] = useState();
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
-
-    if (user?.notification === adoptionCount) {
-      setInvisible(true);
-    } else {
-      setInvisible(false);
-    }
   }, []);
 
   const handleNavigate = (drawermenu) => {
     navigate(`/${drawermenu}`);
   };
-  const handleBadgeNotification = async () => {};
 
   const userDrawerMenus = [
     {

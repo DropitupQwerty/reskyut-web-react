@@ -1,19 +1,12 @@
-import { Box, Toolbar } from '@mui/material';
+import { Box } from '@mui/material';
 import MessageList from '../../components/messageList';
 
 import React, { useEffect, useState } from 'react';
 import SenderInfo from '../../components/senderInfo';
 import MessageArea from './../../components/messageArea';
 
-import { getUsersInfo, listAdoptor } from './../../firebase/auth';
-import {
-  orderBy,
-  query,
-  collection,
-  getDocs,
-  onSnapshot,
-  where,
-} from 'firebase/firestore';
+import { listAdoptor } from './../../firebase/auth';
+import { query, collection, onSnapshot, where } from 'firebase/firestore';
 import { auth } from '../../firebase/firebase-config';
 import { db } from './../../firebase/firebase-config';
 import getMatchedUserInfo from './../../lib/getMatchedUserInfo';
@@ -22,7 +15,6 @@ export default function Message() {
   const [acc, setAcc] = useState([]);
 
   useEffect(() => {
-    const users = [];
     const docRef = collection(db, 'matches');
     const q = query(
       docRef,
@@ -36,11 +28,13 @@ export default function Message() {
         id: detail.id,
       }));
 
+      const users = [];
       userInfos.map(async (a) => {
         users.push(
           await listAdoptor(getMatchedUserInfo(a.users, auth.currentUser?.uid))
         );
-        setAcc(users);
+        const n = [...users];
+        setAcc(n);
       });
     });
   }, []);

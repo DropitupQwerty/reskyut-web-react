@@ -16,7 +16,7 @@ const ApproveDialog = ({ open, cancel, confirm, user }) => {
         style: {
           borderRadius: 30,
           width: '400px',
-          height: '290px',
+          minHeight: '290px',
           padding: '10px',
         },
       }}
@@ -25,26 +25,41 @@ const ApproveDialog = ({ open, cancel, confirm, user }) => {
       <DialogContent
         sx={{
           fontWeight: 'bold',
-          color: '#E94057',
+          display: 'flex',
+          whiteSpace: 'normal',
         }}
       >
-        <Typography
-          sx={{ fontSize: '25px', textAlign: 'center', marginTop: '20px' }}
-        >
-          {`Are you sure you want to approve ${user}  as a adoptor of this pet?`}
+        <Typography sx={{ fontSize: '25px', textAlign: 'center' }}>
+          {` Are you sure you want to approve `}
+          <span style={{ color: '#E94057', fontStyle: 'italic' }}>
+            "{user}"
+          </span>
+          {` as a adoptor of this pet?`}
         </Typography>
       </DialogContent>
 
       <DialogActions>
         <Button
           sx={{
-            ...global.button2,
+            ...global.button2xs,
+            padding: '20px',
+            height: '70px',
+            width: '100%',
+            fontSize: '20px',
           }}
           onClick={cancel}
         >
           Cancel
         </Button>
-        <Button sx={{ ...global.button1 }} onClick={confirm}>
+        <Button
+          sx={{
+            ...global.button1xs,
+            width: '100%',
+            height: '70px',
+            fontSize: '20px',
+          }}
+          onClick={confirm}
+        >
           Approve
         </Button>
       </DialogActions>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
-import { Typography, Grid, Button, Checkbox } from '@mui/material';
+import { Typography, Grid, Button } from '@mui/material';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
@@ -13,10 +13,8 @@ import {
 } from './../../firebase/auth';
 import DataTable from '../../components/tableWithSort';
 import DeleteDialog from './../../components/common/deleteDialog';
-import { setDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore';
-import { auth } from '../../firebase/firebase-config';
+import { doc, updateDoc } from 'firebase/firestore';
 import { db } from './../../firebase/firebase-config';
-import { async } from '@firebase/util';
 import { toast } from 'react-toastify';
 
 export default function ListOfNgo() {

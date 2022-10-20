@@ -27,7 +27,7 @@ import AddNgo from './pages/SuperAdmin/addngo';
 import ViewNgo from './pages/SuperAdmin/viewngo';
 
 import PagenotFound from './PagenotFound';
-import IsLoggedIn, { logout } from './firebase/auth';
+import IsLoggedIn from './firebase/auth';
 import { auth } from './firebase/firebase-config';
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';

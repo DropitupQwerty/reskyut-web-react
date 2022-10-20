@@ -4,10 +4,7 @@ import {
   Box,
   Paper,
   Typography,
-  Avatar,
-  TextField,
   Button,
-  FormGroup,
   FormControl,
   OutlinedInput,
 } from '@mui/material';
@@ -18,20 +15,13 @@ import {
   getDoc,
   collection,
   doc,
-  getDocs,
   query,
-  where,
-  arrayUnion,
   orderBy,
-  setDoc,
   addDoc,
   serverTimestamp,
   onSnapshot,
-  updateDoc,
 } from 'firebase/firestore';
-import { async } from '@firebase/util';
 import { auth, db } from '../firebase/firebase-config';
-import SenderInfo from './senderInfo';
 import { useParams } from 'react-router-dom';
 import ReceiveMessage from './common/receiveMessage';
 
@@ -80,19 +70,6 @@ export default function MessageArea() {
     };
     getIfDisable();
   }, [id]);
-
-  // useEffect(() => {
-  //   const get = async () => {
-  //     await updateDoc(
-  //       doc(db, `ngoshelters/${auth.currentUser.uid}/adoptionlist/${id}`),
-  //       {
-  //         lastMessagePreview: lastMessage[0].message,
-  //         lastMessageTime: lastMessage[0].timestamp,
-  //       }
-  //     );
-  //   };
-  //   get();
-  // }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

@@ -31,7 +31,6 @@ const MessagesLists = ({ lastMessage }) => {
         uid: detail.id,
       }));
       setLastMessages(message[0]);
-      console.log(message[0].message);
     });
   }, []);
 
