@@ -97,11 +97,11 @@ export default function AnimalListing() {
       renderCell: (rows) => {
         return rows.row.status === 'listed' ? (
           <Typography variant="caption" color="#749F82">
-            listed
+            Listed
           </Typography>
         ) : (
           <Typography variant="caption" color="#F2F200">
-            unlisted
+            Unlisted
           </Typography>
         );
       },

@@ -81,7 +81,6 @@ export default function ViewAnimal() {
             sx={style.button}
             component={Link}
             to="/admin/postofngo"
-            selected={window.location.pathname.includes('/admin/postofngo')}
           >
             <ArrowBackIosIcon />
           </Button>

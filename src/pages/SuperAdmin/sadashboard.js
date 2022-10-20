@@ -7,10 +7,24 @@ import { Paper, Typography, Box } from '@mui/material';
 import global from '../../styles/global';
 import { Oval } from 'react-loader-spinner';
 import { GetAccounts, getNgoCount } from './../../firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 export default function SaDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [accounts, setAccounts] = useState();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const authToken = sessionStorage.getItem('Auth Token');
+
+    if (authToken) {
+      navigate('/admin/dashboard');
+    }
+
+    if (!authToken) {
+      navigate('/login');
+    }
+  });
 
   useEffect(() => {
     const allAccounts = async () => {

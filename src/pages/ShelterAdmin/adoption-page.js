@@ -115,6 +115,8 @@ export default function AdoptionPage() {
       headerName: 'Email',
       flex: 1,
     },
+
+    { field: 'petToAdopt', headerName: 'Wants To adopt', minWidth: 150 },
     {
       field: 'timestamp',
       headerName: 'Date',
@@ -125,7 +127,6 @@ export default function AdoptionPage() {
         return <Typography variant="caption">{date}</Typography>;
       },
     },
-    { field: 'petToAdopt', headerName: 'Wants To adopt', minWidth: 150 },
     {
       field: 'score',
       headerName: 'Score',

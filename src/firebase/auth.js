@@ -41,8 +41,11 @@ const { backendURL } = config;
 // Login Account
 export async function login(loginEmail, loginPassword) {
   await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
-    .then((res) => {
-      toast.success('Account Login');
+    .then((response) => {
+      sessionStorage.setItem(
+        'Auth Token',
+        response._tokenResponse.refreshToken
+      );
     })
     .catch((error) => {
       toast.warn(error.code);
