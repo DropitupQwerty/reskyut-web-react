@@ -44,6 +44,17 @@ export default function AdoptionHistory() {
         </Link>
       ),
     },
+    {
+      field: 'time',
+      headerName: 'Date',
+      flex: 1,
+      renderCell: (rows) => {
+        const time = rows.row.time;
+        const date = time.toDate().toDateString();
+
+        return <Typography variant="caption">{date}</Typography>;
+      },
+    },
     { field: 'petToAdopt', headerName: 'Wants To adopt', minWidth: 150 },
     {
       field: 'isDecline',

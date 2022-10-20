@@ -113,7 +113,7 @@ export default function App() {
           <Route path="/Page-Not-Found" element={<PagenotFound />} />
         </Routes>
       </Router>
-      <ToastContainer />
+      <ToastContainer autoClose={2000} />
     </ThemeProvider>
   );
 }

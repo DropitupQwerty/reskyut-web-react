@@ -18,6 +18,7 @@ import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
 import { register } from '../../firebase/auth';
 import Loader from './../../components/common/loader';
+import { serverTimestamp } from 'firebase/firestore';
 
 export default function AddNgo() {
   const [isLoading, setIsLoading] = useState();
@@ -33,6 +34,7 @@ export default function AddNgo() {
     isAdmin: false,
     isDisable: false,
     isDelete: false,
+    dateCreated: serverTimestamp(),
   });
   const [image, setImage] = useState([]);
   const [previewImage, setPreviewImage] = useState();

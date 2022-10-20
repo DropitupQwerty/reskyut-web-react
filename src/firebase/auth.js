@@ -277,21 +277,18 @@ export const getAnimalProfile = async (id) => {
 //Update Animal Profile
 export const updateAnimalProfile = async (id, inputs, images) => {
   if (images.length !== 0) {
-    await updateDoc(
-      doc(db, `pets/${id}`),
-      {
-        ...inputs,
-        imageURL: deleteField(),
-        timestamp: serverTimestamp(),
-      },
-      { merge: false }
-    ).then((docRef) => {
+    await updateDoc(doc(db, `pets/${id}`), {
+      ...inputs,
+      imageURL: deleteField(),
+    }).then((docRef) => {
       uploadMultipleImage(images, id);
     });
-  } else if (images.length > 9) {
-    alert('Must upload 9 images or less');
   } else {
-    alert('Must add a photo');
+    await updateDoc(doc(db, `pets/${id}`), {
+      ...inputs,
+    }).then(() => {
+      toast.success('Sucessfully Updated', { autoClose: 2000 });
+    });
   }
 };
 
@@ -387,8 +384,9 @@ export const updateAccountPassword = async (values, email) => {
 
 export const listAdoptor = async (userAccount) => {
   let dataNeed = {};
-  const { id, photoURL, displayName } = userAccount || {};
+  const { id, photoURL, displayName, email } = userAccount || {};
   const docRef = doc(db, `users/${id}`);
+
   const formSnap = await getDoc(doc(docRef, '/form/form'));
   const AdoptionInfo = await getDoc(
     doc(db, `matches/${id}${auth.currentUser?.uid}`)
@@ -405,8 +403,10 @@ export const listAdoptor = async (userAccount) => {
       id: id,
       name: displayName,
       facebookURL: formSnap.data()?.BestWayToContact,
+      timestamp: AdoptionInfo.data()?.timestamp,
       petToAdopt: 'Deleted',
       petToAdoptId: '',
+      email: email,
       score: formSnap.data()?.score,
     };
   } else {
@@ -415,7 +415,9 @@ export const listAdoptor = async (userAccount) => {
       isApprovedAdoptor: AdoptionInfo.data()?.isApprovedAdoptor,
       isDeclined: AdoptionInfo.data()?.isDeclined,
       id: id,
+      timestamp: AdoptionInfo.data()?.timestamp,
       name: displayName,
+      email: email,
       facebookURL: formSnap.data()?.BestWayToContact,
       petToAdopt: petInfo.data()?.name,
       petToAdoptId: petInfo.data()?.id,
@@ -562,6 +564,8 @@ export const updateMessageField = async (
 };
 
 export const approveAdoption = async (user, notifMessage) => {
+  console.log('user Approve ADdoption', user);
+  await movePending(user);
   await sendNotification(user, notifMessage)
     .then(async (r) => {
       moveToHistory(user, r, false, true, notifMessage);
@@ -574,7 +578,6 @@ export const approveAdoption = async (user, notifMessage) => {
     { isAdopted: true, status: 'unlisted' },
     { merge: true }
   );
-  await deletePending(user);
   const q = query(
     collection(db, `matches`),
     where('petToAdopt', '==', user?.petToAdoptId),
@@ -591,10 +594,10 @@ export const approveAdoption = async (user, notifMessage) => {
       const notif = `Adoption is closed. We have already found ${user?.petToAdopt} 's New Parents`;
       sendNotification(u, notif).then(async (r) => {
         moveToHistory(u, r, true, false, notifMessage);
+        await movePending(u);
       });
     });
   });
-  await movePending(user);
 };
 
 export const declineAdoption = async (user, notifMessage) => {
@@ -606,19 +609,21 @@ export const declineAdoption = async (user, notifMessage) => {
       updateMessageField(user, true, false);
     });
 
-  deletePending(user);
+  // deletePending(user);
 };
 
 export const movePending = async (user) => {
-  const userRef = doc(db, `users/${user.id}`);
-  await getDoc(userRef, `pending/${user.petToAdoptId}`).then((res) => {
-    console.log(res.data());
+  console.log(user);
 
-    addDoc(collection(db, `users/${user.id}/adopted`), {
-      ...res.data(),
-    });
-  });
-  await deletePending(user);
+  await getDoc(doc(db, `users/${user.id}/pending/${user.petToAdoptId}`)).then(
+    (pendingPet) => {
+      console.log(pendingPet.data());
+      addDoc(collection(db, `users/${user.id}/adopted`), {
+        ...pendingPet.data(),
+      });
+    }
+  );
+  // await deletePending(user);
 };
 
 export const deletePending = async (user) => {
@@ -663,7 +668,7 @@ export const uploadMultipleImage = async (images, id) => {
   });
   Promise.all(promises)
     .then(() => {
-      alert('Pet added to databse');
+      toast.success('Succesfull Uploaded');
     })
     .then((err) => console.log(err));
 };

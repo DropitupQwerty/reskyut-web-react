@@ -59,7 +59,8 @@ export default function AdoptionPage() {
 
   const handleInfoDialog = async (event, rows) => {
     setOpen(true);
-
+    setUser(rows.row);
+    console.log(rows.row);
     await getDoc(doc(db, `users/${rows.id}/form/form`)).then((res) => {
       setMoreInfo(res.data());
     });
@@ -108,16 +109,21 @@ export default function AdoptionPage() {
   };
 
   const columns = [
-    { field: 'name', headerName: 'Display Name', minWidth: 150 },
+    { field: 'name', headerName: 'Display Name', minWidth: 150, flex: 1 },
     {
-      field: 'facebookURL',
-      headerName: 'Contacts',
+      field: 'email',
+      headerName: 'Email',
       flex: 1,
-      renderCell: (params) => (
-        <Link href={params.row.facebookURL} target="_blank">
-          {params.row.facebookURL}
-        </Link>
-      ),
+    },
+    {
+      field: 'timestamp',
+      headerName: 'Date',
+      flex: 1,
+      renderCell: (rows) => {
+        const time = rows.row.timestamp;
+        const date = time.toDate().toDateString();
+        return <Typography variant="caption">{date}</Typography>;
+      },
     },
     { field: 'petToAdopt', headerName: 'Wants To adopt', minWidth: 150 },
     {

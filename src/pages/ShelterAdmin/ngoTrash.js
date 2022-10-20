@@ -130,7 +130,7 @@ export default function NgoTrash() {
       />
       <Grid item xs>
         <Typography variant="h4" align="center">
-          <DeleteIcon color="primary" /> <b>Animal Trash</b>
+          <DeleteIcon color="primary" /> <b>Deleted Animals</b>
         </Typography>
       </Grid>
       <Grid item xs>

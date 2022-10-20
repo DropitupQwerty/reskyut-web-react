@@ -28,6 +28,7 @@ import { doc } from 'firebase/firestore';
 import { setDoc } from 'firebase/firestore';
 import { auth, db } from '../../../firebase/firebase-config';
 import { deleteDoc } from 'firebase/firestore';
+import { serverTimestamp } from 'firebase/firestore';
 
 export default function AnimalListing() {
   const [animalData, setAnimalData] = useState([]);
@@ -59,6 +60,7 @@ export default function AnimalListing() {
       doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${animal.id}`),
       {
         ...animal.row,
+        dateDeleted: serverTimestamp(),
       }
     ).then(async () => {
       await deleteDoc(doc(db, `pets/${animal.id}`));
@@ -80,14 +82,41 @@ export default function AnimalListing() {
     },
     { field: 'age', sortable: false, headerName: 'Age', width: 150 },
     { field: 'gender', sortable: false, headerName: 'Gender', minWidth: 150 },
+
     {
       field: 'pet_category',
       sortable: false,
       headerName: 'Pet Category',
       minWidth: 50,
     },
-    { field: 'status', sortable: false, headerName: 'Status', minWidth: 50 },
+    {
+      field: 'status',
+      sortable: false,
+      headerName: 'Status',
+      minWidth: 50,
+      renderCell: (rows) => {
+        return rows.row.status === 'listed' ? (
+          <Typography variant="caption" color="#749F82">
+            listed
+          </Typography>
+        ) : (
+          <Typography variant="caption" color="#F2F200">
+            unlisted
+          </Typography>
+        );
+      },
+    },
+    {
+      field: 'timestamp',
+      headerName: 'Date Added',
 
+      renderCell: (rows) => {
+        const time = rows.row.timestamp;
+        const date = time.toDate().toDateString();
+        return <Typography variant="caption">{date}</Typography>;
+      },
+      minWidth: 150,
+    },
     {
       field: 'Delete Animal',
       headerName: 'Delete Animal',
