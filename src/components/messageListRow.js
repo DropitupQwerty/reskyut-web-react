@@ -68,6 +68,9 @@ const MessagesLists = ({ lastMessage }) => {
                 >
                   {lastMessages?.message}
                 </Typography>
+                <Typography variant="caption">
+                  {/* {lastMessages?.toDate().toDateString()} */}
+                </Typography>
               </React.Fragment>
             }
           />

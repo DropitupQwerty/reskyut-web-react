@@ -29,7 +29,7 @@ import {
 } from 'firebase/auth';
 import axios from 'axios';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { arrayUnion } from 'firebase/firestore';
+import { arrayUnion, orderBy, onSnapshot } from 'firebase/firestore';
 import config from '../services/config.json';
 
 import { toast } from 'react-toastify';
@@ -41,11 +41,8 @@ const { backendURL } = config;
 // Login Account
 export async function login(loginEmail, loginPassword) {
   await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
-    .then((response) => {
-      sessionStorage.setItem(
-        'Auth Token',
-        response._tokenResponse.refreshToken
-      );
+    .then((res) => {
+      toast.success('Account Login');
     })
     .catch((error) => {
       toast.warn(error.code);
@@ -398,6 +395,19 @@ export const listAdoptor = async (userAccount) => {
     doc(db, `pets/${AdoptionInfo.data()?.petToAdopt}`)
   );
 
+  // const messageRef = collection(
+  //   db,
+  //   `matches/${id}${auth.currentUser.uid}/messages`
+  // );
+
+  // // const mq = query(messageRef, orderBy('timestamp', 'desc'));
+  // // onSnapshot(mq, async (querySnapshot) => {
+  // //   const message = querySnapshot.docs.map((detail) => ({
+  // //     ...detail.data(),
+  // //     uid: detail.id,
+  // //   }));
+  // // });
+
   if (!petInfo.exists()) {
     dataNeed = {
       photoURL: photoURL,
@@ -612,7 +622,7 @@ export const declineAdoption = async (user, notifMessage) => {
       updateMessageField(user, true, false);
     });
 
-  // deletePending(user);
+  deletePending(user);
 };
 
 export const movePending = async (user) => {

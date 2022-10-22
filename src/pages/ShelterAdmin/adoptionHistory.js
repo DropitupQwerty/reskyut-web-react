@@ -7,17 +7,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useNavigate } from 'react-router-dom';
 import DataTable from '../../components/tableWithSort';
-import {
-  getDocs,
-  collection,
-  query,
-  doc,
-  getDoc,
-  deleteDoc,
-} from 'firebase/firestore';
+import { getDocs, collection, query, doc, getDoc } from 'firebase/firestore';
 import { auth, db } from './../../firebase/firebase-config';
 import HistoryIcon from '@mui/icons-material/History';
-import { async } from '@firebase/util';
 
 export default function AdoptionHistory() {
   const navigate = useNavigate();
@@ -26,7 +18,6 @@ export default function AdoptionHistory() {
   // const [decline, setDecline] = useState(false);
   // const [declineUser, setDeclineUser] = useState();
   const [moreInfo, setMoreInfo] = useState();
-  const [selectedUser, setSelectedUser] = useState();
   // const [declinedMessage, setDeclinedMessage] = useState();
 
   // const handleClick = (event, rows) =>
@@ -58,8 +49,8 @@ export default function AdoptionHistory() {
       headerName: 'Date',
       flex: 1,
       renderCell: (rows) => {
-        const timestamp = rows.row.time;
-        const date = timestamp.toDate().toDateString();
+        const time = rows.row.time;
+        const date = time.toDate().toDateString();
 
         return <Typography variant="caption">{date}</Typography>;
       },
@@ -139,14 +130,8 @@ export default function AdoptionHistory() {
     const selectedRowsData = ids.map((id) =>
       adoptionRow.find((row) => row.id === id)
     );
-    setSelectedUser(selectedRowsData);
+    console.log(selectedRowsData);
   };
-
-  const onDeleteMultiple = async () => {
-    selectedUser.map(() => {});
-  };
-
-  console.log(selectedUser);
 
   return (
     <ShelterAdminLayout>
@@ -157,10 +142,10 @@ export default function AdoptionHistory() {
       </Grid>
       <Grid item xs>
         <Button>
-          <DeleteIcon color="primary" /> Delete
+          <RefreshIcon color="primary" />
         </Button>
         <Button>
-          <DeleteIcon color="primary" /> Delete All
+          <DeleteIcon color="primary" />
         </Button>
       </Grid>
 

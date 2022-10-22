@@ -44,7 +44,7 @@ export default function MessageArea() {
         displayName: auth.currentUser?.displayName,
         photoURL: auth.currentUser.photoURL,
         timestamp: serverTimestamp(),
-        userID: auth.currentUser.uid,
+        userId: auth.currentUser.uid,
       });
     }
   };
@@ -91,7 +91,7 @@ export default function MessageArea() {
         }}
       >
         {messages.map((message) => {
-          return message.userID === auth.currentUser.uid ? (
+          return message.userId === auth.currentUser.uid ? (
             <SenderMessage key={message.id} message={message} />
           ) : (
             <ReceiveMessage key={message.id} message={message} />

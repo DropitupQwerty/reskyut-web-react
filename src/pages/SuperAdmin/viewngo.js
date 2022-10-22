@@ -221,11 +221,4 @@ const style = {
   textfield: {
     height: '49px',
   },
-  button1: {
-    width: '52px',
-    height: '52px',
-    borderRadius: '10px',
-    border: '1px solid #E8E6EA',
-    m: 1,
-  },
 };

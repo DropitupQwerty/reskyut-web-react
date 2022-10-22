@@ -16,6 +16,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
@@ -29,6 +30,7 @@ import { setDoc } from 'firebase/firestore';
 import { auth, db } from '../../../firebase/firebase-config';
 import { deleteDoc } from 'firebase/firestore';
 import { serverTimestamp } from 'firebase/firestore';
+import { updateDoc } from 'firebase/firestore';
 
 export default function AnimalListing() {
   const [animalData, setAnimalData] = useState([]);
@@ -36,6 +38,7 @@ export default function AnimalListing() {
   const [open, setOpen] = useState();
   const [animal, setAnimal] = useState();
   const [message, setMessage] = useState();
+  const [selectedAnimals, setSelectedAnimals] = useState([]);
 
   useEffect(() => {
     const getPostList = async () => {
@@ -97,11 +100,11 @@ export default function AnimalListing() {
       renderCell: (rows) => {
         return rows.row.status === 'listed' ? (
           <Typography variant="caption" color="#749F82">
-            Listed
+            listed
           </Typography>
         ) : (
           <Typography variant="caption" color="#F2F200">
-            Unlisted
+            unlisted
           </Typography>
         );
       },
@@ -152,6 +155,32 @@ export default function AnimalListing() {
     },
   ];
 
+  const onRowsSelectionHandler = (ids) => {
+    const selectedRowsData = ids.map((id) =>
+      animalData.find((row) => row.id === id)
+    );
+    console.log(selectedRowsData);
+    setSelectedAnimals(selectedRowsData);
+  };
+
+  const multipleUnlist = () => {
+    selectedAnimals.map(async (sa) => {
+      console.log(sa.id);
+      await updateDoc(doc(db, `pets/${sa.id}`), {
+        status: 'unlisted',
+      });
+    });
+  };
+
+  const multipleList = () => {
+    selectedAnimals.map(async (sa) => {
+      console.log(sa.id);
+      await updateDoc(doc(db, `pets/${sa.id}`), {
+        status: 'listed',
+      });
+    });
+  };
+
   return (
     <ShelterAdminLayout>
       <DeleteDialog
@@ -182,15 +211,22 @@ export default function AnimalListing() {
       </Grid>
 
       <Grid item xs>
-        <Button>
-          <RefreshIcon color="primary" />
+        <Button onClick={multipleList}>
+          <FormatListBulletedIcon color="primary" /> List Pet
+        </Button>
+        <Button onClick={multipleUnlist}>
+          <FormatListBulletedIcon color="primary" /> Unlist Pet
         </Button>
         <Button>
           <DeleteIcon color="primary" />
         </Button>
       </Grid>
 
-      <DataTable rows={animalData} columns={columns} />
+      <DataTable
+        rows={animalData}
+        columns={columns}
+        checkboxSelected={onRowsSelectionHandler}
+      />
     </ShelterAdminLayout>
   );
 }
