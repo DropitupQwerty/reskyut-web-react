@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 //styles
 import logoReskyut from '../src/assets/logoReskyut.webp';
@@ -104,6 +104,7 @@ export default function SignIn() {
                 onChange={handleChange}
               />
             </FormControl>
+
             <FormControl fullWidth>
               <Button
                 type="submit"
@@ -114,6 +115,18 @@ export default function SignIn() {
                 Login
               </Button>
             </FormControl>
+            <Typography
+              sx={{
+                padding: '10px 10px',
+                margin: 'auto',
+                fontSize: '13px',
+              }}
+              color="primary"
+              component={Link}
+              to={'/forgotpassword'}
+            >
+              Forgot Password?
+            </Typography>
           </FormGroup>
         </Box>
       );

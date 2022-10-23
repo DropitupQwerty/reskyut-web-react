@@ -29,6 +29,7 @@ import { auth } from '../firebase/firebase-config';
 import { onAuthStateChanged } from 'firebase/auth';
 import HistoryIcon from '@mui/icons-material/History';
 import DeleteIcon from '@mui/icons-material/Delete';
+import LogoutDialog from './common/logoutConfirmationDialog';
 
 const drawerWidth = 240;
 
@@ -98,11 +99,11 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function ShelterAdminLayout({ children }) {
-  const navigate = useNavigate('');
-
+  const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [user, setUser] = useState();
+  const [logoutDialog, setLogoutDialog] = useState(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
@@ -141,6 +142,17 @@ export default function ShelterAdminLayout({ children }) {
       icon: <DeleteIcon color="primary" />,
     },
   ];
+
+  const handleConfirm = () => {
+    logout();
+  };
+
+  const handleOpenLogoutDialog = () => {
+    setLogoutDialog(true);
+  };
+  const handleCancel = () => {
+    setLogoutDialog(false);
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -253,7 +265,7 @@ export default function ShelterAdminLayout({ children }) {
               px: 3,
               flexGrow: '1',
             }}
-            onClick={() => logout()}
+            onClick={() => handleOpenLogoutDialog()}
           >
             <ListItemIcon
               sx={{
@@ -270,6 +282,11 @@ export default function ShelterAdminLayout({ children }) {
       </Drawer>
 
       <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '100px' }}>
+        <LogoutDialog
+          open={logoutDialog}
+          confirm={handleConfirm}
+          cancel={handleCancel}
+        />
         {children}
       </Box>
     </Box>

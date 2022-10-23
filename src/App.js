@@ -38,6 +38,7 @@ import NgoTrash from './pages/ShelterAdmin/ngoTrash';
 import { ToastContainer } from 'react-toastify';
 import AdminNgoTrash from './pages/SuperAdmin/adminNgoTrash';
 import AdoptionHistory from './pages/ShelterAdmin/adoptionHistory';
+import ForgotPassword from './forgotPassword';
 
 export default function App() {
   const user = IsLoggedIn();
@@ -105,6 +106,7 @@ export default function App() {
           {/* Super Admin */}
           {Path()}
           <Route index element={<SignIn />} />;
+          <Route path="/forgotpassword" element={<ForgotPassword />} />;
           <Route
             path="*"
             element={<Navigate to="/Page-Not-Found" replace={true} />}

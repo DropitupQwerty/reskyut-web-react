@@ -4,21 +4,9 @@ import { Link } from 'react-router-dom';
 import global from '../../../styles/global';
 import ShelterAdminLayout from '../../../components/shelterAdminLayout';
 
-import {
-  Paper,
-  Typography,
-  Grid,
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material';
+import { Typography, Grid, Button } from '@mui/material';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import DeleteIcon from '@mui/icons-material/Delete';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { ListUpdate } from '../../../firebase/auth';
 import { useState } from 'react';

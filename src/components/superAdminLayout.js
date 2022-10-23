@@ -28,6 +28,9 @@ import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase/firebase-config';
+import LogoutDialog from './common/logoutConfirmationDialog';
+import { logout } from '../firebase/auth';
+import { useState } from 'react';
 
 const drawerWidth = 240;
 
@@ -98,7 +101,8 @@ const Drawer = styled(MuiDrawer, {
 
 export default function SuperAdminLayout({ children }) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
+  const [logoutDialog, setLogoutDialog] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -141,6 +145,17 @@ export default function SuperAdminLayout({ children }) {
       icon: <DeleteIcon color="primary" />,
     },
   ];
+
+  const handleConfirm = () => {
+    logout();
+  };
+
+  const handleOpenLogoutDialog = () => {
+    setLogoutDialog(true);
+  };
+  const handleCancel = () => {
+    setLogoutDialog(false);
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -248,7 +263,7 @@ export default function SuperAdminLayout({ children }) {
               px: 3,
               flexGrow: '1',
             }}
-            onClick={() => signOut(auth)}
+            onClick={() => handleOpenLogoutDialog()}
           >
             <ListItemIcon
               sx={{
@@ -266,6 +281,11 @@ export default function SuperAdminLayout({ children }) {
       </Drawer>
 
       <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '100px' }}>
+        <LogoutDialog
+          open={logoutDialog}
+          confirm={handleConfirm}
+          cancel={handleCancel}
+        />
         {children}
       </Box>
     </Box>

@@ -171,7 +171,6 @@ export default function AddAnimal() {
                       <MenuItem value={'Kitten'}>Kitten</MenuItem>
                       <MenuItem value={'Puppy'}>Puppy</MenuItem>
                       <MenuItem value={'Adult'}>Adult</MenuItem>
-                      <MenuItem value={'Senior'}>Senior</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
