@@ -27,6 +27,7 @@ export default function ForgotPassword() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState();
+  const [counter, setCounter] = React.useState(120);
 
   const [input, setInputs] = useState({
     loginEmail: '',
@@ -38,25 +39,24 @@ export default function ForgotPassword() {
   };
 
   const handleSend = () => {
-    var actionCodeSettings = {
-      // After password reset, the user will be give the ability to go back
-      // to this page.
-      url: 'reskyut.vercel.app',
-      handleCodeInApp: false,
-    };
-
-    sendPasswordResetEmail(auth, input.loginEmail, actionCodeSettings)
-      .then(() => {
-        console.log('send');
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-        console.log(errorCode);
-        console.log(errorMessage);
-        // ..
-      });
+    // counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+    // var actionCodeSettings = {
+    //   // After password reset, the user will be give the ability to go back
+    //   // to this page.
+    //   url: 'reskyut.vercel.app',
+    //   handleCodeInApp: false,
+    // };
+    // sendPasswordResetEmail(auth, input.loginEmail, actionCodeSettings)
+    //   .then(() => {
+    //     console.log('send');
+    //   })
+    //   .catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    //     console.log(errorCode);
+    //     console.log(errorMessage);
+    //     // ..
+    //   });
   };
 
   const showLoad = () => {
@@ -93,6 +93,7 @@ export default function ForgotPassword() {
                     <EmailIcon />
                   </InputAdornment>
                 }
+                endAdornment={counter}
               />
             </FormControl>
 
@@ -127,6 +128,9 @@ export default function ForgotPassword() {
 
   return (
     <Box sx={{ ...global.boxContainer }}>
+      {/* <div className="App">
+        <div>Countdown: {counter === 0 ? 'Time over' : counter}</div>
+      </div> */}
       <Paper elevation={3} sx={{ ...global.signInPaper, position: 'relative' }}>
         <Box>
           <Box
