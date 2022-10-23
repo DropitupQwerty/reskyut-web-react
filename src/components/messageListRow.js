@@ -32,7 +32,7 @@ const MessagesLists = ({ lastMessage }) => {
       }));
       setLastMessages(message[0]);
     });
-  }, []);
+  }, [lastMessage]);
 
   return (
     <Box>

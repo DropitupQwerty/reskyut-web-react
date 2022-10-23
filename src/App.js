@@ -48,7 +48,6 @@ export default function App() {
       setCurrent(currentUser);
     });
   }, []);
-  console.log(current);
 
   function Path() {
     if (user?.loggedIn) {

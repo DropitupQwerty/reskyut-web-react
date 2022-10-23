@@ -6,7 +6,13 @@ import SenderInfo from '../../components/senderInfo';
 import MessageArea from './../../components/messageArea';
 
 import { listAdoptor } from './../../firebase/auth';
-import { query, collection, onSnapshot, where } from 'firebase/firestore';
+import {
+  query,
+  collection,
+  onSnapshot,
+  where,
+  orderBy,
+} from 'firebase/firestore';
 import { auth } from '../../firebase/firebase-config';
 import { db } from './../../firebase/firebase-config';
 import getMatchedUserInfo from './../../lib/getMatchedUserInfo';

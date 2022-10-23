@@ -20,6 +20,7 @@ import {
   addDoc,
   serverTimestamp,
   onSnapshot,
+  updateDoc,
 } from 'firebase/firestore';
 import { auth, db } from '../firebase/firebase-config';
 import { useParams } from 'react-router-dom';
@@ -47,6 +48,9 @@ export default function MessageArea() {
         userId: auth.currentUser.uid,
       });
     }
+    await updateDoc(doc(db, `matches/${id}${rid}`), {
+      timestamp: serverTimestamp(),
+    });
   };
 
   const handleChange = (event) => {
