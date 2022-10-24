@@ -43,6 +43,7 @@ import {
   updatePassword,
 } from 'firebase/auth';
 import LoaderDialog from '../../components/common/loaderDialog';
+import { toast } from 'react-toastify';
 
 export default function Profile() {
   const [isLoading, setIsLoading] = useState(false);
@@ -123,13 +124,19 @@ export default function Profile() {
     setOpen(false);
   };
 
+  const [a, setA] = useState([]);
+
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    await updateAccountPassword({ ...values }, inputs.email);
-
-    setOpen(false);
+    if (values.newPassword === values.confirmPassword) {
+      await updateAccountPassword({ ...values }, inputs.email).then((r) => {
+        console.log(r);
+      });
+    } else {
+      toast.warn('Password not Match');
+    }
 
     setLoaderMessage('Updating');
     setTimeout(() => {

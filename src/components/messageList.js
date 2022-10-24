@@ -80,8 +80,8 @@ export default function MessageList({ acc }) {
             ? acc
                 .sort(
                   (a, b) =>
-                    b.timestamp.toDate().valueOf() -
-                    a.timestamp.toDate().valueOf()
+                    b?.timestamp.toDate().valueOf() -
+                    a?.timestamp.toDate().valueOf()
                 )
                 .map((a) => {
                   return (

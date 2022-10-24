@@ -24,7 +24,7 @@ import { toast } from 'react-toastify';
 export default function AnimalListing() {
   const [animalData, setAnimalData] = useState([]);
   const [isLoading, setIsloading] = useState();
-  const [open, setOpen] = useState();
+  const [open, setOpen] = useState(false);
   const [animal, setAnimal] = useState();
   const [message, setMessage] = useState();
   const [selectedAnimals, setSelectedAnimals] = useState([]);

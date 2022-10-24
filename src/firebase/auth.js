@@ -382,6 +382,11 @@ export const updateAccountPassword = async (values, email) => {
         toast.success('Password Updated');
         success.push(true);
       })
+      .then(() => {
+        updateDoc(doc(db, `ngoshelters/${auth.currentUser.uid}`), {
+          password: values.newPassword,
+        });
+      })
       .catch((error) => {
         toast.warn(error.code);
         success.push(false);
@@ -599,12 +604,21 @@ export const approveAdoption = async (user, notifMessage) => {
     })
     .then(async () => {
       updateMessageField(user, false, true);
+    })
+    .catch((error) => {
+      console.log(error.code);
     });
   await updateDoc(
     doc(db, `pets/${user?.petToAdoptId}`),
     { isAdopted: true, status: 'unlisted' },
     { merge: true }
-  );
+  )
+    .catch((error) => {
+      console.log(error.code);
+    })
+    .finally(() => {
+      toast.success('Sucessfully Approved');
+    });
   const q = query(
     collection(db, `matches`),
     where('petToAdopt', '==', user?.petToAdoptId),
@@ -634,6 +648,12 @@ export const declineAdoption = async (user, notifMessage) => {
     })
     .then(async () => {
       updateMessageField(user, true, false);
+    })
+    .catch((error) => {
+      alert(error.code);
+    })
+    .finally(() => {
+      toast.success('Sucessfully Decline');
     });
 
   deletePending(user);

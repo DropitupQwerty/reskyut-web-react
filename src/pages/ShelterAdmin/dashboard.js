@@ -108,14 +108,12 @@ export default function Dashboard() {
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      <b>Adoptor Name</b>
-                    </TableCell>
-                    <TableCell>
-                      <b>Wants to Adopt</b>
-                    </TableCell>
-                  </TableRow>
+                  <TableCell>
+                    <b>Adoptor Name</b>
+                  </TableCell>
+                  <TableCell>
+                    <b>Wants to Adopt</b>
+                  </TableCell>
                 </TableHead>
                 {adoptToday.slice(0, 5).map((at) => {
                   return (

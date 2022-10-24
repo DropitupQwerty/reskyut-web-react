@@ -10,13 +10,18 @@ import {
   Card,
   CardMedia,
   Link,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase/firebase-config';
+import { doc, getDoc, query, collection, getDocs } from 'firebase/firestore';
+import { auth, db } from '../firebase/firebase-config';
 import Loader from '../components/common/loader';
 import Box from '@mui/material/Box';
 import global from '../styles/global';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { async } from '@firebase/util';
 
 export default function SenderInfo() {
   const [form, setForm] = useState();
@@ -25,10 +30,11 @@ export default function SenderInfo() {
   const [isLoading, setIsLoading] = useState();
   const { id, rid } = useParams();
   const [adoptionStatus, setAdoptionStatus] = useState();
+  const [adoptedPet, setAdoptedPet] = useState([]);
 
   const { text1, text2, text3 } = style;
   const { BestWayToContact, FullAddress } = form || {};
-  const { displayName, About, photoURL } = info || {};
+  const { displayName, About, photoURL, email } = info || {};
   const { name, pet_category, desc, gender, imageURL, age } = petInfo || {};
 
   useEffect(() => {
@@ -37,6 +43,20 @@ export default function SenderInfo() {
       //Get User Info
       const docRef = doc(db, `users/${id}`);
       const docSnap = await getDoc(docRef);
+
+      const q = query(collection(db, `users/${id}/adopted`));
+      await getDocs(q).then((r) => {
+        let adopted = [];
+        r.docs.map(async (r) => {
+          const petInfo = doc(db, `pets/${r.data().petID}`);
+          const petInfoSnap = await getDoc(petInfo);
+          console.log(petInfoSnap.data());
+          adopted.push(petInfoSnap.data());
+          setAdoptedPet(adopted);
+        });
+      });
+      console.log(adoptedPet);
+
       setInfo(docSnap.data());
       //Get Fulladdress and Fb URL
       const formSnap = await getDoc(doc(docRef, '/form/form'));
@@ -90,6 +110,7 @@ export default function SenderInfo() {
           </Box>
           <Box noWrap sx={{ p: 1 }}>
             <Typography sx={text1}>{displayName}</Typography>
+            <Typography>{email || ''}</Typography>
             <Link href={BestWayToContact} target="_blank">
               <Typography
                 sx={
@@ -100,8 +121,11 @@ export default function SenderInfo() {
                 {BestWayToContact || ''}
               </Typography>
             </Link>
+
             <Box>
-              <Typography sx={({ paddingTop: '20px' }, text2)}>
+              <Typography
+                sx={({ paddingTop: '20px', marginTop: '20px' }, text2)}
+              >
                 Location
               </Typography>
               <Typography variant="caption">
@@ -113,6 +137,43 @@ export default function SenderInfo() {
         <Box>
           <Typography sx={text2}>About</Typography>
           <Typography variant="caption">{About || 'No Information'}</Typography>
+        </Box>
+        <Box>
+          <Typography
+            color="primary"
+            variant="h6"
+            fontWeight="bold"
+            sx={{ textAlign: 'center' }}
+          >
+            Pets Adopted
+          </Typography>
+          <Box
+            sx={{
+              maxHeight: '200px',
+              overflow: 'scroll',
+              overflowX: 'hidden',
+              padding: '20px',
+              margin: 'auto',
+            }}
+          >
+            {adoptedPet.map((pet) => {
+              return (
+                <Accordion>
+                  <AccordionSummary
+                    aria-controls="panel1d-content"
+                    id="panel1d-header"
+                  >
+                    <Typography>{pet.name}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography fontWeight={'bold'}>
+                      Ngo: {pet.shelterName}
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>
+              );
+            })}
+          </Box>
         </Box>
         <Box sx={{ paddingTop: '20px' }}>
           <Typography
@@ -188,7 +249,7 @@ export default function SenderInfo() {
                   alignItems: 'center',
                   width: '50%',
                 }}
-                primary={<Typography sx={text2}>Pet Category:</Typography>}
+                primary={<Typography sx={text2}>Pet Category : </Typography>}
                 secondary={<Typography sx={text3}>{pet_category} </Typography>}
               />
               <ListItemText
@@ -250,10 +311,12 @@ const style = {
   },
   text3: {
     fontSize: '14px',
-    overflow: 'hidden',
+    maxWidth: '100%',
     display: '-webkit-box',
-    WebkitLineClamp: '4',
     WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 3,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   desc: {
     height: '25px',
