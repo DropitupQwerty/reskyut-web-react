@@ -22,13 +22,12 @@ import logoReskyut from '../src/assets/logoReskyut.webp';
 import Loader from './components/common/loader';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from './firebase/firebase-config';
+import { useCallback } from 'react';
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [status, setStatus] = useState();
-  const [counter, setCounter] = React.useState(120);
-
+  const [sendStatus, setSendStatus] = useState('Send');
   const [input, setInputs] = useState({
     loginEmail: '',
   });
@@ -38,8 +37,29 @@ export default function ForgotPassword() {
     setInputs({ ...input, [e.target.name]: e.target.value });
   };
 
-  const handleSend = () => {
-    // counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+  const [timer, setTimer] = useState(60);
+  const timeOutCallback = useCallback(
+    () => setTimer((currTimer) => currTimer - 1),
+    []
+  );
+
+  useEffect(() => {
+    timer > 0 && setTimeout(timeOutCallback, 1000);
+  }, [timer, timeOutCallback]);
+
+  console.log(timer);
+
+  const resetTimer = function () {
+    if (!timer) {
+      setTimer(60);
+    }
+  };
+
+  const handleResend = () => {};
+
+  const handleSend = (e) => {
+    setSendStatus('Resend');
+
     // var actionCodeSettings = {
     //   // After password reset, the user will be give the ability to go back
     //   // to this page.
@@ -68,15 +88,15 @@ export default function ForgotPassword() {
       );
     } else {
       return (
-        <Box component="form" validate>
-          <FormGroup>
+        <Box>
+          <Button onClick={resetTimer}>Resend OTP ({timer})</Button>
+          <FormGroup validate>
             <Typography
               color="primary"
               sx={{ textAlign: 'center', margin: '40px 0 10px 0' }}
             >
               Reset your password
             </Typography>
-
             <FormControl fullWidth>
               <Typography variant="caption" sx={{ margin: ' 0 20px' }}>
                 Enter the email address associated with your account and we'll
@@ -93,20 +113,30 @@ export default function ForgotPassword() {
                     <EmailIcon />
                   </InputAdornment>
                 }
-                endAdornment={counter}
               />
             </FormControl>
-
             <FormControl fullWidth>
-              <Button
-                type="submit"
-                onClick={() => handleSend()}
-                sx={{
-                  margin: '10px 20px',
-                }}
-              >
-                Send
-              </Button>
+              {sendStatus === 'Send' ? (
+                <Button
+                  type="submit"
+                  sx={{
+                    margin: '10px 20px',
+                  }}
+                  onClick={() => handleSend()}
+                >
+                  Send
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  onClick={() => handleResend()}
+                  sx={{
+                    margin: '10px 20px',
+                  }}
+                >
+                  Resend
+                </Button>
+              )}
               <Typography
                 sx={{
                   padding: '10px 10px',
