@@ -3,6 +3,7 @@ import { auth } from './firebase-config';
 import {
   createUserWithEmailAndPassword,
   EmailAuthProvider,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
@@ -41,8 +42,16 @@ const { backendURL } = config;
 // Login Account
 export async function login(loginEmail, loginPassword) {
   await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
-    .then((res) => {
-      toast.success('Account Login');
+    .then(async (res) => {
+      await getDoc(doc(db, `ngoshelters/${res.user.uid}`)).then((res) => {
+        res.data().isAdmin
+          ? toast.success('Admin Successfully Login')
+          : !res.data().isAdmin
+          ? res.data().isDisable || res.data().isDelete
+            ? toast.warn('Account Disable or Deleted')
+            : toast.success('Succesfully Login')
+          : toast.warn('Not A valid admin');
+      });
     })
     .catch((error) => {
       toast.warn(error.code);
@@ -113,7 +122,7 @@ export const register = async (inputs, image) => {
             ...inputs,
           }).then(() => {
             console.log('dpName', user.displayName);
-            alert('NGO USER CREATED');
+            toast.success('Ngo Account Created');
             signOut(auth2);
           });
         })
@@ -232,9 +241,9 @@ export const AddSubData = async (inputs, images) => {
       uploadMultipleImage(images, docRef.id);
     });
   } else if (images.length > 9) {
-    alert('Must upload 9 images or less');
+    toast.error('Maximum of 9 pictures');
   } else {
-    alert('Must add a photo');
+    toast.error('Please Insert Atleast 1 Picture');
   }
 };
 
@@ -358,28 +367,32 @@ export const updateAccountInfo = async (inputs, image) => {
 };
 
 export const updateAccountPassword = async (values, email) => {
-  console.log(values);
-  try {
-    if (values.confirmPassword === values.newPassword) {
-      const user = auth.currentUser;
+  let success = [];
 
-      const credential = EmailAuthProvider.credential(
-        user.email,
-        values.currentPassword
-      );
-      reauthenticateWithCredential(user, credential)
-        .then(() => {
-          updatePassword(user, values.newPassword);
-          toast.success('Password Updated');
-        })
-        .catch((error) => {
-          toast.warn(error.code);
-        });
-      console.log('Readd');
-    }
-  } catch (error) {
-    toast.error(error.code);
+  if (values.confirmPassword === values.newPassword) {
+    const user = auth.currentUser;
+
+    const credential = EmailAuthProvider.credential(
+      user.email,
+      values.currentPassword
+    );
+    reauthenticateWithCredential(user, credential)
+      .then(() => {
+        updatePassword(user, values.newPassword);
+        toast.success('Password Updated');
+        success.push(true);
+      })
+      .catch((error) => {
+        toast.warn(error.code);
+        success.push(false);
+      });
+    console.log('Readd');
+  } else {
+    toast.error('Password not match');
+    success.push(true);
   }
+
+  return success;
 };
 
 export const listAdoptor = async (userAccount) => {
@@ -488,6 +501,7 @@ export const moveToTrash = async (rows) => {
         ...rows.row,
         adminDelete: true,
       });
+      toast.success('Successfully Deleted');
     })
     .then(async () => {
       await deleteDoc(doc(db, `pets/${rows.row.id}`), {
@@ -517,8 +531,8 @@ export const restoreAnimal = async (rows) => {
               )
             );
           })
-          .then(() => {
-            alert('Animal Restored');
+          .finally(() => {
+            toast.success('Animal Restored');
           });
       });
     })
@@ -681,7 +695,25 @@ export const uploadMultipleImage = async (images, id) => {
   });
   Promise.all(promises)
     .then(() => {
-      toast.success('Succesfull Uploaded');
+      toast.success('Successfully Created');
     })
     .then((err) => console.log(err));
+};
+
+export const resetPassword = (loginEmail) => {
+  var actionCodeSettings = {
+    // After password reset, the user will be give the ability to go back
+    // to this page.
+    url: 'http://localhost:3000/',
+    handleCodeInApp: false,
+  };
+  sendPasswordResetEmail(auth, loginEmail, actionCodeSettings)
+    .then(() => {
+      console.log('send');
+      toast.success('Please Check your Emails');
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      toast.success(errorCode);
+    });
 };

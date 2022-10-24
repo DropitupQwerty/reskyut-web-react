@@ -19,6 +19,7 @@ import { auth, db } from '../../../firebase/firebase-config';
 import { deleteDoc } from 'firebase/firestore';
 import { serverTimestamp } from 'firebase/firestore';
 import { updateDoc } from 'firebase/firestore';
+import { toast } from 'react-toastify';
 
 export default function AnimalListing() {
   const [animalData, setAnimalData] = useState([]);
@@ -55,6 +56,7 @@ export default function AnimalListing() {
       }
     ).then(async () => {
       await deleteDoc(doc(db, `pets/${animal.id}`));
+      toast.success('Succesfully Deleted');
     });
     setOpen(false);
   };

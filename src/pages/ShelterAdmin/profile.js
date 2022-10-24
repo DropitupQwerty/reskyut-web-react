@@ -42,11 +42,13 @@ import {
   reauthenticateWithCredential,
   updatePassword,
 } from 'firebase/auth';
+import LoaderDialog from '../../components/common/loaderDialog';
 
 export default function Profile() {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState([]);
+  const [loaderMessage, setLoaderMessage] = useState();
   const [previewImage, setPreviewImage] = useState([]);
   const [inputs, setInputs] = useState({
     firstName: '',
@@ -121,8 +123,18 @@ export default function Profile() {
     setOpen(false);
   };
 
-  const handleUpdatePassword = async () => {
-    updateAccountPassword({ ...values }, inputs.email);
+  const handleUpdatePassword = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    await updateAccountPassword({ ...values }, inputs.email);
+
+    setOpen(false);
+
+    setLoaderMessage('Updating');
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
   };
 
   const handleUpdate = () => {
@@ -167,6 +179,8 @@ export default function Profile() {
 
   return (
     <ShelterAdminLayout>
+      <LoaderDialog open={isLoading} message={loaderMessage} />
+
       <Box>
         <Stack
           direction="row"

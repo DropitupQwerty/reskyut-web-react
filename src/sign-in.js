@@ -20,6 +20,7 @@ import { getUser, login, logout } from './firebase/auth';
 import { auth } from './firebase/firebase-config';
 import Loader from './components/common/loader';
 import { onAuthStateChanged } from 'firebase/auth';
+import { toast } from 'react-toastify';
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -50,13 +51,15 @@ export default function SignIn() {
           await getUser().then((userDoc) => {
             if (userDoc.isAdmin) {
               navigate('/admin/dashboard');
-            } else if (!userDoc.isAdmin && !userDoc.isDisable) {
-              navigate('/dashboard');
-            } else if (userDoc.isDisable || userDoc.isDelete) {
-              setStatus(
-                'This Account was Disabled or Deleted, Please Contact the Admin'
-              );
-              logout();
+            } else if (!userDoc.isAdmin) {
+              if (userDoc.isDisable || userDoc.isDelete) {
+                setStatus(
+                  'This Account was Disabled or Deleted, Please Contact the Admin'
+                );
+                logout();
+              } else {
+                navigate('/dashboard');
+              }
             }
           });
         }

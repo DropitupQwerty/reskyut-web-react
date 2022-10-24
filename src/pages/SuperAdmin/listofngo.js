@@ -16,12 +16,15 @@ import DeleteDialog from './../../components/common/deleteDialog';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from './../../firebase/firebase-config';
 import { toast } from 'react-toastify';
+import DisableDialog from './../../components/common/disableDialog';
+import { async } from '@firebase/util';
 
 export default function ListOfNgo() {
   const [accounts, setAccounts] = useState([]);
   const [userId, setUserId] = useState();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState();
+  const [disable, setDisable] = useState(false);
 
   const handleDialog = (event, rows) => {
     setOpen(true);
@@ -32,16 +35,15 @@ export default function ListOfNgo() {
 
   const handleClose = () => {
     setOpen(false);
+    setDisable(false);
   };
 
   const handleStatus = async (event, rows) => {
-    const allAcc = [...accounts];
-    const index = allAcc.indexOf(rows.row);
-    allAcc[index] = { ...allAcc[index] };
-    allAcc[index].isDisable = !allAcc[index].isDisable;
-    setAccounts(allAcc);
-    console.log(rows.row.isDisable);
-    rows.row.isDisable ? enableAccount(rows.id) : disableAccount(rows.id);
+    setUserId(rows.row);
+    setDisable(true);
+    !rows.row.isDisable
+      ? setMessage('Enable this Account?')
+      : setMessage('Disable this Account');
   };
 
   const handleDeleteAccount = async () => {
@@ -63,6 +65,18 @@ export default function ListOfNgo() {
       .catch((error) => {
         toast.warn(error.code);
       });
+  };
+
+  const handleDisableAccount = async () => {
+    const allAcc = [...accounts];
+    const index = allAcc.indexOf(userId);
+    allAcc[index] = { ...allAcc[index] };
+    allAcc[index].isDisable = !allAcc[index].isDisable;
+    setAccounts(allAcc);
+    console.log(userId.isDisable);
+    userId.isDisable ? enableAccount(userId.id) : disableAccount(userId.id);
+
+    setDisable(false);
   };
 
   const columns = [
@@ -93,14 +107,14 @@ export default function ListOfNgo() {
       field: 'Status',
       sortable: false,
       renderCell: (rows) => {
-        return !rows.row.isDisable ? (
+        return rows.row.isDisable ? (
           <Button
             sx={{ ...global.button2xsyellow }}
             onClick={(event) => {
               handleStatus(event, rows);
             }}
           >
-            Disable
+            Disabled
           </Button>
         ) : (
           <Button
@@ -109,7 +123,7 @@ export default function ListOfNgo() {
               handleStatus(event, rows);
             }}
           >
-            Enable
+            Enabled
           </Button>
         );
       },
@@ -159,6 +173,12 @@ export default function ListOfNgo() {
 
   return (
     <SuperAdminLayout>
+      <DisableDialog
+        open={disable}
+        cancel={handleClose}
+        confirm={handleDisableAccount}
+        message={message}
+      />
       <DeleteDialog
         open={open}
         cancel={handleClose}

@@ -13,6 +13,7 @@ import {
   OutlinedInput,
   FormHelperText,
   InputAdornment,
+  inputClasses,
 } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 import logoReskyut from '../src/assets/logoReskyut.webp';
@@ -23,6 +24,8 @@ import Loader from './components/common/loader';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from './firebase/firebase-config';
 import { useCallback } from 'react';
+import Timer from './timer';
+import { resetPassword } from './firebase/auth';
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -37,46 +40,9 @@ export default function ForgotPassword() {
     setInputs({ ...input, [e.target.name]: e.target.value });
   };
 
-  const [timer, setTimer] = useState(60);
-  const timeOutCallback = useCallback(
-    () => setTimer((currTimer) => currTimer - 1),
-    []
-  );
-
-  useEffect(() => {
-    timer > 0 && setTimeout(timeOutCallback, 1000);
-  }, [timer, timeOutCallback]);
-
-  console.log(timer);
-
-  const resetTimer = function () {
-    if (!timer) {
-      setTimer(60);
-    }
-  };
-
-  const handleResend = () => {};
-
   const handleSend = (e) => {
     setSendStatus('Resend');
-
-    // var actionCodeSettings = {
-    //   // After password reset, the user will be give the ability to go back
-    //   // to this page.
-    //   url: 'reskyut.vercel.app',
-    //   handleCodeInApp: false,
-    // };
-    // sendPasswordResetEmail(auth, input.loginEmail, actionCodeSettings)
-    //   .then(() => {
-    //     console.log('send');
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     console.log(errorCode);
-    //     console.log(errorMessage);
-    //     // ..
-    //   });
+    resetPassword(input.email);
   };
 
   const showLoad = () => {
@@ -89,8 +55,7 @@ export default function ForgotPassword() {
     } else {
       return (
         <Box>
-          <Button onClick={resetTimer}>Resend OTP ({timer})</Button>
-          <FormGroup validate>
+          <FormGroup validate={true}>
             <Typography
               color="primary"
               sx={{ textAlign: 'center', margin: '40px 0 10px 0' }}
@@ -103,7 +68,7 @@ export default function ForgotPassword() {
                 you a link to reset your password
               </Typography>
               <OutlinedInput
-                sx={{ margin: '10px 20px' }}
+                sx={{ margin: '10px 20px 0 20px' }}
                 name="loginEmail"
                 placeholder="Email"
                 value={input.loginEmail}
@@ -114,6 +79,11 @@ export default function ForgotPassword() {
                   </InputAdornment>
                 }
               />
+              {sendStatus === 'Resend' ? (
+                <FormHelperText sx={{ marginLeft: '20px' }}>
+                  Please check your email or spam messages
+                </FormHelperText>
+              ) : null}
             </FormControl>
             <FormControl fullWidth>
               {sendStatus === 'Send' ? (
@@ -127,14 +97,8 @@ export default function ForgotPassword() {
                   Send
                 </Button>
               ) : (
-                <Button
-                  type="submit"
-                  onClick={() => handleResend()}
-                  sx={{
-                    margin: '10px 20px',
-                  }}
-                >
-                  Resend
+                <Button>
+                  <Timer email={input.loginEmail} />
                 </Button>
               )}
               <Typography

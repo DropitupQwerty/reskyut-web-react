@@ -25,12 +25,14 @@ export default function ViewNgo() {
   const [account, setAccount] = useState([]);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState();
+  const [button, setButton] = useState();
 
   useEffect(() => {
     const getUsers = async () => {
       const docRef = doc(db, 'ngoshelters', id);
       const docSnap = await getDoc(docRef);
       setAccount(docSnap.data());
+      setButton(docSnap.data().isDisable);
     };
     getUsers();
   }, []);
@@ -46,36 +48,18 @@ export default function ViewNgo() {
     desc,
   } = account || {};
 
-  const handleDialog = () => {
-    setOpen(true);
-    setMessage('Disable Account?');
-  };
-  const handleCancel = () => {
-    setOpen(false);
-  };
-  const handleConfirm = () => {
-    const acc = account;
-    acc.isDisable = !account.isDisable;
-    setAccount(acc);
-
-    setOpen(false);
-    disableAccount(account.id);
-  };
   const handleEnable = () => {
-    const disAcc = !account.isDisable;
-    setAccount(disAcc);
-    enableAccount(account.id);
+    const acc = account;
+    acc.isDisable = !acc.isDisable;
+    account.isDisable ? disableAccount(account.id) : enableAccount(account.id);
+    // setAccount(acc);
+    setButton(acc.isDisable);
+    console.log(acc.isDisable);
   };
 
   return (
     <div>
       <AppBarAdminLayout>
-        <DeleteDialog
-          open={open}
-          message={message}
-          cancel={handleCancel}
-          confirm={handleConfirm}
-        />
         <Box>
           <Button
             elevation={3}
@@ -187,15 +171,15 @@ export default function ViewNgo() {
                   justifyContent: 'center',
                 }}
               >
-                {!account.isDisable ? (
+                {button === true ? (
                   <Button
                     sx={{
                       ...global.button2,
                       fontWeight: 'bold',
                     }}
-                    onClick={handleDialog}
+                    onClick={() => handleEnable()}
                   >
-                    Disable
+                    Account Disabled
                   </Button>
                 ) : (
                   <Button
@@ -203,9 +187,9 @@ export default function ViewNgo() {
                       ...global.button1,
                       fontWeight: 'bold',
                     }}
-                    onClick={handleEnable}
+                    onClick={() => handleEnable()}
                   >
-                    Enable
+                    Account Enabled
                   </Button>
                 )}
               </Grid>

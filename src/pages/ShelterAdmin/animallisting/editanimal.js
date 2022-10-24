@@ -17,7 +17,7 @@ import {
 
 import ImageIcon from '@mui/icons-material/Image';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-
+import WarningIcon from '@mui/icons-material/Warning';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   AddSubData,
@@ -298,6 +298,7 @@ export default function AddAnimal() {
               Upload an image file, pick one from your media library, or add one
               with a URL.
             </Typography>
+
             <Button
               variant="contained"
               component="label"
@@ -355,6 +356,12 @@ export default function AddAnimal() {
                   </Grid>
                 ))}
               </Grid>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <WarningIcon sx={{ margin: '3px', color: '#FFCC00' }} />
+                <Typography color="#FFCC00" variant="caption">
+                  Uploading new photos will delete the existing photos
+                </Typography>
+              </Box>
             </Box>
           </Box>
         </Box>

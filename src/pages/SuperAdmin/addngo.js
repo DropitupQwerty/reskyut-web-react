@@ -19,6 +19,7 @@ import SuperAdminLayout from '../../components/superAdminLayout';
 import { register } from '../../firebase/auth';
 import Loader from './../../components/common/loader';
 import { serverTimestamp } from 'firebase/firestore';
+import { toast } from 'react-toastify';
 
 export default function AddNgo() {
   const [isLoading, setIsLoading] = useState();
@@ -36,6 +37,18 @@ export default function AddNgo() {
     isDelete: false,
     dateCreated: serverTimestamp(),
   });
+
+  const {
+    firstName,
+    middleName,
+    lastName,
+    username,
+    email,
+    password,
+    display_name,
+    desc,
+  } = inputs;
+
   const [image, setImage] = useState([]);
   const [previewImage, setPreviewImage] = useState();
 
@@ -46,7 +59,20 @@ export default function AddNgo() {
 
   const handleCreateAccount = async () => {
     setIsLoading(true);
-    await register(inputs, image);
+
+    firstName &&
+    middleName &&
+    lastName &&
+    username &&
+    email &&
+    password &&
+    display_name &&
+    desc
+      ? image.length === 1
+        ? await register(inputs, image)
+        : toast.warn('Photo required')
+      : toast.warn('Please Fill up all Fields');
+
     setIsLoading(false);
   };
 
@@ -57,6 +83,7 @@ export default function AddNgo() {
   useEffect(() => {
     const handlePreview = () => {
       const selectedFIles = [];
+
       image.map((file) => {
         console.log('file', file);
         return selectedFIles.push(URL.createObjectURL(file));

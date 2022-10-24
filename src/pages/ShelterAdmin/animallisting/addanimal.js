@@ -25,6 +25,7 @@ import { AddSubData } from './../../../firebase/auth';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { auth } from '../../../firebase/firebase-config';
 import LoaderDialog from './../../../components/common/loaderDialog';
+import { toast } from 'react-toastify';
 
 export default function AddAnimal() {
   const [images, setImages] = useState([]);
@@ -55,7 +56,11 @@ export default function AddAnimal() {
   const handleImage = (evnt) => {
     const targetFiles = evnt.target.files;
     const targetFilesObject = [...targetFiles];
-    setImages(targetFilesObject);
+    if (targetFiles.length < 9) {
+      setImages(targetFilesObject);
+    } else {
+      toast.warn('Maximum of 9 image');
+    }
   };
 
   //Preview image into Object Url
