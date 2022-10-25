@@ -79,14 +79,24 @@ export default function AdoptionPage() {
     setOpenApproveDialog(false);
   };
 
+  const handleCancelDecline = (e) => {
+    e.preventDefault();
+    setNotifMessage('');
+    setDecline(false);
+  };
+
+  const confirmApprove = async () => {
+    approveAdoption(user, notifMessage);
+    setOpenApproveDialog(false);
+    const approvedAccount = adoptionRow.filter((a) => a.id !== user.id);
+    setAdoptionRow(approvedAccount);
+  };
+
   const handleSendDecline = async (e) => {
     e.preventDefault();
-
     declineAdoption(user, notifMessage);
-
     const deleteAccount = adoptionRow.filter((a) => a.id !== user.id);
     setAdoptionRow(deleteAccount);
-
     setDecline(false);
     setNotifMessage('');
   };
@@ -100,12 +110,6 @@ export default function AdoptionPage() {
       adoptionRow.find((row) => row.id === id)
     );
     console.log(selectedRowsData);
-  };
-
-  const handleCancelDecline = (e) => {
-    e.preventDefault();
-    setNotifMessage('');
-    setDecline(false);
   };
 
   const columns = [
@@ -225,13 +229,6 @@ export default function AdoptionPage() {
       // const n = [...users];
     });
   }, []);
-
-  const confirmApprove = async () => {
-    approveAdoption(user, notifMessage);
-    setOpenApproveDialog(false);
-    const approvedAccount = adoptionRow.filter((a) => a.id !== user.id);
-    setAdoptionRow(approvedAccount);
-  };
 
   return (
     <ShelterAdminLayout>

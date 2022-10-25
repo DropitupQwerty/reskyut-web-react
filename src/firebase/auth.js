@@ -413,19 +413,6 @@ export const listAdoptor = async (userAccount) => {
     doc(db, `pets/${AdoptionInfo.data()?.petToAdopt}`)
   );
 
-  // const messageRef = collection(
-  //   db,
-  //   `matches/${id}${auth.currentUser.uid}/messages`
-  // );
-
-  // // const mq = query(messageRef, orderBy('timestamp', 'desc'));
-  // // onSnapshot(mq, async (querySnapshot) => {
-  // //   const message = querySnapshot.docs.map((detail) => ({
-  // //     ...detail.data(),
-  // //     uid: detail.id,
-  // //   }));
-  // // });
-
   if (!petInfo.exists()) {
     dataNeed = {
       photoURL: photoURL,
@@ -553,6 +540,7 @@ export const sendNotification = async (user, notifMessage) => {
     name: auth.currentUser.displayName,
     petName: user?.petToAdopt,
     photoURL: auth.currentUser.photoURL,
+    isRead: 'false',
   });
   return doc;
 };
@@ -670,7 +658,7 @@ export const movePending = async (user) => {
       });
     }
   );
-  // await deletePending(user);
+  await deletePending(user);
 };
 
 export const deletePending = async (user) => {

@@ -22,6 +22,11 @@ import Box from '@mui/material/Box';
 import global from '../styles/global';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { async } from '@firebase/util';
+import ApproveDialog from './common/approveDialog';
+import DeclineDialog from './common/declineDialog';
+import { declineAdoption, listAdoptor } from '../firebase/auth';
+import getMatchedUserInfo from './../lib/getMatchedUserInfo';
+import { approveAdoption } from './../firebase/auth';
 
 export default function SenderInfo() {
   const [form, setForm] = useState();
@@ -31,6 +36,10 @@ export default function SenderInfo() {
   const { id, rid } = useParams();
   const [adoptionStatus, setAdoptionStatus] = useState();
   const [adoptedPet, setAdoptedPet] = useState([]);
+  const [openDecline, setOpenDecline] = useState(false);
+  const [openApprove, setOpenApprove] = useState(false);
+  const [notifMessage, setNotifMessage] = useState('');
+  const [user, setUser] = useState();
 
   const { text1, text2, text3 } = style;
   const { BestWayToContact, FullAddress } = form || {};
@@ -64,10 +73,17 @@ export default function SenderInfo() {
 
       //Get pet Info
       const petRef = doc(db, `matches/${id}${rid}`);
-      await getDoc(petRef).then((petSnap) => {
+      await getDoc(petRef).then(async (petSnap) => {
         setAdoptionStatus(petSnap.data());
+
+        const userInfos = await listAdoptor(
+          getMatchedUserInfo(petSnap.data()?.users, auth.currentUser.uid)
+        );
+        setUser(userInfos);
+
         const getPetInfo = async () => {
           console.log(petSnap.data());
+
           const petInfo = doc(db, `pets/${petSnap.data().petToAdopt}`);
           const petInfoSnap = await getDoc(petInfo);
           if (!petInfoSnap.exists()) {
@@ -77,6 +93,7 @@ export default function SenderInfo() {
             setIsLoading(false);
           }
         };
+
         getPetInfo();
       });
       console.log('Get Info Sender Info');
@@ -84,8 +101,61 @@ export default function SenderInfo() {
     getInfo();
   }, [id]);
 
+  useEffect(() => {}, []);
+
+  const handleApproveDialog = () => {
+    setNotifMessage(
+      `Congratulation you are the chosen adoptor for this pet ${user.petToAdopt} please proceed to the ngo shelter `
+    );
+    setOpenApprove(true);
+  };
+  const handleDeclineDialog = () => {
+    setNotifMessage(
+      `Adoption is closed. Sorry this pet is no longer available`
+    );
+    setOpenDecline(true);
+  };
+
+  const handleCancel = () => {
+    setOpenDecline(false);
+    setOpenApprove(false);
+  };
+  const handleChange = (e) => {
+    setNotifMessage(e);
+  };
+
+  const at = adoptionStatus;
+  const handleApproveAdoption = () => {
+    setOpenApprove(false);
+    approveAdoption(user, notifMessage);
+    at.isApprovedAdoptor = !at.isApprovedAdoptor;
+    setAdoptionStatus(at);
+  };
+
+  const handleSendDecline = async (e) => {
+    e.preventDefault();
+    declineAdoption(user, notifMessage);
+    setNotifMessage('');
+    at.isDeclined = !at.isDeclined;
+    setAdoptionStatus(at);
+  };
+
   return (
     <div>
+      <ApproveDialog
+        user={user?.name}
+        open={openApprove}
+        cancel={handleCancel}
+        confirm={handleApproveAdoption}
+      />
+      <DeclineDialog
+        confirm={handleSendDecline}
+        open={openDecline}
+        cancel={handleCancel}
+        onChange={handleChange}
+        value={notifMessage}
+        user={user}
+      />
       <Drawer
         sx={{
           width: 400,
@@ -163,11 +233,11 @@ export default function SenderInfo() {
                     aria-controls="panel1d-content"
                     id="panel1d-header"
                   >
-                    <Typography>{pet.name}</Typography>
+                    <Typography>{pet?.name}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography fontWeight={'bold'}>
-                      Ngo: {pet.shelterName}
+                      Ngo: {pet?.shelterName}
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
@@ -285,8 +355,18 @@ export default function SenderInfo() {
                 justifyContent: 'center',
               }}
             >
-              <Button sx={{ ...global.button2xs }}>Decline</Button>
-              <Button sx={{ ...global.button1xs }}>Approve</Button>
+              <Button
+                sx={{ ...global.button2xs }}
+                onClick={handleDeclineDialog}
+              >
+                Decline
+              </Button>
+              <Button
+                sx={{ ...global.button1xs }}
+                onClick={handleApproveDialog}
+              >
+                Approve
+              </Button>
             </Box>
           ) : (
             <Typography color="primary" textAlign="center">
