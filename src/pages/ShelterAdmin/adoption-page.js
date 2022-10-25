@@ -43,6 +43,7 @@ export default function AdoptionPage() {
   const [moreInfo, setMoreInfo] = useState();
   const [notifMessage, setNotifMessage] = useState();
   const [openApproveDialog, setOpenApproveDialog] = useState(false);
+  const [clicked, setClicked] = useState();
 
   const handleClick = (event, rows) => {
     navigate(`/message/${rows.id}/${auth.currentUser?.uid}`);
@@ -228,7 +229,7 @@ export default function AdoptionPage() {
       });
       // const n = [...users];
     });
-  }, []);
+  }, [clicked]);
 
   return (
     <ShelterAdminLayout>
@@ -252,18 +253,11 @@ export default function AdoptionPage() {
           <PetsIcon color="primary" /> <b>Adoption Page</b>
         </Typography>
       </Grid>
-      <Grid item xs>
-        <Button onClick={() => navigate('/adoptionpage')}>
-          <RefreshIcon color="primary" />
-        </Button>
-        <Button>
-          <DeleteIcon color="primary" />
-        </Button>
-      </Grid>
 
       <DataTable
         rows={adoptionRow}
         checkboxSelected={onRowsSelectionHandler}
+        checkBox={false}
         columns={columns}
       />
     </ShelterAdminLayout>

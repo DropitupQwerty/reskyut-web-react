@@ -10,6 +10,7 @@ import DataTable from '../../components/tableWithSort';
 import { getDocs, collection, query, doc, getDoc } from 'firebase/firestore';
 import { auth, db } from './../../firebase/firebase-config';
 import HistoryIcon from '@mui/icons-material/History';
+import DeleteDialog from './../../components/common/deleteDialog';
 
 export default function AdoptionHistory() {
   const navigate = useNavigate();
@@ -19,7 +20,9 @@ export default function AdoptionHistory() {
   // const [declineUser, setDeclineUser] = useState();
   const [moreInfo, setMoreInfo] = useState();
   // const [declinedMessage, setDeclinedMessage] = useState();
-
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [selected, setSelected] = useState([]);
+  const [deleteMessage, setDeleteMessage] = useState();
   // const handleClick = (event, rows) =>
 
   const handleInfoDialog = async (event, rows) => {
@@ -51,7 +54,6 @@ export default function AdoptionHistory() {
       renderCell: (rows) => {
         const time = rows.row.time;
         const date = time.toDate().toDateString();
-
         return <Typography variant="caption">{date}</Typography>;
       },
     },
@@ -125,16 +127,34 @@ export default function AdoptionHistory() {
     getRow();
   }, []);
 
+  const handleDeleteDialog = () => {
+    const c = selected.length;
+    setOpenDeleteDialog(true);
+    setDeleteMessage(
+      `Are you sure you want to the ${c} items in your history?`
+    );
+  };
+
   ///Get all selected in checkbox
   const onRowsSelectionHandler = (ids) => {
     const selectedRowsData = ids.map((id) =>
       adoptionRow.find((row) => row.id === id)
     );
-    console.log(selectedRowsData);
+    setSelected(selectedRowsData);
+  };
+  const handleConfirmDelete = () => {
+    setOpenDeleteDialog(false);
+    const item = adoptionRow.filter((a) => a.id !== selected.id);
+    setAdoptionRow(item);
   };
 
   return (
     <ShelterAdminLayout>
+      <DeleteDialog
+        open={openDeleteDialog}
+        message={deleteMessage}
+        confirm={handleConfirmDelete}
+      />
       <Grid item xs>
         <Typography variant="h4" align="center">
           <HistoryIcon color="primary" /> <b>Adoption History</b>
@@ -144,7 +164,7 @@ export default function AdoptionHistory() {
         <Button>
           <RefreshIcon color="primary" />
         </Button>
-        <Button>
+        <Button onClick={handleDeleteDialog}>
           <DeleteIcon color="primary" />
         </Button>
       </Grid>
@@ -153,6 +173,7 @@ export default function AdoptionHistory() {
         rows={adoptionRow}
         checkboxSelected={onRowsSelectionHandler}
         columns={columns}
+        checkBox={true}
       />
     </ShelterAdminLayout>
   );

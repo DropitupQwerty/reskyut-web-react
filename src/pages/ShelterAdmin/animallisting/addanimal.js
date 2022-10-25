@@ -268,19 +268,21 @@ export default function AddAnimal() {
                   <TextField
                     required
                     multiline
-                    rows={3}
+                    maxRows={5}
                     fullWidth
                     sx={{ ...global.borderRadius20 }}
                     name="desc"
                     value={inputs.desc}
                     onChange={handleChange}
                     inputProps={{
-                      maxLength: 70,
+                      maxLength: 1000,
                     }}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment sx={{ marginTop: '50px' }}>
-                          <Typography>{`${inputs.desc.length}`}/70</Typography>
+                          <Typography>
+                            {`${inputs.desc.length}`}/1000
+                          </Typography>
                         </InputAdornment>
                       ),
                     }}

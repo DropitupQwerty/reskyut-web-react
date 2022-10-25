@@ -154,21 +154,25 @@ export default function AnimalListing() {
   };
 
   const multipleUnlist = () => {
-    selectedAnimals.map(async (sa) => {
+    const unlisted = selectedAnimals.map(async (sa) => {
+      Object.assign(sa, { status: 'unlisted' });
       console.log(sa.id);
       await updateDoc(doc(db, `pets/${sa.id}`), {
         status: 'unlisted',
       });
     });
+    setSelectedAnimals(unlisted);
   };
 
   const multipleList = () => {
-    selectedAnimals.map(async (sa) => {
+    const listed = selectedAnimals.map(async (sa) => {
+      Object.assign(sa, { status: 'listed' });
       console.log(sa.id);
       await updateDoc(doc(db, `pets/${sa.id}`), {
         status: 'listed',
       });
     });
+    setSelectedAnimals(listed);
   };
 
   return (
@@ -215,6 +219,7 @@ export default function AnimalListing() {
       <DataTable
         rows={animalData}
         columns={columns}
+        checkBox={true}
         checkboxSelected={onRowsSelectionHandler}
       />
     </ShelterAdminLayout>

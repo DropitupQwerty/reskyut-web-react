@@ -140,7 +140,7 @@ export default function NgoTrash() {
         <Button></Button>
       </Grid>
 
-      <DataTable rows={animalData} columns={columns} />
+      <DataTable checkBox={true} rows={animalData} columns={columns} />
     </ShelterAdminLayout>
   );
 }

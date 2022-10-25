@@ -59,6 +59,22 @@ export default function PostOfNgo() {
     { field: 'gender', headerName: 'gender', minWidth: 150 },
     { field: 'pet_category', headerName: 'Pet Category', minWidth: 150 },
     {
+      field: 'isAdopted',
+      headerName: 'Pet status',
+      minWidth: 150,
+      renderCell: (rows) => {
+        return rows.row.isAdopted ? (
+          <Typography color="#749F82" variant="caption">
+            Adopted
+          </Typography>
+        ) : (
+          <Typography color="primary" variant="caption">
+            Posted
+          </Typography>
+        );
+      },
+    },
+    {
       field: 'Delete',
       sortable: false,
       renderCell: (rows) => {
@@ -125,36 +141,6 @@ export default function PostOfNgo() {
       </Grid>
 
       <DataTable rows={animalData} columns={columns} />
-
-      {/* <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <Checkbox />
-              </TableCell>
-              <TableCell>
-                <b>NGO Name</b>
-              </TableCell>
-              <TableCell sx={{ marginLeft: '10vw' }}>
-                <b>Pet Name</b>
-              </TableCell>
-              <TableCell>
-                <b>Age</b>
-              </TableCell>
-              <TableCell>
-                <b>Gender</b>
-              </TableCell>
-              <TableCell>
-                <b>Description</b>
-              </TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{showDataTable()}</TableBody>
-        </Table>
-      </TableContainer> */}
     </SuperAdminLayout>
   );
 }

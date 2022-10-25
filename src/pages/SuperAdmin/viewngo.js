@@ -46,6 +46,8 @@ export default function ViewNgo() {
     username,
     display_name,
     desc,
+    shelterLocLatitude,
+    shelterLocLongitude,
   } = account || {};
 
   const handleEnable = () => {
@@ -161,6 +163,26 @@ export default function ViewNgo() {
                   fullWidth
                   inputProps={{ readOnly: true }}
                 />
+              </Grid>
+              <Grid item container xs={4}>
+                <Grid item xs={12}>
+                  <Typography sx={{ fontWeight: 'bold' }}>Longitude</Typography>
+                  <TextField
+                    fullWidth
+                    name="shelterLocLatitude"
+                    value={shelterLocLongitude}
+                    inputProps={{ readOnly: true }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography sx={{ fontWeight: 'bold' }}>Latitude</Typography>
+                  <TextField
+                    fullWidth
+                    value={shelterLocLatitude}
+                    name="shelterLocLongitude"
+                    inputProps={{ readOnly: true }}
+                  />
+                </Grid>
               </Grid>
               <Grid
                 item
