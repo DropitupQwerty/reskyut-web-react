@@ -62,6 +62,8 @@ export default function Profile() {
     desc: '',
     isAdmin: false,
     photoURL: '',
+    shelterLocLatitude: '',
+    shelterLocLongitude: '',
   });
   const [values, setValues] = useState({
     currentPassword: '',
@@ -132,20 +134,31 @@ export default function Profile() {
 
     if (values.newPassword === values.confirmPassword) {
       await updateAccountPassword({ ...values }, inputs.email).then((r) => {
-        console.log(r);
+        setLoaderMessage('Updating');
+        if (!r) {
+          setOpen(false);
+          setValues({
+            [values.confirmPassword]: '',
+            [values.currentPassword]: '',
+            [values.newPassword]: '',
+          });
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+        }
       });
     } else {
       toast.warn('Password not Match');
-    }
-
-    setLoaderMessage('Updating');
-    setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
+    }
   };
 
-  const handleUpdate = () => {
-    updateAccountInfo({ ...inputs }, image);
+  const handleUpdate = async () => {
+    setIsLoading(true);
+    setLoaderMessage('Updating');
+    await updateAccountInfo({ ...inputs }, image);
+    setLoaderMessage('Done');
+    setIsLoading(false);
   };
 
   const inputsComp = [
@@ -263,18 +276,38 @@ export default function Profile() {
               );
             })}
 
-            <Grid item xs>
+            <Grid item xs={8}>
               <Typography sx={{ fontWeight: 'bold' }}>
                 Description of Shelter
               </Typography>
               <TextField
                 multiline
                 rows={5}
-                sx={{ width: '830px' }}
                 name="desc"
                 value={inputs?.desc}
                 onChange={handleChange}
+                fullWidth
               />
+            </Grid>
+            <Grid item container xs={4}>
+              <Grid item xs={12}>
+                <Typography sx={{ fontWeight: 'bold' }}>Longitude</Typography>
+                <TextField
+                  fullWidth
+                  name="shelterLocLatitude"
+                  value={inputs.shelterLocLongitude}
+                  inputProps={{ readOnly: true }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography sx={{ fontWeight: 'bold' }}>Latitude</Typography>
+                <TextField
+                  fullWidth
+                  value={inputs.shelterLocLatitude}
+                  name="shelterLocLongitude"
+                  inputProps={{ readOnly: true }}
+                />
+              </Grid>
             </Grid>
             <Grid item container xs={4} spacing={2}>
               <Grid item>

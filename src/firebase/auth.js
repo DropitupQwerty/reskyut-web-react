@@ -44,13 +44,18 @@ export async function login(loginEmail, loginPassword) {
   await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
     .then(async (res) => {
       await getDoc(doc(db, `ngoshelters/${res.user.uid}`)).then((res) => {
-        res.data().isAdmin
-          ? toast.success('Admin Successfully Login')
-          : !res.data().isAdmin
-          ? res.data().isDisable || res.data().isDelete
-            ? toast.warn('Account Disable or Deleted')
-            : toast.success('Succesfully Login')
-          : toast.warn('Not A valid admin');
+        if (res.exists()) {
+          res.data().isAdmin
+            ? toast.success('Admin Successfully Login')
+            : !res.data().isAdmin
+            ? res.data().isDisable || res.data().isDelete
+              ? toast.warn('Account Disable or Deleted')
+              : toast.success('Succesfully Login')
+            : toast.warn('Not A valid admin');
+        } else {
+          toast.warn('User not found');
+          logout();
+        }
       });
     })
     .catch((error) => {
@@ -302,12 +307,6 @@ export const updateAnimalProfile = async (id, inputs, images) => {
 };
 
 /**This Will manage the application users Request */
-//Getting the users information
-export const getUsersInfo = async () => {
-  const users = [];
-
-  return users;
-};
 
 export const updateAccountInfo = async (inputs, image) => {
   console.log('update Account', inputs);
@@ -363,41 +362,29 @@ export const updateAccountInfo = async (inputs, image) => {
       );
     });
   }
-  return;
 };
 
 export const updateAccountPassword = async (values, email) => {
-  let success = [];
+  const user = auth.currentUser;
 
-  if (values.confirmPassword === values.newPassword) {
-    const user = auth.currentUser;
-
-    const credential = EmailAuthProvider.credential(
-      user.email,
-      values.currentPassword
-    );
-    reauthenticateWithCredential(user, credential)
-      .then(() => {
-        updatePassword(user, values.newPassword);
-        toast.success('Password Updated');
-        success.push(true);
-      })
-      .then(() => {
-        updateDoc(doc(db, `ngoshelters/${auth.currentUser.uid}`), {
-          password: values.newPassword,
-        });
-      })
-      .catch((error) => {
-        toast.warn(error.code);
-        success.push(false);
+  const credential = EmailAuthProvider.credential(
+    user.email,
+    values.currentPassword
+  );
+  return reauthenticateWithCredential(user, credential)
+    .then(() => {
+      updatePassword(user, values.newPassword);
+      toast.success('Password Updated');
+    })
+    .then(async () => {
+      await updateDoc(doc(db, `ngoshelters/${auth.currentUser.uid}`), {
+        password: values.newPassword,
       });
-    console.log('Readd');
-  } else {
-    toast.error('Password not match');
-    success.push(true);
-  }
-
-  return success;
+    })
+    .catch((error) => {
+      toast.warn(error.code);
+      return error.code;
+    });
 };
 
 export const listAdoptor = async (userAccount) => {

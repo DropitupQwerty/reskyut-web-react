@@ -180,7 +180,7 @@ export default function SenderInfo() {
           </Box>
           <Box noWrap sx={{ p: 1 }}>
             <Typography sx={text1}>{displayName}</Typography>
-            <Typography>{email || ''}</Typography>
+            <Typography variant="caption">{email || ''}</Typography>
             <Link href={BestWayToContact} target="_blank">
               <Typography
                 sx={
@@ -191,7 +191,6 @@ export default function SenderInfo() {
                 {BestWayToContact || ''}
               </Typography>
             </Link>
-
             <Box>
               <Typography
                 sx={({ paddingTop: '20px', marginTop: '20px' }, text2)}

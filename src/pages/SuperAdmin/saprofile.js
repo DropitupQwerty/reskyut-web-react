@@ -26,6 +26,7 @@ import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { auth, db } from '../../firebase/firebase-config';
 import { doc, getDoc } from 'firebase/firestore';
 import LoaderDialog from '../../components/common/loaderDialog';
+import { toast } from 'react-toastify';
 
 export default function SaProfile() {
   const [open, setOpen] = useState(false);
@@ -107,18 +108,27 @@ export default function SaProfile() {
   };
 
   const handleUpdatePassword = async (e) => {
-    e.preventDefault();
     setIsLoading(true);
-
-    await updateAccountPassword({ ...values }, inputs.email).catch((error) => {
-      console.log(error.code);
-    });
-
-    setOpen(false);
-    setLoaderMessage('Updating');
-    setTimeout(() => {
+    e.preventDefault();
+    if (values.newPassword === values.confirmPassword) {
+      await updateAccountPassword({ ...values }, inputs.email).then((r) => {
+        setLoaderMessage('Updating');
+        if (!r) {
+          setOpen(false);
+          setValues({
+            [values.confirmPassword]: '',
+            [values.currentPassword]: '',
+            [values.newPassword]: '',
+          });
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+        }
+      });
+    } else {
+      toast.warn('Password not match');
       setIsLoading(false);
-    }, 3000);
+    }
   };
 
   const handleUpdate = async () => {

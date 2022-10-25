@@ -22,7 +22,7 @@ import { serverTimestamp } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 
 export default function AddNgo() {
-  const [isLoading, setIsLoading] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const [inputs, setInputs] = useState({
     firstName: '',
     middleName: '',
@@ -30,12 +30,15 @@ export default function AddNgo() {
     username: '',
     email: '',
     password: '',
+    confirmpassword: '',
     display_name: '',
     desc: '',
     isAdmin: false,
     isDisable: false,
     isDelete: false,
     dateCreated: serverTimestamp(),
+    shelterLocLatitude: '',
+    shelterLocLongitude: '',
   });
 
   const {
@@ -47,6 +50,8 @@ export default function AddNgo() {
     password,
     display_name,
     desc,
+    shelterLocLongitude,
+    shelterLocLatitude,
   } = inputs;
 
   const [image, setImage] = useState([]);
@@ -67,7 +72,9 @@ export default function AddNgo() {
     email &&
     password &&
     display_name &&
-    desc
+    desc &&
+    shelterLocLatitude &&
+    shelterLocLongitude
       ? image.length === 1
         ? await register(inputs, image)
         : toast.warn('Photo required')
@@ -92,6 +99,7 @@ export default function AddNgo() {
     };
     handlePreview();
   }, [image]);
+  console.log(inputs);
 
   return (
     <SuperAdminLayout>
@@ -147,6 +155,16 @@ export default function AddNgo() {
               marginTop: '12px',
             }}
           >
+            <Grid item xs={12}>
+              <Typography
+                sx={{ fontWeight: 'bold' }}
+                variant="h5"
+                color="primary"
+              >
+                Shelter Admin Info :
+              </Typography>
+            </Grid>
+
             <Grid item xs={4}>
               <Typography sx={{ fontWeight: 'bold' }}> Firstname</Typography>
               <FormGroup>
@@ -219,6 +237,15 @@ export default function AddNgo() {
                 </FormControl>
               </FormGroup>
             </Grid>
+            <Grid item xs={12}>
+              <Typography
+                sx={{ fontWeight: 'bold' }}
+                variant="h5"
+                color="primary"
+              >
+                Shelter Info :
+              </Typography>
+            </Grid>
 
             <Grid item xs={8}>
               <Typography sx={{ fontWeight: 'bold' }}>
@@ -233,33 +260,58 @@ export default function AddNgo() {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={4}>
-              <Typography sx={{ fontWeight: 'bold' }}>Password</Typography>
-              <FormGroup>
-                <FormControl fullWidth>
-                  <OutlinedInput
-                    name="password"
-                    value={inputs.password}
-                    onChange={handleChange}
-                    type="password"
-                  />
-                </FormControl>
-              </FormGroup>
+            <Grid item container xs={4}>
+              <Grid item xs={12}>
+                <Typography sx={{ fontWeight: 'bold' }}>Longitude</Typography>
+                <TextField
+                  fullWidth
+                  name="shelterLocLatitude"
+                  value={shelterLocLatitude}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography sx={{ fontWeight: 'bold' }}>Latitude</Typography>
+                <TextField
+                  fullWidth
+                  name="shelterLocLongitude"
+                  value={shelterLocLongitude}
+                  onChange={handleChange}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs sx={{ marginTop: '50px' }}>
-              {isLoading ? (
-                <Loader isLoading={isLoading} height={20} width={20} />
-              ) : (
-                <Button
-                  sx={{
-                    ...global.button2,
-                    fontWeight: 'bold',
-                  }}
-                  onClick={handleCreateAccount}
-                >
-                  Create Account
-                </Button>
-              )}
+
+            <Grid item container xs={4}>
+              <Grid item xs={12}>
+                <Typography sx={{ fontWeight: 'bold' }}>Password</Typography>
+                <FormGroup>
+                  <FormControl fullWidth>
+                    <OutlinedInput
+                      name="password"
+                      value={inputs.password}
+                      onChange={handleChange}
+                      type="password"
+                    />
+                  </FormControl>
+                </FormGroup>
+              </Grid>
+
+              <Grid item xs sx={{ marginTop: '50px' }}>
+                {isLoading ? (
+                  <Loader isLoading={isLoading} height={30} width={30} />
+                ) : (
+                  <Button
+                    sx={{
+                      ...global.button2,
+                      fontWeight: 'bold',
+                      width: '100%',
+                    }}
+                    onClick={handleCreateAccount}
+                  >
+                    Create Account
+                  </Button>
+                )}
+              </Grid>
             </Grid>
           </Grid>
         </Box>

@@ -5,7 +5,7 @@ import { Box, Dialog, DialogContent, Typography } from '@mui/material';
 const LoaderDialog = ({ isLoading, open, message }) => {
   return (
     <Dialog
-      open={isLoading}
+      open={open}
       PaperProps={{
         style: {
           borderRadius: 30,
