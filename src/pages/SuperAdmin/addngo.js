@@ -20,6 +20,7 @@ import { register } from '../../firebase/auth';
 import Loader from './../../components/common/loader';
 import { serverTimestamp } from 'firebase/firestore';
 import { toast } from 'react-toastify';
+import bcrypt from 'bcryptjs';
 
 export default function AddNgo() {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +31,6 @@ export default function AddNgo() {
     username: '',
     email: '',
     password: '',
-    confirmpassword: '',
     display_name: '',
     desc: '',
     isAdmin: false,
@@ -76,7 +76,12 @@ export default function AddNgo() {
     shelterLocLatitude &&
     shelterLocLongitude
       ? image.length === 1
-        ? await register(inputs, image)
+        ? await register(inputs, image).then((r) => {
+            if (r) {
+              toast.warn(r);
+            }
+            setIsLoading(false);
+          })
         : toast.warn('Photo required')
       : toast.warn('Please Fill up all Fields');
 

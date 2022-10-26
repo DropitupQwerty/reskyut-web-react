@@ -34,6 +34,7 @@ import { arrayUnion } from 'firebase/firestore';
 import config from '../services/config.json';
 import { toast } from 'react-toastify';
 import getMatchedUserInfo from './../lib/getMatchedUserInfo';
+import bcrypt from 'bcryptjs';
 
 const { backendURL } = config;
 
@@ -63,78 +64,85 @@ export async function login(loginEmail, loginPassword) {
 
 //Create account in asecondary authentication
 export const register = async (inputs, image) => {
-  await createUserWithEmailAndPassword(
+  const hashedPassword = bcrypt.hashSync(inputs.password, 10);
+
+  return await createUserWithEmailAndPassword(
     auth2,
     inputs.email,
     inputs.password
-  ).then(() => {
-    if (image.length !== 0) {
-      image.map((file) => {
-        const profileRef = ref(
-          storage,
-          `profiles/${auth2.currentUser.uid}.jpg`
-        );
-        const uploadTask = uploadBytesResumable(profileRef, file);
-        uploadTask.on(
-          'state_changed',
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-          },
-          (error) => {
-            alert('image error', error.message);
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              const user = auth2.currentUser;
-              updateProfile(user, {
-                displayName: inputs.display_name,
-                photoURL: downloadURL,
-              })
-                .then(async () => {
-                  await setDoc(
-                    doc(db, `ngoshelters/${auth2.currentUser?.uid}`),
-                    {
-                      id: user?.uid,
-                      ...inputs,
-                      photoURL: downloadURL,
-                    }
-                  ).then(() => {
-                    console.log('dpName', user.displayName);
-                    console.log('imgUrl', user.photoURL);
-                    toast.success('Ngo Account Created');
-                    signOut(auth2);
-                  });
+  )
+    .then(() => {
+      if (image.length !== 0) {
+        image.map((file) => {
+          const profileRef = ref(
+            storage,
+            `profiles/${auth2.currentUser.uid}.jpg`
+          );
+          const uploadTask = uploadBytesResumable(profileRef, file);
+          uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+              const progress =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log('Upload is ' + progress + '% done');
+            },
+            (error) => {
+              alert('image error', error.message);
+            },
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                const user = auth2.currentUser;
+                updateProfile(user, {
+                  displayName: inputs.display_name,
+                  photoURL: downloadURL,
                 })
-                .catch((error) => {
-                  console.log(error);
-                });
-            });
-          }
-        );
-      });
-    } else {
-      const user = auth2.currentUser;
-      updateProfile(user, {
-        displayName: inputs.display_name,
-      })
-        .then(async () => {
-          await setDoc(doc(db, `ngoshelters/${auth2.currentUser?.uid}`), {
-            id: user?.uid,
-            ...inputs,
-          }).then(() => {
-            console.log('dpName', user.displayName);
-            toast.success('Ngo Account Created');
-            signOut(auth2);
-          });
-        })
-        .catch((error) => {
-          console.log(error);
+                  .then(async () => {
+                    await setDoc(
+                      doc(db, `ngoshelters/${auth2.currentUser?.uid}`),
+                      {
+                        id: user?.uid,
+                        ...inputs,
+                        password: hashedPassword,
+                        photoURL: downloadURL,
+                      }
+                    ).then(() => {
+                      console.log('dpName', user.displayName);
+                      console.log('imgUrl', user.photoURL);
+                      toast.success('Ngo Account Created');
+                      signOut(auth2);
+                    });
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+              });
+            }
+          );
         });
-    }
-  });
-  return;
+      } else {
+        const user = auth2.currentUser;
+        updateProfile(user, {
+          displayName: inputs.display_name,
+        })
+          .then(async () => {
+            await setDoc(doc(db, `ngoshelters/${auth2.currentUser?.uid}`), {
+              id: user?.uid,
+              ...inputs,
+              password: hashedPassword,
+            }).then(() => {
+              console.log('dpName', user.displayName);
+              toast.success('Ngo Account Created');
+              signOut(auth2);
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    })
+    .catch((err) => {
+      return err.code;
+    });
 };
 
 //logout user
@@ -366,6 +374,8 @@ export const updateAccountInfo = async (inputs, image) => {
 export const updateAccountPassword = async (values, email) => {
   const user = auth.currentUser;
 
+  const hashedPassword = bcrypt.hashSync(values.newPassword, 10);
+
   const credential = EmailAuthProvider.credential(
     user.email,
     values.currentPassword
@@ -377,7 +387,7 @@ export const updateAccountPassword = async (values, email) => {
     })
     .then(async () => {
       await updateDoc(doc(db, `ngoshelters/${auth.currentUser.uid}`), {
-        password: values.newPassword,
+        password: hashedPassword,
       });
     })
     .catch((error) => {
