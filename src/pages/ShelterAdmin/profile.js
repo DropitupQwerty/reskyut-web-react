@@ -295,15 +295,15 @@ export default function Profile() {
                 <TextField
                   fullWidth
                   name="shelterLocLatitude"
-                  value={inputs.shelterLocLongitude}
+                  value={inputs.shelterLocLatitude}
                   inputProps={{ readOnly: true }}
                 />
               </Grid>
               <Grid item xs={12}>
-                <Typography sx={{ fontWeight: 'bold' }}>Latitude</Typography>
+                <Typography sx={{ fontWeight: 'bold' }}>Longitude</Typography>
                 <TextField
                   fullWidth
-                  value={inputs.shelterLocLatitude}
+                  value={inputs.shelterLocLongitude}
                   name="shelterLocLongitude"
                   inputProps={{ readOnly: true }}
                 />

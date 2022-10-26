@@ -267,7 +267,7 @@ export default function AddNgo() {
             </Grid>
             <Grid item container xs={4}>
               <Grid item xs={12}>
-                <Typography sx={{ fontWeight: 'bold' }}>Longitude</Typography>
+                <Typography sx={{ fontWeight: 'bold' }}>Latitude</Typography>
                 <TextField
                   fullWidth
                   name="shelterLocLatitude"
@@ -276,7 +276,7 @@ export default function AddNgo() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <Typography sx={{ fontWeight: 'bold' }}>Latitude</Typography>
+                <Typography sx={{ fontWeight: 'bold' }}>Longitude</Typography>
                 <TextField
                   fullWidth
                   name="shelterLocLongitude"

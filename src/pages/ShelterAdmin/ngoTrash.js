@@ -20,6 +20,8 @@ export default function NgoTrash() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState();
   const [animal, setAnimal] = useState();
+  const [selected, setSelected] = useState();
+  const [iconDeleteDialog, setIconDeleteDialog] = useState(false);
 
   const handleDelete = (event, rows) => {
     setOpen(true);
@@ -99,6 +101,7 @@ export default function NgoTrash() {
 
   const handleClose = () => {
     setOpen(false);
+    setIconDeleteDialog(false);
   };
   const handleConfirmDelete = async () => {
     const deletedAnimal = animalData.filter((a) => a.id !== animal.id);
@@ -121,8 +124,22 @@ export default function NgoTrash() {
     const selectedRowsData = ids.map((id) =>
       animalData.find((row) => row.id === id)
     );
-    console.log(selectedRowsData);
+    setSelected(selectedRowsData);
   };
+
+  const openDialogDeleteSelected = () => {
+    if (selected.length === 0) {
+      selected.length !== animalData.length
+        ? setMessage(
+            `Are youre you want to delete this${selected.length} items`
+          )
+        : setMessage(`Are youre you want to delete all items`);
+
+      setIconDeleteDialog(true);
+    }
+  };
+
+  const confirmMultipleDelete = () => {};
 
   useEffect(() => {
     const getpCollection = async () => {
@@ -136,11 +153,18 @@ export default function NgoTrash() {
   return (
     <ShelterAdminLayout>
       <DeleteDialog
+        open={iconDeleteDialog}
+        cancel={handleClose}
+        message={message}
+        confirm={confirmMultipleDelete}
+      />
+      <DeleteDialog
         open={open}
         cancel={handleClose}
         message={message}
         confirm={handleConfirmDelete}
       />
+
       <Grid item xs>
         <Typography variant="h4" align="center">
           <DeleteIcon color="primary" /> <b>Deleted Animals</b>
@@ -148,7 +172,7 @@ export default function NgoTrash() {
       </Grid>
       <Grid container spacing={2}>
         <Grid item>
-          <Button>
+          <Button onClick={openDialogDeleteSelected}>
             <DeleteIcon color="primary" /> <b>Delete selected</b>
           </Button>
         </Grid>

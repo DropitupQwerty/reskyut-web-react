@@ -166,19 +166,19 @@ export default function ViewNgo() {
               </Grid>
               <Grid item container xs={4}>
                 <Grid item xs={12}>
-                  <Typography sx={{ fontWeight: 'bold' }}>Longitude</Typography>
+                  <Typography sx={{ fontWeight: 'bold' }}>Latitude</Typography>
                   <TextField
                     fullWidth
                     name="shelterLocLatitude"
-                    value={shelterLocLongitude}
+                    value={shelterLocLatitude}
                     inputProps={{ readOnly: true }}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography sx={{ fontWeight: 'bold' }}>Latitude</Typography>
+                  <Typography sx={{ fontWeight: 'bold' }}>Longitude</Typography>
                   <TextField
                     fullWidth
-                    value={shelterLocLatitude}
+                    value={shelterLocLongitude}
                     name="shelterLocLongitude"
                     inputProps={{ readOnly: true }}
                   />
