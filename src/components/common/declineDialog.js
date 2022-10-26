@@ -64,9 +64,6 @@ const DeclineDialog = ({ open, cancel, confirm, onChange, value, user }) => {
               Adoption is closed. We have already found {user?.petToAdopt}'s New
               Parents
             </MenuItem>
-            <MenuItem value={`Abuso Ka ${user?.name}`}>
-              Abuso Ka ${user?.name}
-            </MenuItem>
           </Select>
         </FormControl>
       </DialogContent>

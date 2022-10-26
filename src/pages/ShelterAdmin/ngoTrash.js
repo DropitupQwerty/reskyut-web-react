@@ -128,18 +128,19 @@ export default function NgoTrash() {
   };
 
   const openDialogDeleteSelected = () => {
-    if (selected.length === 0) {
+    if (selected.length !== 0) {
+      setIconDeleteDialog(true);
       selected.length !== animalData.length
         ? setMessage(
             `Are youre you want to delete this${selected.length} items`
           )
         : setMessage(`Are youre you want to delete all items`);
-
-      setIconDeleteDialog(true);
     }
   };
 
-  const confirmMultipleDelete = () => {};
+  const confirmMultipleDelete = () => {
+    console.log('clicked');
+  };
 
   useEffect(() => {
     const getpCollection = async () => {
@@ -147,8 +148,6 @@ export default function NgoTrash() {
     };
     getpCollection();
   }, []);
-
-  console.log(animalData);
 
   return (
     <ShelterAdminLayout>

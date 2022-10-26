@@ -417,7 +417,7 @@ export const listAdoptor = async (userAccount) => {
       id: id,
       name: displayName,
       facebookURL: formSnap.data()?.BestWayToContact,
-      timestamp: AdoptionInfo.data()?.timestamp,
+      timestamp: AdoptionInfo.data()?.adoptionTime,
       petToAdopt: 'Deleted',
       petToAdoptId: '',
       email: email,
