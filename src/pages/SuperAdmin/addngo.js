@@ -281,37 +281,37 @@ export default function AddNgo() {
               </Grid>
             </Grid>
 
-            <Grid item container xs={4}>
-              <Grid item xs={12}>
-                <Typography sx={{ fontWeight: 'bold' }}>Password</Typography>
-                <FormGroup>
-                  <FormControl fullWidth>
-                    <OutlinedInput
-                      name="password"
-                      value={inputs.password}
-                      onChange={handleChange}
-                      type="password"
-                    />
-                  </FormControl>
-                </FormGroup>
-              </Grid>
+            <Grid item xs={8}>
+              {isLoading ? (
+                <Loader isLoading={isLoading} height={30} width={30} />
+              ) : (
+                <Button
+                  sx={{
+                    ...global.button2,
+                    marginTop: '25px',
+                    fontWeight: 'bold',
+                    width: '100%',
+                    height: '50px',
+                  }}
+                  onClick={handleCreateAccount}
+                >
+                  Create Account
+                </Button>
+              )}
+            </Grid>
 
-              <Grid item xs sx={{ marginTop: '50px' }}>
-                {isLoading ? (
-                  <Loader isLoading={isLoading} height={30} width={30} />
-                ) : (
-                  <Button
-                    sx={{
-                      ...global.button2,
-                      fontWeight: 'bold',
-                      width: '100%',
-                    }}
-                    onClick={handleCreateAccount}
-                  >
-                    Create Account
-                  </Button>
-                )}
-              </Grid>
+            <Grid item xs={4}>
+              <Typography sx={{ fontWeight: 'bold' }}>Password</Typography>
+              <FormGroup>
+                <FormControl fullWidth>
+                  <OutlinedInput
+                    name="password"
+                    value={inputs.password}
+                    onChange={handleChange}
+                    type="password"
+                  />
+                </FormControl>
+              </FormGroup>
             </Grid>
           </Grid>
         </Box>

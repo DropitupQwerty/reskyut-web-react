@@ -6,6 +6,7 @@ export default function DataTable({
   columns,
   checkboxSelected,
   checkBox,
+  ...rest
 }) {
   return (
     <div style={{ height: 600, width: '100%' }}>
@@ -18,6 +19,7 @@ export default function DataTable({
         onSelectionModelChange={(ids) => checkboxSelected(ids)}
         disableSelectionOnClick
         components={{ Toolbar: GridToolbar }}
+        {...rest}
       />
     </div>
   );

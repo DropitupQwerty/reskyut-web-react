@@ -8,7 +8,7 @@ import { Typography, Grid, Button } from '@mui/material';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import { ListUpdate } from '../../../firebase/auth';
+import { deleteAndBackup, ListUpdate } from '../../../firebase/auth';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import DataTable from '../../../components/tableWithSort';
@@ -28,6 +28,7 @@ export default function AnimalListing() {
   const [animal, setAnimal] = useState();
   const [message, setMessage] = useState();
   const [selectedAnimals, setSelectedAnimals] = useState([]);
+  const [openMultipleDeleteDialog, setOpenMultipleDeleteDialog] = useState();
 
   useEffect(() => {
     const getPostList = async () => {
@@ -41,27 +42,19 @@ export default function AnimalListing() {
 
   const handleDialog = (event, rows) => {
     setOpen(true);
-    setAnimal(rows);
+    setAnimal(rows.row);
     setMessage(`Move to trash?`);
   };
   const handleConfirm = async () => {
     const deletedAnimal = animalData.filter((a) => a.id !== animal.id);
     setAnimalData(deletedAnimal);
 
-    await setDoc(
-      doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${animal.id}`),
-      {
-        ...animal.row,
-        dateDeleted: serverTimestamp(),
-      }
-    ).then(async () => {
-      await deleteDoc(doc(db, `pets/${animal.id}`));
-      toast.success('Succesfully Deleted');
-    });
+    deleteAndBackup(animal);
     setOpen(false);
   };
   const handleClose = () => {
     setOpen(false);
+    setOpenMultipleDeleteDialog(false);
   };
 
   const columns = [
@@ -149,7 +142,6 @@ export default function AnimalListing() {
     const selectedRowsData = ids.map((id) =>
       animalData.find((row) => row.id === id)
     );
-    console.log(selectedRowsData);
     setSelectedAnimals(selectedRowsData);
   };
 
@@ -175,11 +167,40 @@ export default function AnimalListing() {
     setSelectedAnimals(listed);
   };
 
+  const confirmMultipleDeletion = () => {
+    if (selectedAnimals.length > 0) {
+      if (selectedAnimals.length === animalData.length) {
+        setMessage('Are you you want to delete all items?');
+      } else {
+        setMessage(
+          `Are you you want to delete this ${selectedAnimals.length} items`
+        );
+      }
+      setOpenMultipleDeleteDialog(true);
+    }
+  };
+
+  const multipleDelete = () => {
+    let _data = [...animalData];
+    selectedAnimals.map((ad) => {
+      _data = _data.filter((t) => t.id !== ad.id);
+      deleteAndBackup(ad);
+    });
+    setAnimalData(_data);
+    setOpenMultipleDeleteDialog(false);
+  };
+
   return (
     <ShelterAdminLayout>
       <DeleteDialog
         open={open}
         confirm={handleConfirm}
+        cancel={handleClose}
+        message={message}
+      />
+      <DeleteDialog
+        open={openMultipleDeleteDialog}
+        confirm={multipleDelete}
         cancel={handleClose}
         message={message}
       />
@@ -211,7 +232,7 @@ export default function AnimalListing() {
         <Button onClick={multipleUnlist}>
           <FormatListBulletedIcon color="primary" /> Unlist Pet
         </Button>
-        <Button>
+        <Button onClick={confirmMultipleDeletion}>
           <DeleteIcon color="primary" />
         </Button>
       </Grid>

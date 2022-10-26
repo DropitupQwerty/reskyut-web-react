@@ -13,6 +13,7 @@ import DeleteDialog from '../../components/common/deleteDialog';
 import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase/firebase-config';
 import ShelterAdminLayout from './../../components/shelterAdminLayout';
+import { toast } from 'react-toastify';
 
 export default function NgoTrash() {
   const [animalData, setAnimalData] = useState([]);
@@ -105,12 +106,24 @@ export default function NgoTrash() {
     console.log(animal.id);
     await deleteDoc(
       doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${animal.id}`)
-    ).then(() => {
-      alert('Pet Deleted');
-      setOpen(false);
-    });
+    )
+      .then(() => {
+        toast.success('Pet Deleted');
+        setOpen(false);
+      })
+      .catch((err) => {
+        toast.error(err.code);
+      });
     console.log('delete', animal);
   };
+
+  const onRowsSelectionHandler = (ids) => {
+    const selectedRowsData = ids.map((id) =>
+      animalData.find((row) => row.id === id)
+    );
+    console.log(selectedRowsData);
+  };
+
   useEffect(() => {
     const getpCollection = async () => {
       setAnimalData(await getTrashCollection());
@@ -133,14 +146,25 @@ export default function NgoTrash() {
           <DeleteIcon color="primary" /> <b>Deleted Animals</b>
         </Typography>
       </Grid>
-      <Grid item xs>
-        <Button>
-          <RefreshIcon color="primary" />
-        </Button>
-        <Button></Button>
+      <Grid container spacing={2}>
+        <Grid item>
+          <Button>
+            <DeleteIcon color="primary" /> <b>Delete selected</b>
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button>
+            <DeleteIcon color="primary" /> <b>Delete All</b>
+          </Button>
+        </Grid>
       </Grid>
 
-      <DataTable checkBox={true} rows={animalData} columns={columns} />
+      <DataTable
+        checkBox={true}
+        rows={animalData}
+        columns={columns}
+        checkboxSelected={onRowsSelectionHandler}
+      />
     </ShelterAdminLayout>
   );
 }

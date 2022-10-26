@@ -59,7 +59,9 @@ export default function AdminNgoTrash() {
   const confirmDelete = async () => {
     await deleteDoc(
       doc(`ngoshelters/${auth.currentUser.uid}/accountstrash/${userId.id}`)
-    ).then(() => {});
+    ).then(() => {
+      toast.success('Deleted succesfully');
+    });
   };
 
   const columns = [

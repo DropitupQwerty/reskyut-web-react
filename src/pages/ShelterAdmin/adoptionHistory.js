@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Grid, Button, Link } from '@mui/material';
+import { Typography, Grid, Button, Link, Box } from '@mui/material';
 import global from '../../styles/global';
 
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
@@ -144,6 +144,7 @@ export default function AdoptionHistory() {
   };
   const handleConfirmDelete = () => {
     setOpenDeleteDialog(false);
+
     const item = adoptionRow.filter((a) => a.id !== selected.id);
     setAdoptionRow(item);
   };
@@ -160,21 +161,27 @@ export default function AdoptionHistory() {
           <HistoryIcon color="primary" /> <b>Adoption History</b>
         </Typography>
       </Grid>
-      <Grid item xs>
+      {/* <Grid item xs>
         <Button>
           <RefreshIcon color="primary" />
         </Button>
         <Button onClick={handleDeleteDialog}>
           <DeleteIcon color="primary" />
         </Button>
-      </Grid>
-
-      <DataTable
-        rows={adoptionRow}
-        checkboxSelected={onRowsSelectionHandler}
-        columns={columns}
-        checkBox={true}
-      />
+      </Grid> */}
+      <Box sx={{ marginTop: '50px' }}>
+        <DataTable
+          rows={adoptionRow}
+          checkboxSelected={onRowsSelectionHandler}
+          columns={columns}
+          checkBox={false}
+          initialState={{
+            sorting: {
+              sortModel: [{ field: 'time', sort: 'desc' }],
+            },
+          }}
+        />
+      </Box>
     </ShelterAdminLayout>
   );
 }

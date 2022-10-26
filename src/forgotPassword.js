@@ -13,7 +13,6 @@ import {
   OutlinedInput,
   FormHelperText,
   InputAdornment,
-  inputClasses,
 } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 import logoReskyut from '../src/assets/logoReskyut.webp';
@@ -21,9 +20,6 @@ import logoReskyut from '../src/assets/logoReskyut.webp';
 //firebase
 
 import Loader from './components/common/loader';
-import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from './firebase/firebase-config';
-import { useCallback } from 'react';
 import Timer from './timer';
 import { resetPassword } from './firebase/auth';
 

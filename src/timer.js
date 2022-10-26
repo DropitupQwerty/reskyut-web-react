@@ -31,7 +31,7 @@ export const Timer = ({ email }) => {
   };
 
   const clearTimer = (e) => {
-    setTimer('00:30');
+    setTimer('00:60');
     if (Ref.current) clearInterval(Ref.current);
     const id = setInterval(() => {
       startTimer(e);
@@ -42,7 +42,7 @@ export const Timer = ({ email }) => {
   const getDeadTime = () => {
     let deadline = new Date();
 
-    deadline.setSeconds(deadline.getSeconds() + 30);
+    deadline.setSeconds(deadline.getSeconds() + 60);
     return deadline;
   };
 

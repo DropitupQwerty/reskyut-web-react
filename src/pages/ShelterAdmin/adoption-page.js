@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Grid, Button, Link } from '@mui/material';
+import { Typography, Grid, Button, Link, Box } from '@mui/material';
 import global from '../../styles/global';
 
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
@@ -253,13 +253,19 @@ export default function AdoptionPage() {
           <PetsIcon color="primary" /> <b>Adoption Page</b>
         </Typography>
       </Grid>
-
-      <DataTable
-        rows={adoptionRow}
-        checkboxSelected={onRowsSelectionHandler}
-        checkBox={false}
-        columns={columns}
-      />
+      <Box sx={{ marginTop: '50px' }}>
+        <DataTable
+          rows={adoptionRow}
+          checkboxSelected={onRowsSelectionHandler}
+          checkBox={false}
+          columns={columns}
+          initialState={{
+            sorting: {
+              sortModel: [{ field: 'time', sort: 'desc' }],
+            },
+          }}
+        />
+      </Box>
     </ShelterAdminLayout>
   );
 }

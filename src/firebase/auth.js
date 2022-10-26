@@ -30,11 +30,9 @@ import {
 } from 'firebase/auth';
 import axios from 'axios';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { arrayUnion, orderBy, onSnapshot } from 'firebase/firestore';
+import { arrayUnion } from 'firebase/firestore';
 import config from '../services/config.json';
-
 import { toast } from 'react-toastify';
-import { async } from '@firebase/util';
 import getMatchedUserInfo from './../lib/getMatchedUserInfo';
 
 const { backendURL } = config;
@@ -157,6 +155,7 @@ export const GetAccounts = async () => {
   }));
   return queryData;
 };
+
 export const getNgoCount = async () => {
   const q = query(collection(db, `ngoshelters`), where('isAdmin', '==', false));
   const querySnapshot = await getDocs(q);
@@ -711,4 +710,17 @@ export const resetPassword = (loginEmail) => {
       const errorCode = error.code;
       toast.success(errorCode);
     });
+};
+
+export const deleteAndBackup = async (animal) => {
+  await setDoc(
+    doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${animal.id}`),
+    {
+      ...animal,
+      dateDeleted: serverTimestamp(),
+    }
+  ).then(async () => {
+    await deleteDoc(doc(db, `pets/${animal.id}`));
+    toast.success('Succesfully Deleted');
+  });
 };
