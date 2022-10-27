@@ -108,11 +108,15 @@ export default function SignIn() {
               />
             </FormControl>
 
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={{ marginTop: '12px' }}>
               <Button
                 type="submit"
                 sx={{
-                  margin: '10px 20px',
+                  ...global.button2,
+                  width: '90%',
+                  height: '50px',
+
+                  margin: 'auto',
                 }}
               >
                 Login

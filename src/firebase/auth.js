@@ -155,7 +155,8 @@ export const logout = async () => {
 export const GetAccounts = async () => {
   const q = query(
     collection(db, `ngoshelters`),
-    where('isDelete', '==', false)
+    where('isDelete', '==', false),
+    where('isAdmin', '==', false)
   );
   const querySnapshot = await getDocs(q);
   const queryData = querySnapshot.docs.map((detail) => ({
@@ -417,7 +418,7 @@ export const listAdoptor = async (userAccount) => {
       id: id,
       name: displayName,
       facebookURL: formSnap.data()?.BestWayToContact,
-      timestamp: AdoptionInfo.data()?.adoptionTime,
+      timestamp: AdoptionInfo.data()?.timestamp,
       petToAdopt: 'Deleted',
       petToAdoptId: '',
       email: email,
@@ -429,7 +430,7 @@ export const listAdoptor = async (userAccount) => {
       isApprovedAdoptor: AdoptionInfo.data()?.isApprovedAdoptor,
       isDeclined: AdoptionInfo.data()?.isDeclined,
       id: id,
-      timestamp: AdoptionInfo.data()?.timestamp,
+      timestamp: AdoptionInfo.data()?.adoptionTime,
       name: displayName,
       email: email,
       facebookURL: formSnap.data()?.BestWayToContact,
@@ -606,7 +607,8 @@ export const approveAdoption = async (user, notifMessage) => {
   const q = query(
     collection(db, `matches`),
     where('petToAdopt', '==', user?.petToAdoptId),
-    where('isApprovedAdoptor', '==', false)
+    where('isApprovedAdoptor', '==', false),
+    where('isDeclined', '==', false)
   );
   await getDocs(q).then((r) => {
     r.docs.map(async (e) => {
@@ -619,13 +621,15 @@ export const approveAdoption = async (user, notifMessage) => {
       const notif = `Adoption is closed. We have already found ${user?.petToAdopt} 's New Parents`;
       sendNotification(u, notif).then(async (r) => {
         moveToHistory(u, r, true, false, notifMessage);
-        await movePending(u);
+        await deletePending(u);
       });
     });
   });
 };
 
 export const declineAdoption = async (user, notifMessage) => {
+  console.log(user);
+  await deletePending(user);
   await sendNotification(user, notifMessage)
     .then(async (r) => {
       moveToHistory(user, r, true, false, notifMessage);
@@ -639,8 +643,6 @@ export const declineAdoption = async (user, notifMessage) => {
     .finally(() => {
       toast.success('Sucessfully Decline');
     });
-
-  deletePending(user);
 };
 
 export const movePending = async (user) => {

@@ -242,13 +242,22 @@ export default function AddNgo() {
                 </FormControl>
               </FormGroup>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={8}>
               <Typography
                 sx={{ fontWeight: 'bold' }}
                 variant="h5"
                 color="primary"
               >
                 Shelter Info :
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography
+                sx={{ fontWeight: 'bold' }}
+                variant="h5"
+                color="primary"
+              >
+                Location :
               </Typography>
             </Grid>
 
@@ -265,6 +274,7 @@ export default function AddNgo() {
                 fullWidth
               />
             </Grid>
+
             <Grid item container xs={4}>
               <Grid item xs={12}>
                 <Typography sx={{ fontWeight: 'bold' }}>Latitude</Typography>

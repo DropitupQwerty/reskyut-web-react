@@ -125,8 +125,8 @@ export default function AdoptionPage() {
       headerName: 'Date',
       flex: 1,
       renderCell: (rows) => {
-        const time = rows.row.timestamp;
-        const date = time.toDate().toDateString();
+        const time = rows.row?.timestamp;
+        const date = time?.toDate().toDateString();
         return <Typography variant="caption">{date}</Typography>;
       },
     },
@@ -151,7 +151,7 @@ export default function AdoptionPage() {
 
     {
       field: 'Delete',
-      headerName: 'Delete',
+      headerName: 'Decline',
       sortable: false,
       renderCell: (rows) => {
         return (
