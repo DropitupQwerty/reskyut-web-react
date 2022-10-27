@@ -12,6 +12,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Badge,
 } from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
@@ -30,6 +31,12 @@ import { onAuthStateChanged } from 'firebase/auth';
 import HistoryIcon from '@mui/icons-material/History';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LogoutDialog from './common/logoutConfirmationDialog';
+import { where, query, collection, onSnapshot } from 'firebase/firestore';
+import { listAdoptor } from './../firebase/auth';
+import getMatchedUserInfo from './../lib/getMatchedUserInfo';
+import { db } from './../firebase/firebase-config';
+import { useMemo } from 'react';
+import NotifBadge from './common/notifBadge';
 
 const drawerWidth = 240;
 
@@ -127,6 +134,7 @@ export default function ShelterAdminLayout({ children }) {
       icon: <ViewListIcon color="primary" />,
     },
     {
+      badge: <NotifBadge />,
       label: 'Adoption Page',
       link: 'adoptionpage',
       icon: <PetsIcon color="primary" />,
@@ -219,10 +227,12 @@ export default function ShelterAdminLayout({ children }) {
               >
                 {drawermenu.icon}
               </ListItemIcon>
+
               <ListItemText
                 primary={`${drawermenu.label}`}
                 sx={{ opacity: open ? 1 : 0 }}
               />
+              {drawermenu?.badge}
             </ListItem>
           ))}
         </List>

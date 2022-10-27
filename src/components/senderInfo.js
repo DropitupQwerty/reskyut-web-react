@@ -138,6 +138,7 @@ export default function SenderInfo() {
     setNotifMessage('');
     at.isDeclined = !at.isDeclined;
     setAdoptionStatus(at);
+    setOpenDecline(false);
   };
 
   return (

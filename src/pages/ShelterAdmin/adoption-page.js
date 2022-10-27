@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Grid, Button, Link, Box } from '@mui/material';
+import { Typography, Grid, Button, Link, Box, Badge } from '@mui/material';
 import global from '../../styles/global';
 
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
@@ -45,7 +45,13 @@ export default function AdoptionPage() {
   const [openApproveDialog, setOpenApproveDialog] = useState(false);
   const [clicked, setClicked] = useState();
 
+  const a = sessionStorage.getItem('notifcount');
+
   const handleClick = (event, rows) => {
+    updateDoc(doc(db, `matches/${rows.id}${auth.currentUser?.uid}`), {
+      isNotifRead: true,
+    });
+
     navigate(`/message/${rows.id}/${auth.currentUser?.uid}`);
   };
 
@@ -114,7 +120,22 @@ export default function AdoptionPage() {
   };
 
   const columns = [
-    { field: 'name', headerName: 'Display Name', minWidth: 150, flex: 1 },
+    {
+      field: 'name',
+      headerName: 'Display Name',
+      minWidth: 150,
+      flex: 1,
+      renderCell: (rows) => {
+        return !rows?.row?.isNotifRead ? (
+          <Box sx={{ display: 'flex' }}>
+            <Badge color="primary" variant="dot" invisible={a == 0} />
+            <Typography variant="caption">{rows?.row?.name}</Typography>
+          </Box>
+        ) : (
+          <Typography variant="caption">{rows?.row?.name}</Typography>
+        );
+      },
+    },
     {
       field: 'email',
       headerName: 'Email',

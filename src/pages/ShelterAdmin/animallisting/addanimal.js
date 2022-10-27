@@ -151,6 +151,24 @@ export default function AddAnimal() {
                       autoComplete="off"
                       value={inputs.name}
                       onChange={handleChange}
+                      inputProps={{
+                        maxLength: 30,
+                      }}
+                      endAdornment={
+                        <InputAdornment>
+                          <Typography>{`${inputs.name.length}`}/30</Typography>
+                        </InputAdornment>
+                      }
+
+                      // InputProps={{
+                      //   endAdornment: (
+                      //     <InputAdornment sx={{ marginTop: '50px' }}>
+                      //       <Typography>
+                      //         {`${inputs.desc.length}`}/30
+                      //       </Typography>
+                      //     </InputAdornment>
+                      //   ),
+                      // }}
                     />
                   </FormControl>
                 </Grid>

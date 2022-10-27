@@ -418,7 +418,7 @@ export const listAdoptor = async (userAccount) => {
       id: id,
       name: displayName,
       facebookURL: formSnap.data()?.BestWayToContact,
-      timestamp: AdoptionInfo.data()?.timestamp,
+      timestamp: AdoptionInfo.data()?.adoptionTime,
       petToAdopt: 'Deleted',
       petToAdoptId: '',
       email: email,
@@ -629,13 +629,14 @@ export const approveAdoption = async (user, notifMessage) => {
 
 export const declineAdoption = async (user, notifMessage) => {
   console.log(user);
-  await deletePending(user);
+
   await sendNotification(user, notifMessage)
     .then(async (r) => {
       moveToHistory(user, r, true, false, notifMessage);
     })
     .then(async () => {
       updateMessageField(user, true, false);
+      await deletePending(user);
     })
     .catch((error) => {
       alert(error.code);
