@@ -27,18 +27,16 @@ export default function ForgotPassword() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [sendStatus, setSendStatus] = useState('Send');
-  const [input, setInputs] = useState({
-    loginEmail: '',
-  });
+  const [email, setEmail] = useState();
 
   const handleChange = (e) => {
     e.preventDefault();
-    setInputs({ ...input, [e.target.name]: e.target.value });
+    setEmail(e.target.value);
   };
 
   const handleSend = (e) => {
     setSendStatus('Resend');
-    resetPassword(input.email);
+    resetPassword(email);
   };
 
   const showLoad = () => {
@@ -67,7 +65,7 @@ export default function ForgotPassword() {
                 sx={{ margin: '10px 20px 0 20px' }}
                 name="loginEmail"
                 placeholder="Email"
-                value={input.loginEmail}
+                value={email}
                 onChange={handleChange}
                 startAdornment={
                   <InputAdornment position="end" sx={{ marginRight: '20px' }}>
@@ -94,7 +92,7 @@ export default function ForgotPassword() {
                 </Button>
               ) : (
                 <Button>
-                  <Timer email={input.loginEmail} />
+                  <Timer email={email} />
                 </Button>
               )}
               <Typography

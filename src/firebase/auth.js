@@ -707,17 +707,16 @@ export const uploadMultipleImage = async (images, id) => {
     .then((err) => console.log(err));
 };
 
-export const resetPassword = (loginEmail) => {
+export const resetPassword = async (loginEmail) => {
   var actionCodeSettings = {
     // After password reset, the user will be give the ability to go back
     // to this page.
-    url: 'http://localhost:3000/',
+    url: 'https://reskyut.vercel.app/',
     handleCodeInApp: false,
   };
-  sendPasswordResetEmail(auth, loginEmail, actionCodeSettings)
-    .then(() => {
-      console.log('send');
-      toast.success('Please Check your Emails');
+  await sendPasswordResetEmail(auth, loginEmail, actionCodeSettings)
+    .then((r) => {
+      console.log(r);
     })
     .catch((error) => {
       const errorCode = error.code;

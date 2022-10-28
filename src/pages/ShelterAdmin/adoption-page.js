@@ -127,9 +127,14 @@ export default function AdoptionPage() {
       flex: 1,
       renderCell: (rows) => {
         return !rows?.row?.isNotifRead ? (
-          <Box sx={{ display: 'flex' }}>
-            <Badge color="primary" variant="dot" invisible={a == 0} />
+          <Box sx={{ display: 'absolute' }}>
             <Typography variant="caption">{rows?.row?.name}</Typography>
+            <Badge
+              color="primary"
+              variant="dot"
+              invisible={a == 0}
+              sx={{ left: '20px' }}
+            />
           </Box>
         ) : (
           <Typography variant="caption">{rows?.row?.name}</Typography>
@@ -274,7 +279,7 @@ export default function AdoptionPage() {
           <PetsIcon color="primary" /> <b>Adoption Page</b>
         </Typography>
       </Grid>
-      <Box sx={{ marginTop: '50px' }}>
+      <Box sx={{ marginTop: '50px', display: 'relative' }}>
         <DataTable
           rows={adoptionRow}
           checkboxSelected={onRowsSelectionHandler}
