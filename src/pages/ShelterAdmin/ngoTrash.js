@@ -23,12 +23,14 @@ export default function NgoTrash() {
   const [animal, setAnimal] = useState();
   const [selected, setSelected] = useState();
   const [iconDeleteDialog, setIconDeleteDialog] = useState(false);
+  const [iconDeleteAllDialog, setIconDeleteAllDialog] = useState(false);
 
   const handleDelete = (event, rows) => {
     setOpen(true);
     setMessage(`Delete ${rows.row.name} Permanently?`);
     setAnimal(rows);
   };
+
   const handleRestore = async (event, rows) => {
     const deletedAnimal = animalData.filter((a) => a.id !== rows.id);
     setAnimalData(deletedAnimal);
@@ -102,6 +104,7 @@ export default function NgoTrash() {
     setOpen(false);
     setIconDeleteDialog(false);
   };
+
   const handleConfirmDelete = async () => {
     const deletedAnimal = animalData.filter((a) => a.id !== animal.id);
     setAnimalData(deletedAnimal);
@@ -136,10 +139,26 @@ export default function NgoTrash() {
         : setMessage(`Are youre you want to delete all items`);
     }
   };
+  const openDialogDeleteAllSelected = () => {
+    setMessage(`Are youre you want to delete all items`);
+    setIconDeleteAllDialog(true);
+  };
 
   const confirmMultipleDelete = () => {
     let _data = [...animalData];
     selected.map(async (ad) => {
+      _data = _data.filter((t) => t.id !== ad.id);
+      await deleteDoc(
+        doc(db, `ngoshelters/${auth.currentUser}/trash/${ad.id}`)
+      );
+    });
+    setAnimalData(_data);
+    setIconDeleteDialog(false);
+  };
+
+  const confirmDeleteAll = () => {
+    let _data = [...animalData];
+    animalData.map(async (ad) => {
       _data = _data.filter((t) => t.id !== ad.id);
       await deleteDoc(
         doc(db, `ngoshelters/${auth.currentUser}/trash/${ad.id}`)
@@ -170,6 +189,12 @@ export default function NgoTrash() {
         message={message}
         confirm={handleConfirmDelete}
       />
+      <DeleteDialog
+        open={iconDeleteAllDialog}
+        cancel={handleClose}
+        message={message}
+        confirm={confirmDeleteAll}
+      />
 
       <Grid item xs>
         <Typography variant="h4" align="center">
@@ -183,7 +208,7 @@ export default function NgoTrash() {
           </Button>
         </Grid>
         <Grid item>
-          <Button>
+          <Button onClick={openDialogDeleteAllSelected}>
             <DeleteIcon color="primary" /> <b>Delete All</b>
           </Button>
         </Grid>

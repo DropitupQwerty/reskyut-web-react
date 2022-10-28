@@ -713,7 +713,7 @@ export const resetPassword = async (loginEmail) => {
   var actionCodeSettings = {
     // After password reset, the user will be give the ability to go back
     // to this page.
-    url: 'https://reskyut.vercel.app/',
+    url: 'http://localhost:3000/',
     handleCodeInApp: false,
   };
   await sendPasswordResetEmail(auth, loginEmail, actionCodeSettings)
