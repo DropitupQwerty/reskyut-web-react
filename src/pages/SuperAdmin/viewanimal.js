@@ -19,21 +19,34 @@ import {
 import ImageIcon from '@mui/icons-material/Image';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
-import { Link, useParams } from 'react-router-dom';
-import { getAnimalProfile } from './../../firebase/auth';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { getAnimalProfile, moveToTrash } from './../../firebase/auth';
+import DeleteDialog from './../../components/common/deleteDialog';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { db } from './../../firebase/firebase-config';
 
 export default function ViewAnimal() {
   const { id } = useParams();
-
-  const [inputs, setInputs] = useState({
-    name: '',
-    age: 'Puppy',
-    gender: '',
-    status: 'listed',
-    pet_category: 'Custom',
-    desc: '',
-  });
+  const [trash, setTrash] = useState();
+  const [message, setMessage] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [inputs, setInputs] = useState({});
   const [images, setImages] = useState([]);
+  const navigate = useNavigate();
+
+  const handleDelete = async () => {
+    setOpen(true);
+    setMessage('Confirm Deletion');
+  };
+  const handeleConfirm = async () => {
+    // await deleteDoc(doc(db, `pets/${id}`));
+    moveToTrash(inputs);
+    setOpen(false);
+    navigate(-1);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     const getAnimalPro = async () => {
@@ -72,6 +85,12 @@ export default function ViewAnimal() {
 
   return (
     <AppBarAdminLayout>
+      <DeleteDialog
+        open={open}
+        message={message}
+        confirm={handeleConfirm}
+        cancel={handleClose}
+      />
       <Box>
         <Box>
           <Button
@@ -142,7 +161,10 @@ export default function ViewAnimal() {
                 />
               </Grid>
               <Grid item sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button sx={{ ...global.button2, marginLeft: '20px' }}>
+                <Button
+                  onClick={handleDelete}
+                  sx={{ ...global.button2, marginLeft: '20px' }}
+                >
                   DELETE
                 </Button>
               </Grid>

@@ -34,7 +34,7 @@ export default function PostOfNgo() {
 
   const handleDelete = async (event, rows) => {
     console.log(rows.id);
-    setTrash(rows);
+    setTrash(rows.row);
     setOpen(true);
     setMessage('Confirm Deletion');
   };

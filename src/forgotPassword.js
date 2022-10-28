@@ -36,7 +36,7 @@ export default function ForgotPassword() {
 
   const handleSend = (e) => {
     setSendStatus('Resend');
-    resetPassword(email);
+    resetPassword(email).then((r) => {});
   };
 
   const showLoad = () => {

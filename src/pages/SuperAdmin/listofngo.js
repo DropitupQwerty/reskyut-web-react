@@ -42,29 +42,24 @@ export default function ListOfNgo() {
     setUserId(rows.row);
     setDisable(true);
     !rows.row.isDisable
-      ? setMessage('Enable this Account?')
-      : setMessage('Disable this Account');
+      ? setMessage('Disable this Account?')
+      : setMessage('Enable this Account');
   };
 
   const handleDeleteAccount = async () => {
-    const deleteAccount = accounts.filter((a) => a.id !== userId.id);
-    setAccounts(deleteAccount);
-    setOpen(false);
     disableAccount(userId.id);
-    await updateDoc(
-      doc(db, `ngoshelters/${userId.id}`),
-      {
-        ...userId,
-        isDelete: true,
-      },
-      { merge: true }
-    )
+    await updateDoc(doc(db, `ngoshelters/${userId.id}`), {
+      isDelete: true,
+    })
       .then(() => {
         toast.warn('Account Added to Account Trash', { icon: false });
       })
       .catch((error) => {
         toast.warn(error.code);
       });
+    const deleteAccount = accounts.filter((a) => a.id !== userId.id);
+    setAccounts(deleteAccount);
+    setOpen(false);
   };
 
   const handleDisableAccount = async () => {

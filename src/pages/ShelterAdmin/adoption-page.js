@@ -33,6 +33,7 @@ import getMatchedUserInfo from '../../lib/getMatchedUserInfo';
 import ApproveDialog from '../../components/common/approveDialog';
 import { sendNotification, updateMessageField } from './../../firebase/auth';
 import { async } from '@firebase/util';
+import UserBadgeNotif from '../../components/common/adoptionUserBadgeNotif';
 
 export default function AdoptionPage() {
   const navigate = useNavigate();
@@ -47,15 +48,19 @@ export default function AdoptionPage() {
 
   const a = sessionStorage.getItem('notifcount');
 
-  const handleClick = (event, rows) => {
-    updateDoc(doc(db, `matches/${rows.id}${auth.currentUser?.uid}`), {
+  const readNotif = async (id) => {
+    await updateDoc(doc(db, `matches/${id}${auth.currentUser?.uid}`), {
       isNotifRead: true,
     });
+  };
 
+  const handleClick = (event, rows) => {
+    readNotif(rows.id);
     navigate(`/message/${rows.id}/${auth.currentUser?.uid}`);
   };
 
   const handleDeclineDialog = (event, rows) => {
+    readNotif(rows.id);
     console.log(rows.id);
     setUser(rows.row);
     setNotifMessage(
@@ -65,6 +70,7 @@ export default function AdoptionPage() {
   };
 
   const handleInfoDialog = async (event, rows) => {
+    readNotif(rows.id);
     setOpen(true);
     setUser(rows.row);
     console.log(rows.row);
@@ -74,8 +80,9 @@ export default function AdoptionPage() {
   };
 
   const handleApproveDialog = async (event, rows) => {
+    readNotif(rows.id);
     setNotifMessage(
-      `Congratulation you are the chosen adoptor for this pet ${rows.row.petToAdopt} please proceed to the ngo shelter `
+      `Congratulation you are the chosen adoptor for this pet ${rows?.row?.petToAdopt} please message the ngo rescue shelter for more details `
     );
     setOpenApproveDialog(true);
     setUser(rows.row);
@@ -128,13 +135,10 @@ export default function AdoptionPage() {
       renderCell: (rows) => {
         return !rows?.row?.isNotifRead ? (
           <Box sx={{ display: 'absolute' }}>
-            <Typography variant="caption">{rows?.row?.name}</Typography>
-            <Badge
-              color="primary"
-              variant="dot"
-              invisible={a == 0}
-              sx={{ left: '20px' }}
-            />
+            <Typography variant="caption" fontWeight={'Bold'}>
+              {rows?.row?.name}
+            </Typography>
+            <UserBadgeNotif rows={rows} />
           </Box>
         ) : (
           <Typography variant="caption">{rows?.row?.name}</Typography>

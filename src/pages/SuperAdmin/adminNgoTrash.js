@@ -57,11 +57,13 @@ export default function AdminNgoTrash() {
   };
 
   const confirmDelete = async () => {
-    await deleteDoc(
-      doc(`ngoshelters/${auth.currentUser.uid}/accountstrash/${userId.id}`)
-    ).then(() => {
+    await deleteDoc(doc(db, `ngoshelters/${userId.id}`)).then(() => {
       toast.success('Deleted succesfully');
     });
+
+    const deletedAccount = accounts.filter((a) => a.id !== userId.id);
+    setAccounts(deletedAccount);
+    setOpen(false);
   };
 
   const columns = [

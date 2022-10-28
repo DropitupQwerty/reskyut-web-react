@@ -68,7 +68,7 @@ export default function Dashboard() {
           <Grid item xs={4}>
             <Paper sx={{ ...global.paperDashboard }}>
               <Typography variant="h5">
-                <b>Want to adopt TODAY</b>
+                <b>Want to adopt </b>
               </Typography>
               <Box>
                 <Typography variant="h2" sx={paperText}>

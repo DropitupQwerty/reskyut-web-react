@@ -422,6 +422,7 @@ export const listAdoptor = async (userAccount) => {
       petToAdopt: 'Deleted',
       petToAdoptId: '',
       email: email,
+      isNotifRead: AdoptionInfo.data()?.isNotifRead,
       score: formSnap.data()?.score,
     };
   } else {
@@ -437,6 +438,7 @@ export const listAdoptor = async (userAccount) => {
       petToAdopt: petInfo.data()?.name,
       petToAdoptId: petInfo.data()?.id,
       score: formSnap.data()?.score,
+      isNotifRead: AdoptionInfo.data()?.isNotifRead,
     };
   }
 
@@ -444,13 +446,13 @@ export const listAdoptor = async (userAccount) => {
 };
 
 export const disableAccount = async (rows) => {
-  const q = query(collection(db, 'pets'));
-
   await updateDoc(doc(db, `ngoshelters/${rows}`), {
     isDisable: true,
   }).then(async () => {
-    await getDocs(q, where('shelterID', '==', rows)).then((res) => {
+    const q = query(collection(db, 'pets'), where('shelterID', '==', rows));
+    await getDocs(q).then((res) => {
       res.docs.map(async (r) => {
+        console.log(r.data().id);
         await updateDoc(doc(db, `pets/${r.data().id}`), {
           status: 'unlisted',
         });
@@ -481,20 +483,20 @@ export const moveToTrash = async (rows) => {
   await setDoc(
     doc(db, `ngoshelters/${auth.currentUser.uid}/trash/${rows.id}`),
     {
-      ...rows.row,
+      ...rows,
       adminDelete: true,
     }
   )
     .then(() => {
-      setDoc(doc(db, `ngoshelters/${rows.row.shelterID}/trash/${rows.id}`), {
-        ...rows.row,
+      setDoc(doc(db, `ngoshelters/${rows.shelterID}/trash/${rows.id}`), {
+        ...rows,
         adminDelete: true,
       });
       toast.success('Successfully Deleted');
     })
     .then(async () => {
-      await deleteDoc(doc(db, `pets/${rows.row.id}`), {
-        ...rows.row,
+      await deleteDoc(doc(db, `pets/${rows.id}`), {
+        ...rows,
       });
     })
     .catch((error) => console.log(error));

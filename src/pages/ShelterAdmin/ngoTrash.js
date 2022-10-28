@@ -14,6 +14,7 @@ import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase/firebase-config';
 import ShelterAdminLayout from './../../components/shelterAdminLayout';
 import { toast } from 'react-toastify';
+import { async } from '@firebase/util';
 
 export default function NgoTrash() {
   const [animalData, setAnimalData] = useState([]);
@@ -57,7 +58,7 @@ export default function NgoTrash() {
       field: 'Delete',
       sortable: false,
       renderCell: (rows) => {
-        return !rows.row?.adminDelete ? (
+        return (
           <Button
             sx={{ ...global.button2xs }}
             onClick={(event) => {
@@ -65,6 +66,23 @@ export default function NgoTrash() {
             }}
           >
             Delete
+          </Button>
+        );
+      },
+      width: 150,
+    },
+    {
+      field: 'Restore',
+      sortable: false,
+      renderCell: (rows) => {
+        return !rows.row?.adminDelete ? (
+          <Button
+            sx={{ ...global.button1xs }}
+            onClick={(event) => {
+              handleRestore(event, rows);
+            }}
+          >
+            Restore
           </Button>
         ) : (
           <Typography
@@ -75,25 +93,6 @@ export default function NgoTrash() {
             Admin Deletion
           </Typography>
         );
-      },
-      width: 150,
-    },
-    {
-      field: 'Restore',
-      sortable: false,
-      renderCell: (rows) => {
-        if (!rows.row?.adminDelete) {
-          return (
-            <Button
-              sx={{ ...global.button1xs }}
-              onClick={(event) => {
-                handleRestore(event, rows);
-              }}
-            >
-              Restore
-            </Button>
-          );
-        }
       },
       width: 150,
     },
@@ -132,14 +131,22 @@ export default function NgoTrash() {
       setIconDeleteDialog(true);
       selected.length !== animalData.length
         ? setMessage(
-            `Are youre you want to delete this${selected.length} items`
+            `Are youre you want to delete this${selected?.length} items`
           )
         : setMessage(`Are youre you want to delete all items`);
     }
   };
 
   const confirmMultipleDelete = () => {
-    console.log('clicked');
+    let _data = [...animalData];
+    selected.map(async (ad) => {
+      _data = _data.filter((t) => t.id !== ad.id);
+      await deleteDoc(
+        doc(db, `ngoshelters/${auth.currentUser}/trash/${ad.id}`)
+      );
+    });
+    setAnimalData(_data);
+    setIconDeleteDialog(false);
   };
 
   useEffect(() => {
