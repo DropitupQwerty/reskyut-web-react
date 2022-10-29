@@ -186,14 +186,6 @@ export default function ListOfNgo() {
           <ApartmentIcon color="primary" /> <b>List of NGO</b>
         </Typography>
       </Grid>
-      <Grid item xs>
-        <Button>
-          <RefreshIcon color="primary" />
-        </Button>
-        <Button>
-          <PersonRemoveIcon color="primary" />
-        </Button>
-      </Grid>
       <DataTable rows={accounts} columns={columns} />
     </SuperAdminLayout>
   );

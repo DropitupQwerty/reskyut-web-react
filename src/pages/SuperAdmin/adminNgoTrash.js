@@ -18,7 +18,6 @@ import {
   where,
   updateDoc,
 } from 'firebase/firestore';
-import { auth } from '../../firebase/firebase-config';
 import { db } from './../../firebase/firebase-config';
 import { toast } from 'react-toastify';
 
@@ -154,14 +153,6 @@ export default function AdminNgoTrash() {
         <Typography variant="h4" align="center">
           <PersonRemoveIcon color="primary" /> <b>Deleted NGO Accounts</b>
         </Typography>
-      </Grid>
-      <Grid item xs>
-        <Button>
-          <RefreshIcon color="primary" />
-        </Button>
-        <Button>
-          <PersonRemoveIcon color="primary" />
-        </Button>
       </Grid>
       <DataTable rows={accounts} columns={columns} />
     </SuperAdminLayout>

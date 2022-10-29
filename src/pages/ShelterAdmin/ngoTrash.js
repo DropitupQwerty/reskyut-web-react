@@ -103,6 +103,7 @@ export default function NgoTrash() {
   const handleClose = () => {
     setOpen(false);
     setIconDeleteDialog(false);
+    setIconDeleteAllDialog(false);
   };
 
   const handleConfirmDelete = async () => {
@@ -149,8 +150,14 @@ export default function NgoTrash() {
     selected.map(async (ad) => {
       _data = _data.filter((t) => t.id !== ad.id);
       await deleteDoc(
-        doc(db, `ngoshelters/${auth.currentUser}/trash/${ad.id}`)
-      );
+        doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${ad.id}`)
+      )
+        .then(() => {
+          toast.success('Deleted Succesfully');
+        })
+        .catch((err) => {
+          toast.error(err);
+        });
     });
     setAnimalData(_data);
     setIconDeleteDialog(false);
@@ -160,12 +167,19 @@ export default function NgoTrash() {
     let _data = [...animalData];
     animalData.map(async (ad) => {
       _data = _data.filter((t) => t.id !== ad.id);
+      console.log(ad);
       await deleteDoc(
-        doc(db, `ngoshelters/${auth.currentUser}/trash/${ad.id}`)
-      );
+        doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${ad.id}`)
+      )
+        .then(() => {
+          toast.success('Deleted Succesfully');
+        })
+        .catch((err) => {
+          toast.error(err);
+        });
     });
     setAnimalData(_data);
-    setIconDeleteDialog(false);
+    setIconDeleteAllDialog(false);
   };
 
   useEffect(() => {

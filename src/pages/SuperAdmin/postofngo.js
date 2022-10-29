@@ -108,11 +108,11 @@ export default function PostOfNgo() {
       width: 150,
     },
   ];
+  const getpCollection = async () => {
+    setAnimalData(await getPetsCollection());
+  };
 
   useEffect(() => {
-    const getpCollection = async () => {
-      setAnimalData(await getPetsCollection());
-    };
     getpCollection();
   }, []);
   console.log(animalData);
@@ -132,7 +132,7 @@ export default function PostOfNgo() {
       </Grid>
       <Grid item xs>
         <Checkbox {...ListOfNGO} />
-        <Button>
+        <Button onClick={getpCollection}>
           <RefreshIcon color="primary" />
         </Button>
         <Button>

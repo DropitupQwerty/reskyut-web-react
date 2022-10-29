@@ -97,7 +97,7 @@ export default function AddAnimal() {
 
   return (
     <AppBarLayout>
-      <LoaderDialog isLoading={isLoading} />
+      <LoaderDialog open={isLoading} />
       <Box>
         <Box>
           <Button

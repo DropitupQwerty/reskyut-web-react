@@ -30,7 +30,7 @@ import {
 } from 'firebase/auth';
 import axios from 'axios';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { arrayUnion } from 'firebase/firestore';
+import { arrayUnion, onSnapshot } from 'firebase/firestore';
 import config from '../services/config.json';
 import { toast } from 'react-toastify';
 import getMatchedUserInfo from './../lib/getMatchedUserInfo';
@@ -251,12 +251,16 @@ export const AddSubData = async (inputs, images) => {
       ...inputs,
       timestamp: serverTimestamp(),
     }).then((docRef) => {
-      uploadMultipleImage(images, docRef.id);
+      return uploadMultipleImage(images, docRef.id).then((r) => {
+        return r;
+      });
     });
   } else if (images.length > 9) {
     toast.error('Maximum of 9 pictures');
+    return false;
   } else {
     toast.error('Please Insert Atleast 1 Picture');
+    return false;
   }
 };
 
@@ -268,6 +272,7 @@ export const ListUpdate = async () => {
     where('isAdopted', '==', false)
   );
   const querySnapshot = await getDocs(q);
+
   const queryData = querySnapshot.docs.map((detail) => ({
     ...detail.data(),
   }));
@@ -480,24 +485,15 @@ export const getTrashCollection = async () => {
 };
 
 export const moveToTrash = async (rows) => {
-  await setDoc(
-    doc(db, `ngoshelters/${auth.currentUser.uid}/trash/${rows.id}`),
-    {
-      ...rows,
-      adminDelete: true,
-    }
-  )
-    .then(() => {
-      setDoc(doc(db, `ngoshelters/${rows.shelterID}/trash/${rows.id}`), {
-        ...rows,
-        adminDelete: true,
-      });
-      toast.success('Successfully Deleted');
-    })
+  setDoc(doc(db, `ngoshelters/${rows.shelterID}/trash/${rows.id}`), {
+    ...rows,
+    adminDelete: true,
+  })
     .then(async () => {
       await deleteDoc(doc(db, `pets/${rows.id}`), {
         ...rows,
       });
+      toast.success('Successfully Deleted');
     })
     .catch((error) => console.log(error));
 };
@@ -508,24 +504,12 @@ export const restoreAnimal = async (rows) => {
     adminDelete: false,
   })
     .then(async () => {
-      await getDoc(
-        doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${rows.id}`)
-      ).then(async (res) => {
-        await deleteDoc(
-          doc(db, `ngoshelters/${auth.currentUser.uid}/trash/${res.data().id}`)
-        )
-          .then(async () => {
-            await deleteDoc(
-              doc(
-                db,
-                `ngoshelters/${rows.row.shelterID}/trash/${res.data().id}`
-              )
-            );
-          })
-          .finally(() => {
-            toast.success('Animal Restored');
-          });
-      });
+      await deleteDoc(
+        doc(db, `ngoshelters/${rows.row.shelterID}/trash/${rows.id}`)
+      );
+    })
+    .finally(() => {
+      toast.success('Animal Restored');
     })
     .catch((error) => {
       console.log(error);
@@ -702,11 +686,15 @@ export const uploadMultipleImage = async (images, id) => {
     );
     i++;
   });
-  Promise.all(promises)
+  return Promise.all(promises)
     .then(() => {
       toast.success('Successfully Created');
+      return true;
     })
-    .then((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
 };
 
 export const resetPassword = async (loginEmail) => {

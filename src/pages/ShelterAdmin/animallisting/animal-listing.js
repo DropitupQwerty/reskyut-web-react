@@ -20,6 +20,7 @@ import { deleteDoc } from 'firebase/firestore';
 import { serverTimestamp } from 'firebase/firestore';
 import { updateDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 export default function AnimalListing() {
   const [animalData, setAnimalData] = useState([]);
@@ -30,13 +31,13 @@ export default function AnimalListing() {
   const [selectedAnimals, setSelectedAnimals] = useState([]);
   const [openMultipleDeleteDialog, setOpenMultipleDeleteDialog] = useState();
 
+  const getPostList = async () => {
+    setIsloading(true);
+    const list = await ListUpdate();
+    setAnimalData(list);
+    setIsloading(false);
+  };
   useEffect(() => {
-    const getPostList = async () => {
-      setIsloading(true);
-      const list = await ListUpdate();
-      setAnimalData(list);
-      setIsloading(false);
-    };
     getPostList();
   }, []);
 
@@ -234,6 +235,9 @@ export default function AnimalListing() {
         </Button>
         <Button onClick={confirmMultipleDeletion}>
           <DeleteIcon color="primary" />
+        </Button>
+        <Button onClick={getPostList}>
+          <RefreshIcon color="primary" />
         </Button>
       </Grid>
 

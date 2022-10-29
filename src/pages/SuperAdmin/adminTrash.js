@@ -19,8 +19,17 @@ import { getTrashCollection, restoreAnimal } from './../../firebase/auth';
 import DataTable from '../../components/tableWithSort';
 import DeleteDialog from '../../components/common/deleteDialog';
 import { async } from '@firebase/util';
-import { deleteDoc, doc } from 'firebase/firestore';
+import {
+  deleteDoc,
+  doc,
+  collection,
+  query,
+  getDocs,
+  where,
+  onSnapshot,
+} from 'firebase/firestore';
 import { auth, db } from '../../firebase/firebase-config';
+import { toast } from 'react-toastify';
 
 export default function AdminTrash() {
   const [animalData, setAnimalData] = useState([]);
@@ -94,24 +103,45 @@ export default function AdminTrash() {
     setOpen(false);
 
     console.log(animal.id);
-
     await deleteDoc(
       doc(db, `ngoshelters/${auth.currentUser?.uid}/trash/${animal.id}`)
     ).then(async () => {
       await deleteDoc(
         doc(db, `ngoshelters/${animal.row.shelterID}/trash/${animal.id}`)
       ).then(() => {
-        alert('Animal Deleted');
+        toast.succes('Animal Deleted');
       });
     });
   };
+  const getAllAdminDelete = async () => {
+    let adminDelete = [];
+    const q = query(collection(db, `ngoshelters`));
+    await getDocs(q).then((res) => {
+      res.docs.map((r) => {
+        const mq = query(
+          collection(db, `ngoshelters/${r.data().id}/trash`),
+          where('adminDelete', '==', true)
+        );
+
+        onSnapshot(mq, (querySnapshot) => {
+          const userInfos = querySnapshot.docs.map((detail) => ({
+            ...detail.data(),
+            id: detail.id,
+          }));
+
+          userInfos.map((ui) => {
+            adminDelete.push(ui);
+            const u = [...adminDelete];
+            setAnimalData(u);
+          });
+        });
+      });
+    });
+  };
+
   useEffect(() => {
-    const getpCollection = async () => {
-      setAnimalData(await getTrashCollection());
-    };
-    getpCollection();
+    getAllAdminDelete();
   }, []);
-  console.log('delete', animalData);
 
   return (
     <SuperAdminLayout>
@@ -127,7 +157,7 @@ export default function AdminTrash() {
         </Typography>
       </Grid>
       <Grid item xs>
-        <Button>
+        <Button onClick={getAllAdminDelete()}>
           <RefreshIcon color="primary" />
         </Button>
       </Grid>
