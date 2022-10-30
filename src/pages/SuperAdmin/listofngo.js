@@ -47,7 +47,7 @@ export default function ListOfNgo() {
   };
 
   const handleDeleteAccount = async () => {
-    disableAccount(userId.id);
+    disableAccount(userId);
     await updateDoc(doc(db, `ngoshelters/${userId.id}`), {
       isDelete: true,
     })
@@ -69,8 +69,7 @@ export default function ListOfNgo() {
     allAcc[index].isDisable = !allAcc[index].isDisable;
     setAccounts(allAcc);
     console.log(userId.isDisable);
-    userId.isDisable ? enableAccount(userId.id) : disableAccount(userId.id);
-
+    userId.isDisable ? enableAccount(userId.id) : disableAccount(userId);
     setDisable(false);
   };
 

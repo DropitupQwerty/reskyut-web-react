@@ -115,7 +115,7 @@ export default function AddAnimal() {
             variant="h4"
             sx={{ textAlign: 'center', ...global.textHeader }}
           >
-            {'EDIT ANIMAL'}
+            {'EDIT ANIMAL INFO'}
           </Typography>
         </Box>
         <Box

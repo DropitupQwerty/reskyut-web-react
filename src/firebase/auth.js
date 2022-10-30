@@ -35,6 +35,7 @@ import config from '../services/config.json';
 import { toast } from 'react-toastify';
 import getMatchedUserInfo from './../lib/getMatchedUserInfo';
 import bcrypt from 'bcryptjs';
+import { async } from '@firebase/util';
 
 const { backendURL } = config;
 
@@ -209,7 +210,6 @@ export default function IsLoggedIn() {
           if (currentUser?.uid) {
             const docRef = doc(db, 'ngoshelters', auth.currentUser?.uid);
             const docSnap = await getDoc(docRef);
-
             if (docSnap.exists()) {
               setUser({
                 ...user,
@@ -218,6 +218,7 @@ export default function IsLoggedIn() {
                 userData: docSnap.data(),
               });
             }
+
             return user;
           }
         };
@@ -270,6 +271,7 @@ export const ListUpdate = async () => {
     collection(db, `pets`),
     where('shelterID', '==', auth.currentUser?.uid),
     where('isAdopted', '==', false)
+    // where('status', '==', 'listed')
   );
   const querySnapshot = await getDocs(q);
 
@@ -402,15 +404,13 @@ export const updateAccountPassword = async (values, email) => {
     });
 };
 
-export const listAdoptor = async (userAccount) => {
+export const listAdoptor = async (userAccount, uid) => {
   let dataNeed = {};
   const { id, photoURL, displayName, email } = userAccount || {};
   const docRef = doc(db, `users/${id}`);
 
   const formSnap = await getDoc(doc(docRef, '/form/form'));
-  const AdoptionInfo = await getDoc(
-    doc(db, `matches/${id}${auth.currentUser?.uid}`)
-  );
+  const AdoptionInfo = await getDoc(doc(db, `matches/${id}${uid}`));
   const petInfo = await getDoc(
     doc(db, `pets/${AdoptionInfo.data()?.petToAdopt}`)
   );
@@ -451,19 +451,61 @@ export const listAdoptor = async (userAccount) => {
 };
 
 export const disableAccount = async (rows) => {
-  await updateDoc(doc(db, `ngoshelters/${rows}`), {
+  await updateDoc(doc(db, `ngoshelters/${rows?.id}`), {
     isDisable: true,
-  }).then(async () => {
-    const q = query(collection(db, 'pets'), where('shelterID', '==', rows));
-    await getDocs(q).then((res) => {
-      res.docs.map(async (r) => {
-        console.log(r.data().id);
-        await updateDoc(doc(db, `pets/${r.data().id}`), {
-          status: 'unlisted',
+  })
+    .then(async () => {
+      const q = query(
+        collection(db, 'pets'),
+        where('shelterID', '==', rows.id)
+      );
+      await getDocs(q).then((res) => {
+        res.docs.map(async (r) => {
+          console.log(r.data().id);
+          await updateDoc(doc(db, `pets/${r.data()?.id}`), {
+            status: 'unlisted',
+          });
+        });
+      });
+    })
+    .then(async () => {
+      const q = query(
+        collection(db, `matches`),
+        where('usersMatched', 'array-contains', rows?.id),
+        where('isApprovedAdoptor', '==', false),
+        where('isDeclined', '==', false)
+      );
+      await getDocs(q).then(async (r) => {
+        r.docs.map(async (e) => {
+          console.log(e.data(), 'asdasd');
+          const u = await listAdoptor(
+            getMatchedUserInfo(e.data()?.users, rows?.id),
+            rows?.id
+          );
+          console.log('ulist', u);
+          await updateDoc(
+            doc(db, `matches/${u.id}${rows?.id}`),
+            {
+              isDeclined: true,
+              isApprovedAdoptor: false,
+              isNotifRead: true,
+            },
+            { merge: true }
+          );
+          const notif = `Sorry this animal shelter is no long available`;
+          await addDoc(collection(db, `users/${u?.id}/notifications`), {
+            preview: notif,
+            time: serverTimestamp(),
+            name: rows?.display_name,
+            petName: '',
+            photoURL: rows?.photoURL,
+            isRead: 'false',
+          }).then(async (r) => {
+            await deletePending(u);
+          });
         });
       });
     });
-  });
 };
 
 export const enableAccount = async (rows) => {
@@ -520,9 +562,9 @@ export const sendNotification = async (user, notifMessage) => {
   const doc = await addDoc(collection(db, `users/${user.id}/notifications`), {
     preview: notifMessage,
     time: serverTimestamp(),
-    name: auth.currentUser.displayName,
+    name: auth.currentUser?.displayName,
     petName: user?.petToAdopt,
-    photoURL: auth.currentUser.photoURL,
+    photoURL: auth.currentUser?.photoURL,
     isRead: 'false',
   });
   return doc;
@@ -536,7 +578,7 @@ export const moveToHistory = async (
   notifMessage
 ) => {
   await addDoc(
-    collection(db, `ngoshelters/${auth.currentUser.uid}/adoptionhistory`),
+    collection(db, `ngoshelters/${auth.currentUser?.uid}/adoptionhistory`),
     {
       ...user,
       id: r.id,
@@ -561,6 +603,7 @@ export const updateMessageField = async (
     {
       isDeclined: isDeclined,
       isApprovedAdoptor: isApprovedAdoptor,
+      isNotifRead: true,
     },
     { merge: true }
   );
@@ -710,7 +753,7 @@ export const resetPassword = async (loginEmail) => {
     })
     .catch((error) => {
       const errorCode = error.code;
-      toast.success(errorCode);
+      toast.warn(errorCode);
     });
 };
 
