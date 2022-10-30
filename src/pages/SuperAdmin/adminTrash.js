@@ -117,13 +117,13 @@ export default function AdminTrash() {
     let adminDelete = [];
     const q = query(collection(db, `ngoshelters`));
     await getDocs(q).then((res) => {
-      res.docs.map((r) => {
+      res.docs.map(async (r) => {
         const mq = query(
           collection(db, `ngoshelters/${r.data().id}/trash`),
           where('adminDelete', '==', true)
         );
 
-        onSnapshot(mq, (querySnapshot) => {
+        await getDocs(mq).then((querySnapshot) => {
           const userInfos = querySnapshot.docs.map((detail) => ({
             ...detail.data(),
             id: detail.id,
@@ -157,7 +157,7 @@ export default function AdminTrash() {
         </Typography>
       </Grid>
       <Grid item xs>
-        <Button onClick={getAllAdminDelete()}>
+        <Button onClick={getAllAdminDelete}>
           <RefreshIcon color="primary" />
         </Button>
       </Grid>
