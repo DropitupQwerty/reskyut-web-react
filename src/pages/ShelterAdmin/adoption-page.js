@@ -251,7 +251,8 @@ export default function AdoptionPage() {
       let users = [];
       userInfos.map(async (a) => {
         const u = await listAdoptor(
-          getMatchedUserInfo(a?.users, auth.currentUser?.uid)
+          getMatchedUserInfo(a?.users, auth.currentUser?.uid),
+          auth.currentUser?.uid
         );
         users.push(u);
         const asd = [...users];

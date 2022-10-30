@@ -50,7 +50,8 @@ export default function Dashboard() {
         userInfos.map(async (a) => {
           users.push(
             await listAdoptor(
-              getMatchedUserInfo(a.users, auth.currentUser?.uid)
+              getMatchedUserInfo(a.users, auth.currentUser?.uid),
+              auth.currentUser?.uid
             )
           );
           const n = [...users];

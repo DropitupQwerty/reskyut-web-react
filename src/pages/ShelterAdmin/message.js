@@ -37,7 +37,10 @@ export default function Message() {
       const users = [];
       userInfos.map(async (a) => {
         users.push(
-          await listAdoptor(getMatchedUserInfo(a.users, auth.currentUser?.uid))
+          await listAdoptor(
+            getMatchedUserInfo(a.users, auth.currentUser?.uid),
+            auth.currentUser?.uid
+          )
         );
         const n = [...users];
         setAcc(n);

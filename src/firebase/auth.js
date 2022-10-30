@@ -690,7 +690,13 @@ export const movePending = async (user) => {
 };
 
 export const deletePending = async (user) => {
-  await deleteDoc(doc(db, `users/${user.id}/pending/${user.petToAdoptId}`));
+  const q = query(collection(db, `users/${user.id}/pending`));
+
+  await getDocs(q).then((r) => {
+    const userpending = r.docs.map(async (res) => {
+      await deleteDoc(doc(db, `users/${user.id}/pending/${res.data().petID}`));
+    });
+  });
 };
 
 export const uploadMultipleImage = async (images, id) => {
