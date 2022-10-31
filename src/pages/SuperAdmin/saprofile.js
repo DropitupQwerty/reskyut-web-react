@@ -261,7 +261,7 @@ export default function SaProfile() {
                     sx={{ ...global.button1, fontWeight: 'bold' }}
                     onClick={handleClickOpen}
                   >
-                    ChangePassword
+                    Change Password
                   </Button>
                   <Dialog
                     open={open}

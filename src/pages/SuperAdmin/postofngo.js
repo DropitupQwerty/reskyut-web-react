@@ -131,12 +131,8 @@ export default function PostOfNgo() {
         </Typography>
       </Grid>
       <Grid item xs>
-        <Checkbox {...ListOfNGO} />
         <Button onClick={getpCollection}>
           <RefreshIcon color="primary" />
-        </Button>
-        <Button>
-          <DeleteIcon color="primary" />
         </Button>
       </Grid>
 
