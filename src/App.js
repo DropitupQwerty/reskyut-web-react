@@ -43,6 +43,8 @@ import ForgotPassword from './forgotPassword';
 export default function App() {
   const user = IsLoggedIn();
 
+  console.log(process.env);
+
   function Path() {
     if (user?.loggedIn) {
       if (user?.userData.isAdmin) {
