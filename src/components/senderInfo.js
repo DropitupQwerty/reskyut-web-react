@@ -106,7 +106,7 @@ export default function SenderInfo() {
 
   const handleApproveDialog = () => {
     setNotifMessage(
-      `Congratulation you are the chosen adoptor for this pet ${user.petToAdopt} please proceed to the ngo shelter `
+      `Congratulation you are the chosen adoptor for this pet ${user?.petToAdopt} please message the ngo rescue shelter for more details `
     );
     setOpenApprove(true);
   };

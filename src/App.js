@@ -42,13 +42,6 @@ import ForgotPassword from './forgotPassword';
 
 export default function App() {
   const user = IsLoggedIn();
-  const [current, setCurrent] = useState();
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      setCurrent(currentUser);
-    });
-  }, []);
 
   function Path() {
     if (user?.loggedIn) {
