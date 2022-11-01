@@ -183,7 +183,7 @@ export default function ShelterAdminLayout({ children }) {
               <MenuIcon />
             </IconButton>
             <Typography variant="h4" sx={{ fontWeight: '600' }}>
-              {user?.displayName}
+              Welcome {user?.displayName}
             </Typography>
           </Box>
         </Toolbar>

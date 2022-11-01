@@ -77,7 +77,8 @@ export default function SenderInfo() {
         setAdoptionStatus(petSnap.data());
 
         const userInfos = await listAdoptor(
-          getMatchedUserInfo(petSnap.data()?.users, auth.currentUser.uid)
+          getMatchedUserInfo(petSnap.data()?.users, auth.currentUser?.uid),
+          auth.currentUser?.uid
         );
         setUser(userInfos);
 

@@ -176,7 +176,7 @@ export default function SuperAdminLayout({ children }) {
               <MenuIcon />
             </IconButton>
             <Typography variant="h4" sx={{ fontWeight: '600' }}>
-              {'SUPER ADMIN'}
+              {'Welcome Super Admin'}
             </Typography>
           </Box>
         </Toolbar>
