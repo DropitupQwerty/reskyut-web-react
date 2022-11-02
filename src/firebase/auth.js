@@ -750,7 +750,7 @@ export const resetPassword = async (loginEmail) => {
   var actionCodeSettings = {
     // After password reset, the user will be give the ability to go back
     // to this page.
-    url: 'http://localhost:3000/',
+    url: 'https://dashboard.reskyut.com/',
     handleCodeInApp: false,
   };
   await sendPasswordResetEmail(auth, loginEmail, actionCodeSettings)
