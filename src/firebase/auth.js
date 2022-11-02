@@ -750,12 +750,12 @@ export const resetPassword = async (loginEmail) => {
   var actionCodeSettings = {
     // After password reset, the user will be give the ability to go back
     // to this page.
-    url: 'https://dashboard.reskyut.com/',
+    url: 'https://dashboard.reskyut.com',
     handleCodeInApp: false,
   };
   await sendPasswordResetEmail(auth, loginEmail, actionCodeSettings)
     .then((r) => {
-      console.log(r);
+      toast.success('Email has been sent, Please check and Verify');
     })
     .catch((error) => {
       const errorCode = error.code;

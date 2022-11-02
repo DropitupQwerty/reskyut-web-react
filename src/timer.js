@@ -48,11 +48,11 @@ export const Timer = ({ email }) => {
 
   useEffect(() => {
     clearTimer(getDeadTime());
-    resetPassword(email);
   }, []);
 
   const onClickReset = () => {
     clearTimer(getDeadTime());
+    resetPassword(email);
   };
 
   return (
