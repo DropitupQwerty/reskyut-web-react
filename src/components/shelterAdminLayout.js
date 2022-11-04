@@ -232,7 +232,7 @@ export default function ShelterAdminLayout({ children }) {
                 primary={`${drawermenu.label}`}
                 sx={{ opacity: open ? 1 : 0 }}
               />
-              {drawermenu?.badge}
+              {/* {drawermenu?.badge} */}
             </ListItem>
           ))}
         </List>

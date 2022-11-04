@@ -28,6 +28,7 @@ import React, { useEffect, useState } from 'react';
 import global from '../../styles/global';
 import ShelterAdminLayout from '../../components/shelterAdminLayout';
 import IsLoggedIn, {
+  getUser,
   updateAccountInfo,
   updateAccountPassword,
   updateNgoAccount,
@@ -44,6 +45,7 @@ import {
 } from 'firebase/auth';
 import LoaderDialog from '../../components/common/loaderDialog';
 import { toast } from 'react-toastify';
+import { flatten } from 'joi-browser';
 
 export default function Profile() {
   const [isLoading, setIsLoading] = useState(false);
@@ -90,12 +92,11 @@ export default function Profile() {
 
   useEffect(() => {
     const getUsers = async () => {
-      const docRef = doc(db, 'ngoshelters', auth.currentUser?.uid);
-      const docSnap = await getDoc(docRef);
-      setInputs({ ...docSnap.data() });
+      const user = await getUser();
+      setInputs(user);
     };
     getUsers();
-  }, [auth.currentUser]);
+  }, []);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -125,8 +126,6 @@ export default function Profile() {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const [a, setA] = useState([]);
 
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
@@ -164,33 +163,33 @@ export default function Profile() {
   const inputsComp = [
     {
       label: 'Firstname',
-      value: inputs.firstName,
+      value: inputs?.firstName,
       name: 'firstName',
     },
     {
       label: 'Middlename',
-      value: inputs.middleName,
+      value: inputs?.middleName,
       name: 'middleName',
     },
     {
       label: 'Lastname',
-      value: inputs.lastName,
+      value: inputs?.lastName,
       name: 'lastName',
     },
     {
       label: 'Username',
-      value: inputs.username,
+      value: inputs?.username,
       name: 'username',
     },
     {
       readOnly: true,
       label: 'Email',
-      value: inputs.email,
+      value: inputs?.email,
       name: 'email',
     },
     {
       label: 'Display Name',
-      value: inputs.display_name,
+      value: inputs?.display_name,
       name: 'display_name',
     },
   ];
@@ -260,13 +259,13 @@ export default function Profile() {
               return (
                 <Grid item xs={4}>
                   <Typography sx={{ fontWeight: 'bold' }}>
-                    {input.label}
+                    {input?.label}
                   </Typography>
                   <FormGroup>
                     <FormControl fullWidth>
                       <OutlinedInput
-                        name={input.name}
-                        value={input.value}
+                        name={input?.name}
+                        value={input?.value}
                         onChange={handleChange}
                         readOnly={input?.readOnly}
                       />
@@ -295,7 +294,7 @@ export default function Profile() {
                 <TextField
                   fullWidth
                   name="shelterLocLatitude"
-                  value={inputs.shelterLocLatitude}
+                  value={inputs?.shelterLocLatitude}
                   onChange={handleChange}
                 />
               </Grid>
@@ -303,7 +302,7 @@ export default function Profile() {
                 <Typography sx={{ fontWeight: 'bold' }}>Longitude</Typography>
                 <TextField
                   fullWidth
-                  value={inputs.shelterLocLongitude}
+                  value={inputs?.shelterLocLongitude}
                   name="shelterLocLongitude"
                   onChange={handleChange}
                 />

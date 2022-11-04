@@ -20,7 +20,6 @@ import { getUser, login, logout } from './firebase/auth';
 import { auth } from './firebase/firebase-config';
 import Loader from './components/common/loader';
 import { onAuthStateChanged } from 'firebase/auth';
-import { toast } from 'react-toastify';
 
 export default function SignIn() {
   const navigate = useNavigate();

@@ -35,8 +35,6 @@ import config from '../services/config.json';
 import { toast } from 'react-toastify';
 import getMatchedUserInfo from './../lib/getMatchedUserInfo';
 import bcrypt from 'bcryptjs';
-import { async } from '@firebase/util';
-
 const { backendURL } = config;
 
 // Login Account

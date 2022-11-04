@@ -6,8 +6,6 @@ import { listAdoptor } from './../../firebase/auth';
 import getMatchedUserInfo from './../../lib/getMatchedUserInfo';
 
 const NotifBadge = () => {
-  const [invisible, setInvisible] = useState();
-
   useEffect(() => {
     const docRef = collection(db, 'matches');
     const q = query(
@@ -22,11 +20,11 @@ const NotifBadge = () => {
         id: detail.id,
       }));
 
-      sessionStorage.setItem('notifcount', userInfos.length);
+      localStorage.setItem('notifcount', userInfos.length);
     });
   }, []);
 
-  const a = sessionStorage.getItem('notifcount');
+  const a = localStorage.getItem('notifcount');
 
   return <Badge badgeContent={a} invisible={a == 0} color="primary"></Badge>;
 };
