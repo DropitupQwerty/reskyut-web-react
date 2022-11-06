@@ -49,12 +49,16 @@ export default function PostOfNgo() {
   };
 
   const columns = [
-    { field: 'shelterName', headerName: 'NGO', minWidth: 150 },
-    { field: 'name', headerName: 'Name', minWidth: 150 },
+    {
+      field: 'shelterName',
+      headerName: 'Animal Rescue Shelter ',
+      width: 180,
+    },
+    { field: 'name', headerName: 'Name', flex: 1 },
     {
       field: 'age',
       headerName: 'Age',
-      minWidth: 150,
+      flex: 1,
     },
     { field: 'gender', headerName: 'gender', minWidth: 150 },
     { field: 'pet_category', headerName: 'Pet Category', minWidth: 150 },
@@ -99,7 +103,7 @@ export default function PostOfNgo() {
           <Button
             sx={{ ...global.button1xs }}
             component={Link}
-            to={`/admin/postofngo/viewanimal/${rows.id}`}
+            to={`/admin/post-of-animal-rescue-shelter/viewanimal/${rows.id}`}
           >
             View
           </Button>
@@ -127,7 +131,7 @@ export default function PostOfNgo() {
       />
       <Grid item xs>
         <Typography variant="h4" align="center">
-          <LayersIcon color="primary" /> <b>Post of NGO</b>
+          <LayersIcon color="primary" /> <b>Post of Animal Rescue Shelters</b>
         </Typography>
       </Grid>
       <Grid item xs>

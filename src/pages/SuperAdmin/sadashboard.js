@@ -71,7 +71,7 @@ export default function SaDashboard() {
               >
                 <Box>
                   <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                    <b>Total Number of NGOs</b>
+                    <b>Total Animal Rescue Shelters</b>
                   </Typography>
 
                   <Typography
@@ -93,7 +93,7 @@ export default function SaDashboard() {
               >
                 <Box>
                   <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                    <b>Total post of NGO's</b>
+                    <b>Total post of Animal Shelters</b>
                   </Typography>
 
                   <Typography

@@ -99,8 +99,7 @@ export default function ViewAnimal() {
             color="primary"
             sx={style.button}
             component={Link}
-            to="/admin/postofngo"
-            selected={window.location.pathname.includes('/admin/postofngo')}
+            to="/admin/post-of-animal-rescue-shelter"
           >
             <ArrowBackIosIcon />
           </Button>

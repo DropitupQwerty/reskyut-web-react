@@ -27,12 +27,9 @@ import {
   approveAdoption,
   declineAdoption,
   listAdoptor,
-  moveToHistory,
 } from '../../firebase/auth';
 import getMatchedUserInfo from '../../lib/getMatchedUserInfo';
 import ApproveDialog from '../../components/common/approveDialog';
-import { sendNotification, updateMessageField } from './../../firebase/auth';
-import { async } from '@firebase/util';
 import UserBadgeNotif from '../../components/common/adoptionUserBadgeNotif';
 
 export default function AdoptionPage() {

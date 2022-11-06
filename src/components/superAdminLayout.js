@@ -32,7 +32,7 @@ import LogoutDialog from './common/logoutConfirmationDialog';
 import { logout } from '../firebase/auth';
 import { useState } from 'react';
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -119,24 +119,24 @@ export default function SuperAdminLayout({ children }) {
       icon: <DashboardIcon color="primary" />,
     },
     {
-      label: 'List of NGO',
-      link: '/admin/listofngo',
+      label: 'List of Animal Shelters',
+      link: '/admin/list-of-animal-rescue-shelter',
       icon: <ViewListIcon color="primary" />,
     },
     {
-      label: 'Add NGO',
-      link: '/admin/addngo',
+      label: 'Add Animal Shelter',
+      link: '/admin/add-animal-rescue-shelter',
       icon: <GroupAddIcon color="primary" />,
     },
     {
-      label: 'Post of NGO',
-      link: '/admin/postofngo',
+      label: 'Post of Animal Shelters',
+      link: '/admin/post-of-animal-rescue-shelter',
       icon: <DynamicFeedIcon color="primary" />,
     },
     {
       divider: <Divider />,
-      label: 'NGO Account Trash',
-      link: '/admin/ngotrash',
+      label: 'Animal Shelters Trash',
+      link: '/admin/animal-rescue-shelter-trash',
       icon: <DeleteIcon color="primary" />,
     },
     {
@@ -220,7 +220,7 @@ export default function SuperAdminLayout({ children }) {
                     {drawermenu.icon}
                   </ListItemIcon>
                   <ListItemText
-                    primary={drawermenu.label}
+                    primary={<Typography> {drawermenu.label}</Typography>}
                     sx={{ opacity: open ? 1 : 0 }}
                   />
                 </ListItem>

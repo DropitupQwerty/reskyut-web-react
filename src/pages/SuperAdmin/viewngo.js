@@ -69,7 +69,7 @@ export default function ViewNgo() {
             color="primary"
             sx={style.button}
             component={Link}
-            to="/admin/listofngo"
+            to="/admin/list-of-animal-rescue-shelter"
           >
             <ArrowBackIosIcon />
           </Button>

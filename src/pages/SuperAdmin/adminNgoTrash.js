@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import global from '../../styles/global';
 import SuperAdminLayout from '../../components/superAdminLayout';
-import { Typography, Grid, Button, Checkbox } from '@mui/material';
-import ApartmentIcon from '@mui/icons-material/Apartment';
-import RefreshIcon from '@mui/icons-material/Refresh';
+import { Typography, Grid, Button, Box } from '@mui/material';
+
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 
 import DataTable from '../../components/tableWithSort';
@@ -44,7 +43,7 @@ export default function AdminNgoTrash() {
       isDelete: false,
     })
       .then(() => {
-        toast.success('NGO Admin Succesfully Restored!');
+        toast.success('Animal Rescue Shelter Admin Succesfully Restored!');
       })
       .catch((error) => {
         toast.error(error.code);
@@ -151,10 +150,13 @@ export default function AdminNgoTrash() {
       ;
       <Grid item xs>
         <Typography variant="h4" align="center">
-          <PersonRemoveIcon color="primary" /> <b>Deleted NGO Accounts</b>
+          <PersonRemoveIcon color="primary" />{' '}
+          <b>Deleted Animals Rescue Shelter Accounts</b>
         </Typography>
       </Grid>
-      <DataTable rows={accounts} columns={columns} />
+      <Box sx={{ marginTop: '20px' }}>
+        <DataTable rows={accounts} columns={columns} />
+      </Box>
     </SuperAdminLayout>
   );
 }

@@ -107,7 +107,7 @@ export const register = async (inputs, image) => {
                     ).then(() => {
                       console.log('dpName', user.displayName);
                       console.log('imgUrl', user.photoURL);
-                      toast.success('Ngo Account Created');
+                      toast.success('Animal Rescue Shelter Account Created');
                       signOut(auth2);
                     });
                   })

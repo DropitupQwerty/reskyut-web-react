@@ -131,7 +131,7 @@ export default function ListOfNgo() {
           <Button
             sx={{ ...global.button1xs }}
             component={Link}
-            to={`/admin/listofngo/viewngo/${rows.id}`}
+            to={`/admin/list-of-animal-rescue-shelter/view-animal-rescue-shelter/${rows.id}`}
           >
             View
           </Button>
@@ -182,7 +182,8 @@ export default function ListOfNgo() {
       ;
       <Grid item xs>
         <Typography variant="h4" align="center">
-          <ApartmentIcon color="primary" /> <b>List of NGO</b>
+          <ApartmentIcon color="primary" />{' '}
+          <b>List of Animal Rescue Shelters</b>
         </Typography>
       </Grid>
       <DataTable rows={accounts} columns={columns} />

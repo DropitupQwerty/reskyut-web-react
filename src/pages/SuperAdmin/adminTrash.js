@@ -13,12 +13,10 @@ import {
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import LayersIcon from '@mui/icons-material/Layers';
-import ListOfNGO from './listofngo';
-import { getTrashCollection, restoreAnimal } from './../../firebase/auth';
+
+import { restoreAnimal } from './../../firebase/auth';
 import DataTable from '../../components/tableWithSort';
 import DeleteDialog from '../../components/common/deleteDialog';
-import { async } from '@firebase/util';
 import {
   deleteDoc,
   doc,

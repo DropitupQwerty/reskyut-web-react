@@ -47,7 +47,11 @@ export default function NgoTrash() {
   };
 
   const columns = [
-    { field: 'shelterName', headerName: 'NGO', minWidth: 150 },
+    {
+      field: 'shelterName',
+      headerName: 'Animal Rescue Shelter',
+      flex: 1,
+    },
     { field: 'name', headerName: 'Name', minWidth: 150 },
     {
       field: 'age',

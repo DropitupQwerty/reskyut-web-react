@@ -51,15 +51,30 @@ export default function App() {
         return (
           <Route>
             <Route path="/admin/dashboard" element={<SaDashboard />} />
-            <Route path="/admin/postofngo" element={<PostOfNGO />} />
-            <Route path="/admin/addngo" element={<AddNgo />} />
-            <Route path="/admin/listofngo" element={<ListOfNGO />} />
-            <Route path="/admin/listofngo/viewngo/:id" element={<ViewNgo />} />
+            <Route
+              path="/admin/post-of-animal-rescue-shelter"
+              element={<PostOfNGO />}
+            />
+            <Route
+              path="/admin/add-animal-rescue-shelter"
+              element={<AddNgo />}
+            />
+            <Route
+              path="/admin/list-of-animal-rescue-shelter"
+              element={<ListOfNGO />}
+            />
+            <Route
+              path="/admin/list-of-animal-rescue-shelter/view-animal-rescue-shelter/:id"
+              element={<ViewNgo />}
+            />
             <Route path="/admin/profile" element={<SaProfile />} />
             <Route path="/admin/trash" element={<AdminTrash />} />
-            <Route path="/admin/ngotrash" element={<AdminNgoTrash />} />
             <Route
-              path="/admin/postofngo/viewanimal/:id"
+              path="/admin/animal-rescue-shelter-trash"
+              element={<AdminNgoTrash />}
+            />
+            <Route
+              path="/admin/post-of-animal-rescue-shelter/viewanimal/:id"
               element={<ViewAnimal />}
             />
           </Route>
