@@ -83,7 +83,7 @@ export default function AdminNgoTrash() {
           </Typography>
         ) : (
           <Typography color="secondary" variant="caption">
-            Ngo Admin
+            Shelter Admin
           </Typography>
         );
       },

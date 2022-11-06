@@ -92,7 +92,7 @@ export default function ListOfNgo() {
           </Typography>
         ) : (
           <Typography color="#749F82" variant="caption">
-            Ngo Admin
+            Shelter Admin
           </Typography>
         );
       },
