@@ -581,7 +581,7 @@ export const moveToHistory = async (
       ...user,
       id: r.id,
       cid: user.id,
-      isDecline: isDecline,
+      isDeclined: isDecline,
       isApprovedAdoptor: isApprovedAdoptor,
       preview: notifMessage,
       time: serverTimestamp(),

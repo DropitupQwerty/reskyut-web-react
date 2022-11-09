@@ -63,7 +63,7 @@ export default function AdoptionHistory() {
       headerName: 'Adoption Status',
       minWidth: 150,
       renderCell: (rows) => {
-        return !rows.row.isDecline && rows.row.isApprovedAdoptor ? (
+        return !rows.row.isDeclined && rows.row.isApprovedAdoptor ? (
           <Typography color="#749F82" variant="caption">
             Accepted Adoptor
           </Typography>
