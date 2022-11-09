@@ -28,9 +28,6 @@ import ViewNgo from './pages/SuperAdmin/viewngo';
 
 import PagenotFound from './PagenotFound';
 import IsLoggedIn from './firebase/auth';
-import { auth } from './firebase/firebase-config';
-import { useEffect, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
 import ViewAnimal from './pages/SuperAdmin/viewanimal';
 import SaProfile from './pages/SuperAdmin/saprofile';
 import AdminTrash from './pages/SuperAdmin/adminTrash';
@@ -42,8 +39,6 @@ import ForgotPassword from './forgotPassword';
 
 export default function App() {
   const user = IsLoggedIn();
-
-  console.log(process.env);
 
   function Path() {
     if (user?.loggedIn) {

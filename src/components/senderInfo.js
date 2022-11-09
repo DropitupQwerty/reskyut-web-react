@@ -85,7 +85,7 @@ export default function SenderInfo() {
         const getPetInfo = async () => {
           console.log(petSnap.data());
 
-          const petInfo = doc(db, `pets/${petSnap.data().petToAdopt}`);
+          const petInfo = doc(db, `pets/${petSnap.data()?.petToAdopt}`);
           const petInfoSnap = await getDoc(petInfo);
           if (!petInfoSnap.exists()) {
             setPetInfo('Deleted');

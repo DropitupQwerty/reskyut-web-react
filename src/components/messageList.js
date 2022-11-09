@@ -13,12 +13,11 @@ import {
   Typography,
 } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import MessageListRow from './messageListRow';
 import { getDoc, doc } from 'firebase/firestore';
 import { auth, db } from './../firebase/firebase-config';
-import { listAdoptor } from '../firebase/auth';
-import getMatchedUserInfo from './../lib/getMatchedUserInfo';
+import { approveAdoption } from '../firebase/auth';
 
 const drawerWidth = 260;
 
@@ -26,6 +25,9 @@ export default function MessageList({ acc }) {
   const navigate = useNavigate();
   const { id, rid } = useParams();
   const [adoptionStatus, setAdoptionStatus] = useState();
+  const location = useLocation();
+
+  console.log(location.pathname);
 
   useEffect(() => {
     const getDecline = async () => {
@@ -35,6 +37,16 @@ export default function MessageList({ acc }) {
     };
     getDecline();
   }, []);
+
+  const prevPage = () => {
+    console.log(!!adoptionStatus);
+
+    adoptionStatus
+      ? adoptionStatus.isDeclined === true || approveAdoption === true
+        ? navigate(-1)
+        : navigate('/adoptionpage')
+      : navigate('/adoptionhistory');
+  };
 
   return (
     <div>
@@ -65,7 +77,7 @@ export default function MessageList({ acc }) {
 
         <List sx={{ padding: '12px' }}>
           <ListItem disablePadding>
-            <ListItemButton onClick={() => navigate('/adoptionpage')}>
+            <ListItemButton onClick={prevPage}>
               <ListItemIcon>
                 <ArrowBackIosIcon color="primary" />
               </ListItemIcon>

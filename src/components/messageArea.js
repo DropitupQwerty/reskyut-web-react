@@ -114,6 +114,7 @@ export default function MessageArea() {
           display: 'fixed',
         }}
       >
+        {console.log(isDeclined)}
         {!isDeclined ? (
           <form
             onSubmit={handleSend}
