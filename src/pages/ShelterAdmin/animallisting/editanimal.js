@@ -331,7 +331,7 @@ export default function AddAnimal() {
                         position: 'relative',
                       }}
                     >
-                      <IconButton
+                      {/* <IconButton
                         sx={{
                           position: 'absolute',
                           top: '10px',
@@ -341,7 +341,7 @@ export default function AddAnimal() {
                         onClick={() => handleRemovePhoto(imageURI)}
                       >
                         <CancelIcon color="primary" />
-                      </IconButton>
+                      </IconButton> */}
                       <img
                         style={{
                           height: '100%',

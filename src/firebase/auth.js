@@ -306,7 +306,7 @@ export const updateAnimalProfile = async (id, inputs, images) => {
   if (images.length !== 0) {
     await updateDoc(doc(db, `pets/${id}`), {
       ...inputs,
-      imageURL: deleteField(),
+      imageURL: '',
     }).then((docRef) => {
       uploadMultipleImage(images, id);
     });
