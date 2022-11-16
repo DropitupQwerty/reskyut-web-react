@@ -274,7 +274,7 @@ export default function AddAnimal() {
                       >
                         <MenuItem value={'Dog'}>Dog</MenuItem>
                         <MenuItem value={'Cat'}>Cat</MenuItem>
-                        <MenuItem onClick={() => Custom()}>Custom</MenuItem>
+                        {/* <MenuItem onClick={() => Custom()}>Custom</MenuItem> */}
                       </Select>
                     )}
                   </FormControl>
