@@ -119,7 +119,6 @@ export default function PostOfNgo() {
   useEffect(() => {
     getpCollection();
   }, []);
-  console.log(animalData);
 
   return (
     <SuperAdminLayout>

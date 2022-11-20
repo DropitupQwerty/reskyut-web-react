@@ -134,6 +134,7 @@ export default function Profile() {
     if (values.newPassword === values.confirmPassword) {
       await updateAccountPassword({ ...values }, inputs.email).then((r) => {
         setLoaderMessage('Updating');
+
         if (!r) {
           setOpen(false);
           setValues({

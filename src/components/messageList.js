@@ -42,7 +42,8 @@ export default function MessageList({ acc }) {
     console.log(!!adoptionStatus);
 
     adoptionStatus
-      ? adoptionStatus.isDeclined === true || approveAdoption === true
+      ? adoptionStatus.isDeclined === true ||
+        adoptionStatus.approvedAdoption === true
         ? navigate(-1)
         : navigate('/adoptionpage')
       : navigate('/adoptionhistory');

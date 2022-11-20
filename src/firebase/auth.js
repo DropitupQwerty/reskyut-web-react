@@ -388,8 +388,13 @@ export const updateAccountPassword = async (values, email) => {
   );
   return reauthenticateWithCredential(user, credential)
     .then(() => {
-      updatePassword(user, values.newPassword);
-      toast.success('Password Updated');
+      return updatePassword(user, values.newPassword)
+        .then(() => {
+          toast.success('Password Updated');
+        })
+        .catch((error) => {
+          console.log(error.code);
+        });
     })
     .then(async () => {
       await updateDoc(doc(db, `ngoshelters/${auth.currentUser.uid}`), {

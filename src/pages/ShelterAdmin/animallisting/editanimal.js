@@ -173,7 +173,6 @@ export default function AddAnimal() {
                     <MenuItem value={'Kitten'}>Kitten</MenuItem>
                     <MenuItem value={'Puppy'}>Puppy</MenuItem>
                     <MenuItem value={'Adult'}>Adult</MenuItem>
-                    <MenuItem value={'Senior'}>Senior</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -251,7 +250,7 @@ export default function AddAnimal() {
                     >
                       <MenuItem value={'Dog'}>Dog</MenuItem>
                       <MenuItem value={'Cat'}>Cat</MenuItem>
-                      <MenuItem onClick={() => Custom()}>Custom</MenuItem>
+                      {/* <MenuItem onClick={() => Custom()}>Custom</MenuItem> */}
                     </Select>
                   )}
                 </FormControl>
@@ -294,12 +293,12 @@ export default function AddAnimal() {
                 Image
               </Typography>
             </Box>
-            <Typography variant="body2">
+            {/* <Typography variant="body2">
               Upload an image file, pick one from your media library, or add one
               with a URL.
-            </Typography>
+            </Typography> */}
 
-            <Button
+            {/* <Button
               variant="contained"
               component="label"
               sx={{ marginTop: '12px', ...global.button2Small }}
@@ -312,7 +311,7 @@ export default function AddAnimal() {
                 type="file"
                 onChange={handleImage}
               />
-            </Button>
+            </Button> */}
 
             {/*ADD ANIMAL PHOTOS */}
 
@@ -356,12 +355,12 @@ export default function AddAnimal() {
                   </Grid>
                 ))}
               </Grid>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <WarningIcon sx={{ margin: '3px', color: '#FFCC00' }} />
                 <Typography color="#FFCC00" variant="caption">
                   Uploading new photos will delete the existing photos
                 </Typography>
-              </Box>
+              </Box> */}
             </Box>
           </Box>
         </Box>
