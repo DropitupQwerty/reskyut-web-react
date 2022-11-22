@@ -132,21 +132,26 @@ export default function Profile() {
     setIsLoading(true);
 
     if (values.newPassword === values.confirmPassword) {
-      await updateAccountPassword({ ...values }, inputs.email).then((r) => {
-        setLoaderMessage('Updating');
+      if (values.newPassword.length >= 6) {
+        await updateAccountPassword({ ...values }, inputs.email).then((r) => {
+          setLoaderMessage('Updating');
 
-        if (!r) {
-          setOpen(false);
-          setValues({
-            [values.confirmPassword]: '',
-            [values.currentPassword]: '',
-            [values.newPassword]: '',
-          });
-          setIsLoading(false);
-        } else {
-          setIsLoading(false);
-        }
-      });
+          if (!r) {
+            setOpen(false);
+            setValues({
+              [values.confirmPassword]: '',
+              [values.currentPassword]: '',
+              [values.newPassword]: '',
+            });
+            setIsLoading(false);
+          } else {
+            setIsLoading(false);
+          }
+        });
+      } else {
+        toast.warn('The password must contain 6 characters or more');
+        setIsLoading(false);
+      }
     } else {
       toast.warn('Password not Match');
       setIsLoading(false);
