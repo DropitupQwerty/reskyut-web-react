@@ -11,25 +11,23 @@ import { getDocs, collection, query, doc, getDoc } from 'firebase/firestore';
 import { auth, db } from './../../firebase/firebase-config';
 import HistoryIcon from '@mui/icons-material/History';
 import DeleteDialog from './../../components/common/deleteDialog';
+import InfoDialog from '../../components/common/infoDialog';
 
 export default function AdoptionHistory() {
   const navigate = useNavigate();
   const [adoptionRow, setAdoptionRow] = useState([]);
   const [open, setOpen] = useState(false);
-  // const [decline, setDecline] = useState(false);
-  // const [declineUser, setDeclineUser] = useState();
   const [moreInfo, setMoreInfo] = useState();
-  // const [declinedMessage, setDeclinedMessage] = useState();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selected, setSelected] = useState([]);
   const [deleteMessage, setDeleteMessage] = useState();
-  // const handleClick = (event, rows) =>
 
   const handleInfoDialog = async (event, rows) => {
     setOpen(true);
-    await getDoc(doc(db, `users/${rows.id}/form/form`)).then((res) => {
+    await getDoc(doc(db, `users/${rows.row.cid}/form/form`)).then((res) => {
       setMoreInfo(res.data());
     });
+    console.log(rows.row);
   };
   const handleCloseInfoDialog = async (event, rows) => {
     setOpen(false);
@@ -151,6 +149,11 @@ export default function AdoptionHistory() {
 
   return (
     <ShelterAdminLayout>
+      <InfoDialog
+        open={open}
+        cancel={handleCloseInfoDialog}
+        moreInfo={moreInfo}
+      />
       <DeleteDialog
         open={openDeleteDialog}
         message={deleteMessage}
@@ -161,14 +164,6 @@ export default function AdoptionHistory() {
           <HistoryIcon color="primary" /> <b>Adoption History</b>
         </Typography>
       </Grid>
-      {/* <Grid item xs>
-        <Button>
-          <RefreshIcon color="primary" />
-        </Button>
-        <Button onClick={handleDeleteDialog}>
-          <DeleteIcon color="primary" />
-        </Button>
-      </Grid> */}
       <Box sx={{ marginTop: '50px' }}>
         <DataTable
           rows={adoptionRow}

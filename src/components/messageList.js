@@ -43,8 +43,9 @@ export default function MessageList({ acc }) {
 
     adoptionStatus
       ? adoptionStatus.isDeclined === true ||
-        adoptionStatus.approvedAdoption === true
-        ? navigate(-1)
+        adoptionStatus.isApprovedAdoptor === true ||
+        adoptionStatus?.fromHistory === true
+        ? navigate('/adoptionhistory')
         : navigate('/adoptionpage')
       : navigate('/adoptionhistory');
   };

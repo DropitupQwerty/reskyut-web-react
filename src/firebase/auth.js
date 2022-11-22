@@ -590,6 +590,7 @@ export const moveToHistory = async (
       isApprovedAdoptor: isApprovedAdoptor,
       preview: notifMessage,
       time: serverTimestamp(),
+      fromHistory: true,
       photoURL: auth.currentUser.photoURL,
     },
     { merge: true }
